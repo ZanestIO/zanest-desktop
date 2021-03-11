@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--    <meta http-equiv="content-security-policy" content="script-src 'self' 'unsafe-inline'">-->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="shortcut icon" href="media/favicon.png" type="image/png" id="favicon">
+    <title>زانست</title>
+</head>
+<body class="font-sans">
+<div class="login-container  bg-black text-white overflow-x-hidden w-screen sm:h-screen flex flex-row m-0 flex-wrap justify-evenly items-center p-8 sm:p-10 text-center">
+    <div class="text-right mt-10 mb-5 order-2 sm:order-1 sm:w-full lg:w-2/5">
+        <h1 class="text-6xl font-bold mb-5">زانست</h1>
+        <h2 class="text-2xl mb-5">پلتفرم جامع مدیریتی برای آموزشگاه های سراسر کشور
+        </h2>
+        <p class="mb-5">زانست تمام نیازهای مدیریتی یک آموزشگاه زبان را به خوبی پوشش می دهد و با اتوماتیک کردن فرآیندهای
+            وقت گیر، امکان رسیدگی به امور مهمتری را به شما می دهد</p>
+        <a href="./about_zanira.html">
+            <button class="btn btn-secondary bg-gray-300 bg-opacity-70">درباره نرم افزار</button>
+        </a>
+
+    </div>
+
+    <div class="flex flex-col justify-between items-center text-black order-1 mb-5 sm:w-full lg:w-1/2 md:justify-start">
+
+        <div class="login-box rounded-lg bg-gray-100 bg-opacity-90 p-8 sm:w-3/4">
+            <div class="logo mb-5 flex-row justify-center flex">
+                <img class="h-20" src="media/logofull.png" alt="لوگوی زانست">
+            </div>
+
+            <div class="mb-4 relative">
+                <label for="login-username" class="hidden">نام کاربری</label>
+                <input class="p-4" type="text" class="form-control" required name="username" id="login-username"
+                       aria-describedby="helpId" placeholder="نام کاربری" maxlength="50">
+                <div class="form-error" id="error1">{{ error }}</div>
+            </div>
+            <div class="relative">
+                <label class="hidden" for="login-pass">رمزعبور</label>
+                <input class="p-4" type="password" class="form-control" required name="_password.scss" id="login-pass"
+                       aria-describedby="helpId" min="8" placeholder="رمز عبور" maxlength="50">
+                <div class="form-error" id="error2">{{ error }}</div>
+            </div>
+
+            <div class="mt-10 flex flex-row flex-wrap justify-center items-center">
+                <button type="submit" class="btn btn-primary text-base mb-2" id="login-button">ورود به پروفایل</button>
+            </div>
+            <!--            <form action="#" class="text-right">-->
+            <!--                <div class="mb-4 text-lg text-gray-600">-->
+            <!--                    حساب کاربری مدیر را بسازید:-->
+            <!--                </div>-->
+            <!--                <div class="mb-4">-->
+            <!--                    <label for="name" class="hidden">نام </label>-->
+            <!--                    <input class="p-4" type="text" class="form-control" name="username" id="name"-->
+            <!--                           aria-describedby="helpId" placeholder="نام و نام خانوادگی">-->
+            <!--                </div>-->
+            <!--                <div class="mb-4">-->
+            <!--                    <label for="login-username" class="hidden">نام کاربری</label>-->
+            <!--                    <input class="p-4" type="text" class="form-control" name="username" id="login-username"-->
+            <!--                           aria-describedby="helpId" placeholder="نام کاربری">-->
+            <!--                    <p class="text-sm text-gray-600 p-2">نام کاربری می تواند شامل حروف انگلیسی، اعداد و _ باشد.</p>-->
+            <!--                </div>-->
+            <!--                <div class="mb-2">-->
+            <!--                    <label for="login-pass" class="hidden">رمزعبور</label>-->
+            <!--                    <input class="p-4" type="password" class="form-control" name="password" id="login-pass"-->
+            <!--                           aria-describedby="helpId" placeholder="رمز عبور">-->
+            <!--                </div>-->
+
+            <!--                <div>-->
+            <!--                    <label class="hidden" for="login-pass-repeat">تکرار رمز عبور</label>-->
+            <!--                    <input class="p-4" type="password" class="form-control" name="password" id="login-pass-repeat"-->
+            <!--                           aria-describedby="helpId" placeholder="تکرار رمز عبور">-->
+            <!--                </div>-->
+
+            <!--                <ul class="password-validator">-->
+            <!--                    <li>-->
+            <!--                        حداقل هشت کاراکتر-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        دارای اعداد-->
+            <!--                    </li>-->
+            <!--                    <li>حروف بزرگ و کوچک-->
+            <!--                    </li>-->
+            <!--                    <li>-->
+            <!--                        سیمبل و علامت-->
+            <!--                    </li>-->
+            <!--                </ul>-->
+
+            <!--                <div class="text-right">-->
+            <!--                    <a href="dashboard.html">-->
+            <!--                        <button class="btn btn-primary text-base mb-2">ایجاد حساب کاربری</button>-->
+            <!--                    </a>-->
+            <!--                </div>-->
+            <!--            </form>-->
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="js/app.js">
+</script>
+<script>
+    require('./js/login.js')
+</script>
+</body>
+</html>
