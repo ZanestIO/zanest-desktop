@@ -7,13 +7,13 @@ const loginPass = document.querySelector('#login-pass')
 const loginButton = document.querySelector('#login-button')
 
 let errors = {
-    error1: new Vue({
+    usernameErr: new Vue({
         el: '#error1',
         data: {
             error: ''
         }
     }),
-    error2: new Vue({
+    passwordErr: new Vue({
         el: '#error2',
         data: {
             error: ''
@@ -44,14 +44,14 @@ function sendLoginInfo() {
 
     // username and password validation
     if (!username) {
-        errors.error1.error = "نام کاربری نمی تواند خالی باشد"
+        errors.usernameErr.error = "نام کاربری نمی تواند خالی باشد"
         formValid = false
     }
     if (!password) {
-        errors.error2.error = "رمز عبور نمی تواند خالی باشد"
+        errors.passwordErr.error = "رمز عبور نمی تواند خالی باشد"
         formValid = false
     } else if (password.length < 8) {
-        errors.error2.error = "رمزعبور شما کمتر از 8 کاراکتر نیست"
+        errors.passwordErr.error = "رمزعبور شما کمتر از 8 کاراکتر نیست"
         formValid = false
     }
 

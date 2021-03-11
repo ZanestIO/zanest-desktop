@@ -1,9 +1,12 @@
 const {Sequelize, Model} = require('sequelize')
 const user = require('./user')
+const bcrypt = require('bcrypt')
 let sequelize;
 class User extends Model {}
 
-// creates the database and tables
+// ================================================================================
+// creates the database connection and main user
+// ================================================================================
 exports.dbInit = async () => {
     // create db connection
     try {
@@ -29,16 +32,33 @@ exports.dbInit = async () => {
     }
     // initializing all of the database tables
 
+    let adminUser;
     try {
         await sequelize.sync()
-        return [true, sequelize]
-    }
-    catch(err)  {
-        return [false, sequelize]
-    }
 
+        // =======================================
+        // creating admin user
+        adminUser = await User.findOne({
+            where: {
+                userName: 'admin'
+            }
+        })
+        if (adminUser === null) {
+            let hashedPass = '323da#(df$#fald50..'
+            bcrypt.hash(hashedPass, 10, async (err, hash) => {
+                await User.create({fullName: 'admin', userName: 'admin', password: hash});
+            })
+        }
+
+
+        return [true, sequelize]
+        // =======================================
+    } catch (err) {
+        return [false, err.message]
+    }
 }
 
+// connect to database
 function connectToDb() {
     return new Sequelize({
         dialect: "sqlite",
