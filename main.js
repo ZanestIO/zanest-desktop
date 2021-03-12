@@ -27,7 +27,7 @@ function createWindow() {
     });
 
     // removing default menus
-    // mainWindow.removeMenu()
+    mainWindow.removeMenu()
 
     // loading the login page
     mainWindow.loadFile('renderer/login.html')
