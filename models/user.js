@@ -16,6 +16,12 @@ module.exports = {
             allowNull: false
         },
 
+        userType: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            default: 'staff'
+        },
+
         birthDate: {
             type: DataTypes.DATEONLY
             // allowNull is true by defualt

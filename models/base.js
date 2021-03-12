@@ -5,7 +5,7 @@ let sequelize;
 class User extends Model {}
 
 // ================================================================================
-// creates the database connection and main user
+// creates the database connection and admin user
 // ================================================================================
 exports.dbInit = async () => {
     // create db connection
@@ -46,10 +46,9 @@ exports.dbInit = async () => {
         if (adminUser === null) {
             let hashedPass = '323da#(df$#fald50..'
             bcrypt.hash(hashedPass, 10, async (err, hash) => {
-                await User.create({fullName: 'admin', userName: 'admin', password: hash});
+                await User.create({fullName: 'zanest admin', userName: 'admin', password: hash, userType: 'admin'});
             })
         }
-
 
         return [true, sequelize]
         // =======================================

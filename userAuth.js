@@ -2,43 +2,39 @@
 const bcrypt = require('bcrypt');
 
 module.exports = async (username, password, db) => {
-    let userId = await usernameExists(username, db)
+    let user = await usernameExists(username, db)
 
-    if (userId) {
+    if (user) {
         let passMatch = false;
-        passMatch = await passwordMatches(userId, password, db)
-        if (passMatch)
-            return [true, '']
-        else {
-            return [false, "رمز عبور واردشده اشتباه است"]
+        passMatch = await passwordMatches(user, password, db)
+        if (passMatch) {
+            return [true, {
+                id: user.dataValues.id,
+                fullName: user.dataValues.fullName,
+                userName: user.dataValues.userName,
+                userType: user.dataValues.userType
+            }]
+        } else {
+            return [false, {
+                password: "رمز عبور واردشده اشتباه است"
+            }]
         }
     } else {
-        return [false, "نام کاربری در سیستم موجود نیست"]
+        return [false, {
+            userName: "نام کاربری در سیستم موجود نیست"
+        }]
     }
 }
 
 async function usernameExists(input_username,db) {
-    let userId = false
-    userId =await db.models.User.findOne({
-        attributes: ['id'],
+    return await db.models.User.findOne({
         where: {
             userName: input_username
         }
     })
-
-    // find if user exists in the db
-    return userId.dataValues.id
 }
 
-async function passwordMatches(userId, input_password, db) {
-    let user = await db.models.User.findOne({
-        attributes: ['password'],
-        where: {
-            id: userId
-        }
-    })
-
+function passwordMatches(user, input_password, db) {
     let hashedPassword = user.dataValues.password
-    // let userType = user.then.
     return bcrypt.compare(input_password, hashedPassword)
 }

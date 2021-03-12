@@ -2,3 +2,4 @@
 /.idea/
 package-lock.json
 renderer/js/app.js.LICENSE.txt
+out/

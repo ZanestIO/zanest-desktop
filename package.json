@@ -5,8 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "watch": "nodemon --exec electron .",
-    "reset": "git reset --hard"
+    "watch": "nodemon --exec electron ."
   },
   "author": "Sadeq Sheikhi",
   "license": "ISC",
