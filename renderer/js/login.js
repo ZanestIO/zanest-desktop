@@ -1,12 +1,15 @@
 const {ipcRenderer} = require('electron')
-var Vue = require('vue/dist/vue')
+var Vue = require('vue/dist/vue.min')
 const {errorNot} = require("./notification");
 
+// getting page elements
 const loginForm = document.querySelector('.login-box')
 const loginUsername = document.querySelector('#login-username')
 const loginPass = document.querySelector('#login-pass')
 const loginButton = document.querySelector('#login-button')
 
+
+// creating Vue components
 let errors = {
     usernameErr: new Vue({
         el: '#error1',
@@ -26,12 +29,12 @@ let errors = {
 loginButton.addEventListener('click', async e => {
     sendLoginInfo()
 })
-
 loginForm.addEventListener('keyup', async e=> {
     if (e.code === 'Enter' || e.code === 'NumpadEnter')
         sendLoginInfo()
 })
 
+// ===================================================================================================
 // Sending User Login Information Happens Here
 function sendLoginInfo() {
     let username = loginUsername.value
@@ -61,6 +64,7 @@ function sendLoginInfo() {
         send('userAuth', {username, password})
 }
 
+// ===================================================================================================
 // getting response of user authentication from main
 ipcRenderer.on(`userAuthError`, (e, args) => {
     console.log(args.userName)
@@ -73,6 +77,7 @@ ipcRenderer.on(`userAuthError`, (e, args) => {
 })
 
 
+// ===================================================================================================
 // showing db error if happening
 // listens for db errors
 ipcRenderer.on('dbError', (e, args) => {

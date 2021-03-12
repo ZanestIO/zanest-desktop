@@ -14,25 +14,35 @@ function createWindow() {
     // creating user session
     let userSession = session.fromPartition('user')
 
+    // windows attributes
     mainWindow = new BrowserWindow({
         width: 1300, height: 800,
         minHeight: 500, minWidth: 700,
+        show: false,
         webPreferences: {
             nodeIntegration: true,
-            session: userSession
+            session: userSession,
         }
     });
 
+    // removing default menus
     mainWindow.removeMenu()
 
+    // loading the login page
     mainWindow.loadFile('renderer/login.html')
 
-    mainWindow.webContents.openDevTools({mode:"undocked"})
+    // to avoid the white loading screen
+    mainWindow.webContents.on('did-finish-load', function () {
+        mainWindow.show()
+    })
+
+    // mainWindow.webContents.openDevTools({mode:"undocked"})
     mainWindow.on('closed',  () => {
         mainWindow = null
     })
 }
 
+// when the app is ready
 app.on('ready', () => {
     createWindow()
     dbHandle()
@@ -76,6 +86,7 @@ ipcMain.on('userAuth', async (e, args) => {
 
     if (loggedIn[0]) {
 
+        //setting cookies
         let cookieid = {url: 'https://zanest.io', name:'userId', value: `${loggedIn[1].id}`}
         let cookie2 = {url: 'https://zanest.io', name:'userName', value: loggedIn[1].userName}
         let cookie3 = {url: 'https://zanest.io', name:'fullName', value: loggedIn[1].fullName}
