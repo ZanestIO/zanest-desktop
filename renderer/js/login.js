@@ -29,7 +29,7 @@ let errors = {
 loginButton.addEventListener('click', async e => {
     sendLoginInfo()
 })
-loginForm.addEventListener('keyup', async e=> {
+loginForm.addEventListener('keyup', async e => {
     if (e.code === 'Enter' || e.code === 'NumpadEnter')
         sendLoginInfo()
 })
@@ -60,15 +60,17 @@ function sendLoginInfo() {
     }
 
     let send = ipcRenderer.send;
-    if (formValid)
+    if (formValid) {
+        loginButton.innerHTML = '<i class="fas fa-circle-notch fa-spin text-lg"></i>'
         send('userAuth', {username, password})
+    }
+
 }
 
 // ===================================================================================================
 // getting response of user authentication from main
 ipcRenderer.on(`userAuthError`, (e, args) => {
-    console.log(args.userName)
-
+    loginButton.innerHTML = 'ورود به پنل'
     if (args.userName) {
         errors.usernameErr.error = args.userName
     } else if (args.password) {
@@ -81,5 +83,5 @@ ipcRenderer.on(`userAuthError`, (e, args) => {
 // showing db error if happening
 // listens for db errors
 ipcRenderer.on('dbError', (e, args) => {
-    errorNot(args.error)
+    errorNot("خطای پایگاه داده", args.error, true)
 })

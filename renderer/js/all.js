@@ -1,3 +1,4 @@
+const {errorNot} = require("./notification");
 const {ipcRenderer} = require('electron')
 const fullNameHolder = document.querySelector('#fullNameHolder')
 const userTypeHolder = document.querySelector('#userTypeHolder')
@@ -29,7 +30,7 @@ ipcRenderer.on('responseUserSession', (event, args) => {
 // ===================================================================================================
 // listen for db errors
 ipcRenderer.on('dbError', (e, args) => {
-    errorNot(args.error)
+    errorNot("خطای پایگاه داده", args.error, true)
 })
 
 // ===================================================================================================
