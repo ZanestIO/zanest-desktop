@@ -19,6 +19,7 @@ function createWindow() {
         width: 1300, height: 800,
         minHeight: 500, minWidth: 700,
         show: false,
+        icon: './renderer/media/favicon.png',
         webPreferences: {
             nodeIntegration: true,
             session: userSession,
@@ -26,10 +27,11 @@ function createWindow() {
     });
 
     // removing default menus
-    mainWindow.removeMenu()
+    // mainWindow.removeMenu()
 
     // loading the login page
     mainWindow.loadFile('renderer/login.html')
+
 
     // to avoid the white loading screen
     mainWindow.webContents.on('did-finish-load', function () {

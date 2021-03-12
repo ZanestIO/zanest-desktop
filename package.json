@@ -17,7 +17,6 @@
   "dependencies": {
     "bcrypt": "^5.0.1",
     "sequelize": "^6.5.0",
-    "sqlite": "^4.0.19",
     "sqlite3": "^5.0.2",
     "vue": "^2.6.12"
   }
