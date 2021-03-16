@@ -5,12 +5,16 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "watch": "nodemon --exec electron ."
+    "watch": "nodemon --exec electron .",
+    "build": "electron-builder build --win"
   },
   "author": "Sadeq Sheikhi",
+  "repository": "https://github.com/sadeqsheikhi/zanest-electron",
+  "homepage": "https://zanest.ir",
   "license": "ISC",
   "devDependencies": {
     "electron": "^11.3.0",
+    "electron-builder": "^22.10.5",
     "electron-rebuild": "^2.3.5",
     "nodemon": "^2.0.7"
   },
@@ -19,5 +23,12 @@
     "sequelize": "^6.5.0",
     "sqlite3": "^5.0.2",
     "vue": "^2.6.12"
+  },
+  "build": {
+  	"appId": "ir.zanest.zanest",
+  	"copyright": "copyright 2021 Zenst.ir",
+  	"win": {
+  		"target": "msi"
+  	}
   }
 }
