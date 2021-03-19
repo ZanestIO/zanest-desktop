@@ -1,6 +1,8 @@
 const {ipcRenderer} = require('electron')
 var Vue = require('vue/dist/vue.min')
-const {errorNot} = require("./notification");
+const notListener = require('./notListener');
+// setting up notification listeners
+notListener()
 
 // getting page elements
 const loginForm = document.querySelector('.login-box')
@@ -14,13 +16,15 @@ let errors = {
     usernameErr: new Vue({
         el: '#error1',
         data: {
-            error: ''
+            error: '',
+            seen: false
         }
     }),
     passwordErr: new Vue({
         el: '#error2',
         data: {
-            error: ''
+            error: '',
+            seen: false,
         }
     })
 }
@@ -41,21 +45,32 @@ function sendLoginInfo() {
     let password = loginPass.value
     let formValid = true
 
+    // removing class fail
+    loginUsername.classList.remove('fail')
+    loginPass.classList.remove('fail')
+
     // removing error indicators when submit is fired
     for (let [key, value] of Object.entries(errors)) {
         value.error = ''
+        value.seen = false
     }
 
     // username and password validation
     if (!username) {
+        loginUsername.classList.add('fail')
         errors.usernameErr.error = "نام کاربری نمی تواند خالی باشد"
+        errors.usernameErr.seen = true
         formValid = false
     }
     if (!password) {
+        loginPass.classList.add('fail')
         errors.passwordErr.error = "رمز عبور نمی تواند خالی باشد"
+        errors.passwordErr.seen = true
         formValid = false
     } else if (password.length < 8) {
+        loginPass.classList.add('fail')
         errors.passwordErr.error = "رمزعبور شما کمتر از 8 کاراکتر نیست"
+        errors.passwordErr.seen = true
         formValid = false
     }
 
@@ -72,16 +87,17 @@ function sendLoginInfo() {
 ipcRenderer.on(`userAuthError`, (e, args) => {
     loginButton.innerHTML = 'ورود به پنل'
     if (args.userName) {
+        loginUsername.classList.add('fail')
         errors.usernameErr.error = args.userName
+        errors.usernameErr.seen = true
+
     } else if (args.password) {
+        loginPass.classList.add('fail')
         errors.passwordErr.error = args.password
+        errors.passwordErr.seen = true
+
     }
 })
 
 
 // ===================================================================================================
-// showing db error if happening
-// listens for db errors
-ipcRenderer.on('dbError', (e, args) => {
-    errorNot("خطای پایگاه داده", args.error, true)
-})

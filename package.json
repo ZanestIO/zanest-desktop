@@ -28,7 +28,7 @@
   	"appId": "ir.zanest.zanest",
   	"copyright": "copyright 2021 Zenst.ir",
   	"win": {
-  		"target": "msi"
+  		"target": "zip"
   	}
   }
 }

@@ -27,10 +27,10 @@ function createWindow() {
     });
 
     // removing default menus
-    mainWindow.removeMenu()
+    // mainWindow.removeMenu()
 
     // loading the login page
-    mainWindow.loadFile('renderer/login.html')
+    mainWindow.loadFile('renderer/firstLogin.html')
 
 
     // to avoid the white loading screen

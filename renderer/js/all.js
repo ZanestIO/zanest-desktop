@@ -3,6 +3,9 @@ const {ipcRenderer} = require('electron')
 const fullNameHolder = document.querySelector('#fullNameHolder')
 const userTypeHolder = document.querySelector('#userTypeHolder')
 const logout = document.querySelector('#logout')
+const notListener = require('./notListener');
+// setting up notification listeners
+notListener()
 
 // ===================================================================================================
 // send request for logged in user information
@@ -27,11 +30,7 @@ ipcRenderer.on('responseUserSession', (event, args) => {
     userTypeHolder.innerText = userType
 })
 
-// ===================================================================================================
-// listen for db errors
-ipcRenderer.on('dbError', (e, args) => {
-    errorNot("خطای پایگاه داده", args.error, true)
-})
+
 
 // ===================================================================================================
 // adding click to logout
