@@ -30,7 +30,7 @@ function createWindow() {
     // mainWindow.removeMenu()
 
     // loading the login page
-    mainWindow.loadFile('renderer/firstLogin.html')
+    mainWindow.loadFile('renderer/login.html')
 
 
     // to avoid the white loading screen

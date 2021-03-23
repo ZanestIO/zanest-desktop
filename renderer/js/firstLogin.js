@@ -121,37 +121,38 @@ const signupBox = {
             // if there is no error send request
             if (!fail) {
                 this.submitButton.text = loadingIcon
-                ipcRenderer.send('createUser', {
-                    fullname: null,
+                ipcRenderer.send('userCreation', {
+                    fullName: null,
                     username: this.username.value,
                     password: this.password.value,
                     userType: 'manager',
                     birthDate: null,
-                    phoneNumber: null
+                    phoneNumber: null,
+                    login: true,
                 })
             }
         }
     }
 }
-Vue.createApp(signupBox).mount('#signin-box')
+let app = Vue.createApp(signupBox).mount('#signin-box')
 
 
-ipcRenderer.on('createUserResponse', args => {
+ipcRenderer.on('responseUserCreation', args => {
     // if user is created
-    if (args.status) {
+    if (args.verify) {
         // display to user and then go to next page
-        signupBox.submitButton.text =
+        app.submitButton.text =
             `
             <span class="text-green-500">
             حساب کاربری ایجاد شد
-</span>
+        </span>
             `
         setTimeout(()=> {
             ipcRenderer.send('load', {page: 'dashboard'})
         }, 500)
 
     } else {
-        signupBox.submitButton.text="ایجاد حساب کاربری"
+        app.submitButton.text="ایجاد حساب کاربری"
     }
 })
 
