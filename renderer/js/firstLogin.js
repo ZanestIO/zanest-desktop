@@ -4,12 +4,12 @@ const notListener = require('./notListener');
 // setting up notification listeners
 notListener()
 
-loadingIcon = '<i class="fas fa-circle-notch fa-spin text-lg"></i>'
-
+// main vue element associated with #signup-box
 const signupBox = {
     data() {
         return {
             username: {
+                // if err is true class input.fail will be active
                 err: false,
                 value: ''
             },
@@ -33,44 +33,56 @@ const signupBox = {
                 text: ''
             },
             submitButton: {
-                disabled: false,
                 text: 'ایجاد حساب کاربری'
             }
         }
     },
     methods: {
+        // ==================================================================================
+        // process username for valid characters
+        // ==================================================================================
         processUsername() {
             let regex = new RegExp('^[A-Za-z0-9_-]*$')
+
             if (!regex.test(this.username.value)) {
                 this.username.err = true
                 this.usernameErr.seen = true
                 this.usernameErr.text = "کاراکتر غیر مجاز"
             } else {
+                // resetting the styles to no error
                 this.username.err = false
                 this.usernameErr.seen = false
             }
         }, // process username
+
+        // ==================================================================================
+        // process the password strength and updating the strength process bar
+        // ==================================================================================
         processPassword() {
-            let count = 1
+            // counts the strength of password from 1 to 4
+            let strengthPoints = 1
+
+            // if password length is more than 8
             if (this.password.value.length >= 8) {
-                count = 2
+                strengthPoints = 2
                 let smallLetters = new RegExp('[a-z]')
                 let capitalLetters = new RegExp('[A-Z]')
                 let numbers = new RegExp('[0-9]')
                 let symbols = new RegExp('[-!#$%^&*()_+|~=`{}\\[\\]:";\'<>?,.\\/]')
 
                 if (capitalLetters.test(this.password.value) || symbols.test(this.password.value)) {
-                    count++
+                    strengthPoints++
                 }
 
                 if (numbers.test(this.password.value) && smallLetters.test(this.password.value)) {
-                    count++
+                    strengthPoints++
                 }
             }
 
             this.progress.seen = true
-            switch (count) {
+            switch (strengthPoints) {
                 case 1:
+                    // these are tailwind css classes for different widths
                     this.progress.width = 'w-1/4'
                     break
                 case 2:
@@ -84,6 +96,10 @@ const signupBox = {
 
             }
         }, // process password
+
+        // ==================================================================================
+        // check if the password and passwordRepeat are equal
+        // ==================================================================================
         processPassRep() {
             if (this.password.value !== this.passwordRepeat.value) {
                 this.passwordRepeat.err = true
@@ -94,12 +110,19 @@ const signupBox = {
                 this.passwordRepeatErr.seen = false
             }
         }, // /processPassRep
+
+        // ==================================================================================
+        // the logic when submitButton is clicked
+        // ==================================================================================
         submitForm() {
+            // holds the verification result
             let fail = false
+
             if (this.username.err || this.passwordRepeat.err)
                 fail = true
-            // check for empty values
 
+            // ==================================================================================
+            // check for empty values
             if (!this.username.err) {
                 if (this.username.value === '') {
                     this.username.err = true
@@ -118,9 +141,10 @@ const signupBox = {
                 this.passwordRepeatErr.text = "رمز عبور نباید کمتر از 8 کاراکتر باشد"
             }
 
+            // ==================================================================================
             // if there is no error send request
             if (!fail) {
-                this.submitButton.text = loadingIcon
+                this.submitButton.text = '<i class="fas fa-circle-notch fa-spin text-lg"></i>'
                 ipcRenderer.send('userCreation', {
                     fullName: null,
                     username: this.username.value,
@@ -134,9 +158,11 @@ const signupBox = {
         }
     }
 }
-let app = Vue.createApp(signupBox).mount('#signin-box')
+let app = Vue.createApp(signupBox).mount('#signup-box')
 
-
+// ==================================================================================
+// listening for the response from server
+// ==================================================================================
 ipcRenderer.on('responseUserCreation', args => {
     // if user is created
     if (args.verify) {
@@ -147,13 +173,13 @@ ipcRenderer.on('responseUserCreation', args => {
             حساب کاربری ایجاد شد
         </span>
             `
-        setTimeout(()=> {
+        // _____________________________________________________
+        // the timeout is for simulating
+        setTimeout(() => {
             ipcRenderer.send('load', {page: 'dashboard'})
         }, 500)
 
     } else {
-        app.submitButton.text="ایجاد حساب کاربری"
+        app.submitButton.text = "ایجاد حساب کاربری"
     }
 })
-
-// validate inputs in

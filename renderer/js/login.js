@@ -4,6 +4,7 @@ const notListener = require('./notListener');
 // setting up notification listeners
 notListener()
 
+// main vue element containing all the others
 let loginBox = {
     data() {
         return {
@@ -29,8 +30,14 @@ let loginBox = {
         }
     },
     methods: {
+        // ==================================================================================
+        // when the submit button is clicked
+        // ==================================================================================
         submitForm() {
             let formValid = true
+
+            // ==================================================================================
+            // Resetting The Error Properties
             // removing class fail
             this.username.err = false
             this.password.err = false
@@ -38,6 +45,7 @@ let loginBox = {
             this.usernameErr.seen = false
             this.passwordErr.seen = false
 
+            // ==================================================================================
             // username and password validation
             if (!this.username.value) {
                 this.username.err = true
@@ -57,6 +65,8 @@ let loginBox = {
                 formValid = false
             }
 
+            // ==================================================================================
+            // sending the login info to the server
             let username = this.username.value
             let password = this.password.value
             let send = ipcRenderer.send;
@@ -70,12 +80,17 @@ let loginBox = {
 
 let app = Vue.createApp(loginBox).mount('#loginBox')
 
+// ==================================================================================
+// firing submitForm with Enter
 document.querySelector('#loginBox').addEventListener('keyup', async e => {
     if (e.code === 'Enter' || e.code === 'NumpadEnter')
         app.submitForm()
 })
-// ===================================================================================================
-// getting response of user authentication from main
+
+// ==================================================================================
+// // getting response of user authentication from main
+// ==================================================================================
+
 ipcRenderer.on(`userAuthError`, (e, args) => {
 
     app.submitButton.text = 'ورود به پنل'
@@ -91,6 +106,3 @@ ipcRenderer.on(`userAuthError`, (e, args) => {
 
     }
 })
-
-
-// ===================================================================================================
