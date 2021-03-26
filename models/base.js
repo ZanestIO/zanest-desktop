@@ -1,7 +1,8 @@
 const {Sequelize, Model} = require('sequelize')
-const user = require('./user')
+const user = require('./User/user')
 const bcrypt = require('bcrypt')
 let sequelize;
+
 class User extends Model {}
 
 // ================================================================================
@@ -32,6 +33,7 @@ exports.dbInit = async () => {
     }
     // initializing all of the database tables
 
+    // TODO: User add User function for create Admin user
     let adminUser;
     try {
         await sequelize.sync()
@@ -63,5 +65,9 @@ function connectToDb() {
         dialect: "sqlite",
         storage: "./zanest.sqlite"
     })
-
 }
+
+// add acount info to database 
+// for create account of main user of application we need three argument
+// include username, password, usertype and another info most be having default
+// value. 

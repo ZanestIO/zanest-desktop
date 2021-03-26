@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 // ================================================================================
 // handles user Authentication
 // ================================================================================
-module.exports = async (username, password, db) => {
+exports.authenticateUser = async (username, password, db) => {
     let user = await usernameExists(username, db)
 
     // if there is a user
@@ -48,4 +48,13 @@ async function usernameExists(input_username,db) {
 function passwordMatches(user, input_password, db) {
     let hashedPassword = user.dataValues.password
     return bcrypt.compare(input_password, hashedPassword)
+}
+// ===================================================================================================
+// finds user in the database
+exports.userTypeExists = async (input_usertype,db) =>  {
+    return await db.models.User.findOne({
+        where: {
+            userType: input_usertype
+        }
+    })
 }

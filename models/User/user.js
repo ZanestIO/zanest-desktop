@@ -1,9 +1,10 @@
 const {DataTypes, Model} = require('sequelize')
+
 module.exports = {
     attributes: {
         fullName: {
             type: DataTypes.STRING,
-            allowNull: false
+            // allowNull is true by defualt
         },
 
         userName: {

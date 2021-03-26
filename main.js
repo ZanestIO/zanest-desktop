@@ -1,6 +1,8 @@
+const { compareSync } = require("bcrypt");
 const {app, BrowserWindow, ipcMain, session} = require("electron")
 const base = require('./models/base')
-const authenticateUser = require('./userAuth')
+const add = require('./models/User/add')
+const authenticateUser = require('./models/User/userAuth')
 
 // ================================================================================
 // Main Window Creation
@@ -27,11 +29,19 @@ function createWindow() {
     });
 
     // removing default menus
-    // mainWindow.removeMenu()
+    mainWindow.removeMenu()
 
     // loading the login page
-    mainWindow.loadFile('renderer/login.html')
+    // if login is the first login of User in the system and we don't have any manager in the 
+    // Database, application should be load the first login page and alow user to create
+    // The Manager.
+    let findManager = authenticateUser.userTypeExists('manager')
 
+    if (findManager.username === undefined && findManager.password === undefined){
+        mainWindow.loadFile('renderer/firstLogin.html')
+    } else {
+        mainWindow.loadFile('renderer/login.html')
+    }
 
     // to avoid the white loading screen
     mainWindow.webContents.on('did-finish-load', function () {
@@ -46,6 +56,7 @@ function createWindow() {
 
 // when the app is ready
 app.on('ready', () => {
+
     createWindow()
     dbHandle()
 })
@@ -83,23 +94,18 @@ function dbHandle() {
 ipcMain.on('userAuth', async (e, args) => {
     let loggedIn = false
     if (sequelize) {
-        loggedIn = await authenticateUser(args.username, args.password, sequelize)
+        loggedIn = await authenticateUser.authenticateUser(args.username, args.password, sequelize)
     }
 
     if (loggedIn[0]) {
 
         //setting cookies
-        let cookieid = {url: 'https://zanest.io', name:'userId', value: `${loggedIn[1].id}`}
-        let cookie2 = {url: 'https://zanest.io', name:'userName', value: loggedIn[1].userName}
-        let cookie3 = {url: 'https://zanest.io', name:'fullName', value: loggedIn[1].fullName}
-        let cookie4 = {url: 'https://zanest.io', name:'userType', value: loggedIn[1].userType}
 
-        await session.defaultSession.cookies.set(cookieid)
-        await session.defaultSession.cookies.set(cookie2)
-        await session.defaultSession.cookies.set(cookie3)
-        await session.defaultSession.cookies.set(cookie4)
+        // TODO: convert to function 
+        setCookie(loggedIn[1])
 
         mainWindow.loadFile('./renderer/dashboard.html')
+
     } else {
         // return error log
         e.sender.send('userAuthError', loggedIn[1])
@@ -143,3 +149,66 @@ ipcMain.on('logout', (e, args) => {
     mainWindow.loadFile('./renderer/login.html')
 })
 
+// ===================================================================================================
+// Create User
+// ===================================================================================================
+ipcMain.on('userCreation', async (e, args) => {
+
+
+    let verify
+    let check
+    try {
+        //console.log(`${args.username} -----------------`)
+        check = await add(args.fullname, args.username, args.password, args.userType, args.birthDate, args.phoneNumber)
+
+        if(check[0]) {
+            if ( args.login == true ) {
+                // login to Dashboard
+                //console.log(`value of login is ${args.login}`)
+                setCookie(args)
+            }
+            //console.log(`success creation ${check[1]}`)
+            verify = true
+        } else{
+            //console.log(`fail of creation`)
+            verify = false
+            return mainWindow.webContents.send('error', {error: check[1]})
+        }
+    } catch(err) {
+        //console.log(`Error occurred: ${err}`)
+        verify = false
+    }
+
+    e.sender.send('responseUserCreation', verify)
+})
+
+// ===================================================================================================
+// load channel response
+// ===================================================================================================
+ipcMain.on('load', (e, args) => {
+
+    let verify = true // Find User Page Exist and Return a List of Name if args.page have access then return True
+    if(verify/*${args.page} Exists */)
+        //
+        mainWindow.loadFile(`${args.page}`)
+    else {
+        mainWindow.loadFile(`./renderer/404.html`)
+    }
+})
+
+// ===================================================================================================
+// Cookies Function
+// ===================================================================================================
+async function setCookie(loggedInStatus) {
+    // setting up cookies
+
+    let cookieid = {url: 'https://zanest.io', name:'userId', value: `${loggedInStatus.id}`}
+    let cookie2 = {url: 'https://zanest.io', name:'userName', value: loggedInStatus.userName}
+    let cookie3 = {url: 'https://zanest.io', name:'fullName', value: loggedInStatus.fullName}
+    let cookie4 = {url: 'https://zanest.io', name:'userType', value: loggedInStatus.userType}
+
+    await session.defaultSession.cookies.set(cookieid)
+    await session.defaultSession.cookies.set(cookie2)
+    await session.defaultSession.cookies.set(cookie3)
+    await session.defaultSession.cookies.set(cookie4)
+}
