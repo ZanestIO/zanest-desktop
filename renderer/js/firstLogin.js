@@ -8,6 +8,14 @@ notListener()
 const signupBox = {
     data() {
         return {
+            fullname: {
+              err: false,
+              value: '',
+            },
+            fullnameErr: {
+                seen: false,
+                value: ''
+            },
             username: {
                 // if err is true class input.fail will be active
                 err: false,
@@ -39,6 +47,15 @@ const signupBox = {
         }
     },
     methods: {
+        // ==================================================================================
+        // process full name
+        // ==================================================================================
+        processFullname() {
+            if (this.fullname.value.length > 2) {
+                this.fullname.err = false
+                this.fullnameErr.seen = false
+            }
+        },
         // ==================================================================================
         // process username for valid characters
         // ==================================================================================
@@ -121,12 +138,18 @@ const signupBox = {
         submitForm() {
             // holds the verification result
             let fail = false
-
+            this.processPassRep()
             if (this.username.err || this.passwordRepeat.err)
                 fail = true
 
             // ==================================================================================
             // check for empty values
+            if(this.fullname.value === '') {
+                this.fullname.err = true
+                this.fullnameErr.seen = true
+                this.fullnameErr.text = 'نام نمی تواند کمتر از 3 حرف باشد'
+            }
+
             if (!this.username.err) {
                 if (this.username.value === '') {
                     this.username.err = true
