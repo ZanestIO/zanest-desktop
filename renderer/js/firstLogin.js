@@ -19,7 +19,8 @@ const signupBox = {
             },
             progress: {
                 seen: false,
-                width: 'w-1/4'
+                width: 'w-1/4',
+                text: '',
             },
             password: {
                 value: ''
@@ -84,16 +85,19 @@ const signupBox = {
                 case 1:
                     // these are tailwind css classes for different widths
                     this.progress.width = 'w-1/4'
+                    this.progress.text = 'غیرقابل قبول'
                     break
                 case 2:
                     this.progress.width = 'w-1/2'
+                    this.progress.text = 'قابل قبول اما ضعیف'
                     break
                 case 3:
                     this.progress.width = 'w-3/4'
+                    this.progress.text = 'امن'
                     break
                 case 4:
                     this.progress.width = 'w-full'
-
+                    this.progress.text = 'بسیار امن'
             }
         }, // process password
 
