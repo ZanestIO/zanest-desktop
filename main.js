@@ -1,21 +1,18 @@
 const { compareSync } = require("bcrypt");
 const {app, BrowserWindow, ipcMain, session} = require("electron")
-const base = require('./models/base')
-const add = require('./models/User/add')
-const authenticateUser = require('./models/User/userAuth')
+const db = require('./models/Db')
+// ==================================================================================
+// INITIALIZING DATABASE
+// ==================================================================================
+db().init()
 
 // ================================================================================
 // Main Window Creation
 // ================================================================================
 let mainWindow;
-let sequelize;
 
 // Electron `app` is ready
 function createWindow() {
-
-    // creating user session
-    let userSession = session.fromPartition('user')
-
     // windows attributes
     mainWindow = new BrowserWindow({
         width: 1300, height: 800,
@@ -23,29 +20,24 @@ function createWindow() {
         show: false,
         icon: './renderer/media/favicon.png',
         webPreferences: {
-            nodeIntegration: true,
-            session: userSession,
+            nodeIntegration: true
         }
     });
 
     // removing default menus
-    mainWindow.removeMenu()
+    // mainWindow.removeMenu()
 
-    // loading the login page
-    // if login is the first login of User in the system and we don't have any manager in the 
-    // Database, application should be load the first login page and alow user to create
-    // The Manager.
-    let findManager = authenticateUser.userTypeExists('manager')
 
-    if (findManager.username === undefined && findManager.password === undefined){
-        mainWindow.loadFile('renderer/firstLogin.html')
-    } else {
-        mainWindow.loadFile('renderer/login.html')
-    }
+    let hasManger = db().sequelize.models.User.userTypeExists('manager').then( res => {
+        if (!res) {
+            mainWindow.loadFile('renderer/firstLogin.html')
+        } else {
+            mainWindow.loadFile('renderer/login.html')
+        }
 
-    // to avoid the white loading screen
-    mainWindow.webContents.on('did-finish-load', function () {
-        mainWindow.show()
+        mainWindow.webContents.on('did-finish-load', () => {
+            mainWindow.show()
+        })
     })
 
     // mainWindow.webContents.openDevTools({mode:"undocked"})
@@ -55,10 +47,8 @@ function createWindow() {
 }
 
 // when the app is ready
-app.on('ready', () => {
-
+app.on('ready', async () => {
     createWindow()
-    dbHandle()
 })
 
 // Quit when all windows are closed - (Not macOS - Darwin)
@@ -71,40 +61,16 @@ app.on('activate', () => {
     if (mainWindow === null) createWindow()
 })
 
-
-
-// ================================================================================
-// Db Handler & Logging in
-// ================================================================================
-function dbHandle() {
-    mainWindow.webContents.on('did-finish-load', ()=>{
-        base.dbInit().then( res => {
-            if (res[0] === false) {
-                mainWindow.webContents.send('dbError', {error: res[1]})
-            } else {
-                sequelize = res[1]
-            }
-        })
-    })
-}
-
 // ================================================================================
 // requesting user Authentication
 // ================================================================================
 ipcMain.on('userAuth', async (e, args) => {
-    let loggedIn = false
-    if (sequelize) {
-        loggedIn = await authenticateUser.authenticateUser(args.username, args.password, sequelize)
-    }
+    let loggedIn = await db().sequelize.models.User.login(args.username, args.password)
 
     if (loggedIn[0]) {
-
         //setting cookies
-
-        // TODO: convert to function 
-        setCookie(loggedIn[1])
-
-        mainWindow.loadFile('./renderer/dashboard.html')
+        await setCookie(loggedIn[1])
+        await mainWindow.loadFile('./renderer/dashboard.html')
 
     } else {
         // return error log
@@ -162,7 +128,7 @@ ipcMain.on('userCreation', async (e, args) => {
         check = await add(args.fullname, args.username, args.password, args.userType, args.birthDate, args.phoneNumber)
 
         if(check[0]) {
-            if ( args.login == true ) {
+            if ( args.login === true ) {
                 // login to Dashboard
                 //console.log(`value of login is ${args.login}`)
                 setCookie(args)
