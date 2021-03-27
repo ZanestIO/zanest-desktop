@@ -42,7 +42,8 @@ const signupBox = {
                 text: ''
             },
             submitButton: {
-                text: 'ایجاد حساب کاربری'
+                text: 'ایجاد حساب کاربری',
+                success: false
             }
         }
     },
@@ -136,6 +137,11 @@ const signupBox = {
         // the logic when submitButton is clicked
         // ==================================================================================
         submitForm() {
+
+            // not being able to click the button multiple times if successfull
+            if (this.submitButton.success)
+                return
+
             // holds the verification result
             let fail = false
             this.processPassRep()
@@ -173,8 +179,8 @@ const signupBox = {
             if (!fail) {
                 this.submitButton.text = '<i class="fas fa-circle-notch fa-spin text-lg"></i>'
                 ipcRenderer.send('userCreation', {
-                    fullName: null,
-                    username: this.username.value,
+                    fullName: this.fullname.value,
+                    userName: this.username.value,
                     password: this.password.value,
                     userType: 'manager',
                     birthDate: null,
@@ -190,20 +196,21 @@ let app = Vue.createApp(signupBox).mount('#signup-box')
 // ==================================================================================
 // listening for the response from server
 // ==================================================================================
-ipcRenderer.on('responseUserCreation', args => {
+ipcRenderer.on('responseUserCreation', verify => {
     // if user is created
-    if (args.verify) {
+    if (verify) {
         // display to user and then go to next page
         app.submitButton.text =
             `
-            <span class="text-green-500">
+            <span class="text-gray-600">
             حساب کاربری ایجاد شد
         </span>
             `
+        app.submitButton.success = true
         // _____________________________________________________
         // the timeout is for simulating
         setTimeout(() => {
-            ipcRenderer.send('load', {page: 'dashboard'})
+            ipcRenderer.send('load', {page: 'dashboard', currentPage: 'firstLogin'})
         }, 500)
 
     } else {
