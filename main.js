@@ -1,5 +1,6 @@
 const { compareSync } = require("bcrypt");
 const {app, BrowserWindow, ipcMain, session} = require("electron")
+const add = require('./models/User/add')
 const db = require('./models/Db')
 // ==================================================================================
 // INITIALIZING DATABASE
@@ -39,6 +40,7 @@ function createWindow() {
             mainWindow.show()
         })
     })
+
 
     // mainWindow.webContents.openDevTools({mode:"undocked"})
     mainWindow.on('closed',  () => {
@@ -118,34 +120,30 @@ ipcMain.on('logout', (e, args) => {
 // ===================================================================================================
 // Create User
 // ===================================================================================================
-ipcMain.on('userCreation', async (e, args) => {
-
-
+ipcMain.on('userCreation', async (E, args) => {
     let verify
     let check
     try {
-        //console.log(`${args.username} -----------------`)
+        // add new user to db 
         check = await add(args.fullname, args.username, args.password, args.userType, args.birthDate, args.phoneNumber)
-
         if(check[0]) {
             if ( args.login === true ) {
                 // login to Dashboard
-                //console.log(`value of login is ${args.login}`)
                 setCookie(args)
             }
-            //console.log(`success creation ${check[1]}`)
             verify = true
         } else{
-            //console.log(`fail of creation`)
             verify = false
-            return mainWindow.webContents.send('error', {error: check[1]})
+            return mainWindow.webContents.send('error', { errorTitle: 'خطا در ایجاد حساب کاربری',
+                                                          errorMessage: check[1],
+                                                          contactAdmin: 'لطفا نام کاربری دیگری را امتحان کنید'})
         }
     } catch(err) {
-        //console.log(`Error occurred: ${err}`)
+        console.log(`Error occurred: ${err}`)
         verify = false
     }
-
-    e.sender.send('responseUserCreation', verify)
+    // send Response
+    E.sender.send('responseUserCreation', verify)
 })
 
 // ===================================================================================================
@@ -153,13 +151,37 @@ ipcMain.on('userCreation', async (e, args) => {
 // ===================================================================================================
 ipcMain.on('load', (e, args) => {
 
-    let verify = true // Find User Page Exist and Return a List of Name if args.page have access then return True
-    if(verify/*${args.page} Exists */)
-        //
-        mainWindow.loadFile(`${args.page}`)
-    else {
-        mainWindow.loadFile(`./renderer/404.html`)
-    }
+    let verify = true
+    let path = "./renderer/" + args.page + ".html"
+    
+    // if user cookie is staff just allow to access the some limited page. 
+    // TODO:  need be complited
+    session.defaultSession.cookies.get({url: 'http://zanest.io'})
+    .then((cookies) => {
+
+        let value
+
+        cookies.forEach( node => {
+            if(node.name === 'userType'){
+                value = node.value
+            }
+        })
+
+        console.log(value + " request for " + path)
+        if (value === 'staff'){
+            switch(args.page) {
+                case "firstLogin":
+                    path = "./renderer/404.html"
+                case "createStudent":
+                    path = "./renderer/404.html"
+            }
+        }
+    }).catch((error) => {
+        console.log(error)
+    })
+
+    mainWindow.loadFile(`${path}`)
+
 })
 
 // ===================================================================================================

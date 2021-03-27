@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const Model = require('sequelize');
-const db = require('../Db').getDb();
+const db = require('../Db.js');
 
 
 // ================================================================================
@@ -10,7 +10,7 @@ module.exports = async (fullname=null, username, password, usertype='staff', bir
     let newUser
     try {
         // check if user exists
-        newUser = await db.models.User.findOne({
+        newUser = await db().sequelize.models.User.findOne({
             where: {
                 userName: username
             }
@@ -18,7 +18,7 @@ module.exports = async (fullname=null, username, password, usertype='staff', bir
 
         if (newUser === null) {
             bcrypt.hash(password, 10, async (err, hash) => {
-                await db.models.User.create({fullName: fullname , userName: username , password: hash, userType: usertype,
+                await db().sequelize.models.User.create({fullName: fullname , userName: username , password: hash, userType: usertype,
                     birthDate: birthdate, phoneNumber: phonenumber });
             })
 

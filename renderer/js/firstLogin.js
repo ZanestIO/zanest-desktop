@@ -139,7 +139,8 @@ let app = Vue.createApp(signupBox).mount('#signin-box')
 
 ipcRenderer.on('responseUserCreation', args => {
     // if user is created
-    if (args.verify) {
+    console.log(`${args} >>>>>>>>>>>>>>>>`)
+    if (args) {
         // display to user and then go to next page
         app.submitButton.text =
             `
