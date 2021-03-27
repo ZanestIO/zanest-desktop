@@ -1,6 +1,5 @@
 const { compareSync } = require("bcrypt");
 const {app, BrowserWindow, ipcMain, session} = require("electron")
-const add = require('./models/User/add')
 const db = require('./models/Db')
 // ==================================================================================
 // INITIALIZING DATABASE
@@ -125,7 +124,7 @@ ipcMain.on('userCreation', async (E, args) => {
     let check
     try {
         // add new user to db
-        check = await add(args.fullname, args.username, args.password, args.userType, args.birthDate, args.phoneNumber)
+        check = await db().sequelize.models.User.add(args)
         if(check[0]) {
             if ( args.login === true ) {
                 // login to Dashboard
@@ -151,37 +150,47 @@ ipcMain.on('userCreation', async (E, args) => {
 // ===================================================================================================
 ipcMain.on('load', (e, args) => {
 
+    // holds the last page for a reference
+    let lastPage = {url: 'https://zanest.io', name:'lastPage', value: "./renderer/" + args.currentPage + ".html"}
+    session.defaultSession.cookies.set(lastPage)
+
     let verify = true
     let path = "./renderer/" + args.page + ".html"
 
     // if user cookie is staff just allow to access the some limited page.
-    // TODO:  need be complited
     session.defaultSession.cookies.get({url: 'http://zanest.io'})
     .then((cookies) => {
 
-        let value
+        if (cookies) {
+            // get userType
+            let value
+            cookies.forEach( node => {
+                if(node.name === 'userType'){
+                    value = node.value
+                }
+            })
+            console.log(value + " request for " + path)
 
-        cookies.forEach( node => {
-            if(node.name === 'userType'){
-                value = node.value
-            }
-        })
 
-        console.log(value + " request for " + path)
-        if (value === 'staff'){
-            switch(args.page) {
-                case "firstLogin":
-                    path = "./renderer/404.html"
-                case "createStudent":
-                    path = "./renderer/404.html"
+            if (value === 'staff'){
+                switch(args.page) {
+                    case "firstLogin":
+                        path = "./renderer/404.html"
+                        break
+                    case "createStudent":
+                        path = "./renderer/404.html"
+                        break
+                }
             }
+        } else {
+            path = "./renderer/404.html"
         }
+
+        mainWindow.loadFile(path)
+
     }).catch((error) => {
-        console.log(error)
+        console.log(error.msg)
     })
-
-    mainWindow.loadFile(`${path}`)
-
 })
 
 // ===================================================================================================

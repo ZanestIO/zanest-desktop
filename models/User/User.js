@@ -18,7 +18,6 @@ exports.User = class User extends Model {
         }
     }
 
-
     static async login(username, password) {
         const UserAuthenticator = require("./userAuth");
         return await UserAuthenticator.login(username, password)
@@ -27,6 +26,11 @@ exports.User = class User extends Model {
     static async userTypeExists(type) {
         const UserAuthenticator = require("./userAuth");
         return await UserAuthenticator.userTypeExists(type)
+    }
+
+    static async add(args) {
+        const createUser = require('./add')
+        return await createUser(args.fullName, args.userName, args.password, args.userType, args.birthDate, args.phoneNumber)
     }
 }
 

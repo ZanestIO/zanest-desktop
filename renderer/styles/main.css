@@ -42,6 +42,14 @@ input{
   width:100%
 }
 
+.transition-all-02{
+  transition:all ease .2s
+}
+
+.transition-all-03{
+  transition:all ease .3s
+}
+
 .transition-all-half{
   transition:all ease .5s
 }
@@ -126,6 +134,11 @@ input{
   position:relative
 }
 
+#secondary-menu{
+  border-left-width:2px;
+  z-index:2000
+}
+
 .progress.side-nav-li{
   --tw-bg-opacity:1;
   background-color:rgba(34, 197, 94, var(--tw-bg-opacity))
@@ -148,6 +161,27 @@ input{
   padding-left:1rem;
   padding-right:1rem;
   width:100%
+}
+
+.side-nav-li.closed{
+  justify-content:center
+}
+
+.side-nav-li.closed .second-nav-text{
+  display:none;
+  opacity:0
+}
+
+.side-nav-li.closed:hover{
+  width:14rem;
+  margin-right:10rem;
+  justify-content:space-between;
+  right:0
+}
+
+.side-nav-li.closed:hover .second-nav-text{
+  display:inline-block;
+  opacity:1
 }
 
 .progressmain{
@@ -180,7 +214,8 @@ main{
 }
 
 main{
-  background:url("../media/main-bg.jpg") fixed top left
+  background:url("../media/main-bg.jpg") fixed top left;
+  transition:all ease .2s
 }
 
 .input-norm{
