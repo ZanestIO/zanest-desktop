@@ -1,19 +1,19 @@
+const { compareSync } = require("bcrypt");
 const {app, BrowserWindow, ipcMain, session} = require("electron")
-const base = require('./models/base')
-const authenticateUser = require('./userAuth')
+const add = require('./models/User/add')
+const db = require('./models/Db')
+// ==================================================================================
+// INITIALIZING DATABASE
+// ==================================================================================
+db().init()
 
 // ================================================================================
 // Main Window Creation
 // ================================================================================
 let mainWindow;
-let sequelize;
 
 // Electron `app` is ready
 function createWindow() {
-
-    // creating user session
-    let userSession = session.fromPartition('user')
-
     // windows attributes
     mainWindow = new BrowserWindow({
         width: 1300, height: 800,
@@ -21,23 +21,26 @@ function createWindow() {
         show: false,
         icon: './renderer/media/favicon.png',
         webPreferences: {
-            nodeIntegration: true,
-            session: userSession,
+            nodeIntegration: true
         }
     });
 
     // removing default menus
     // mainWindow.removeMenu()
 
-    // loading the login page
-    // here goes the logic for login of firstLogin
-    mainWindow.loadFile('renderer/firstLogin.html')
 
+    let hasManger = db().sequelize.models.User.userTypeExists('manager').then( res => {
+        if (!res) {
+            mainWindow.loadFile('renderer/firstLogin.html')
+        } else {
+            mainWindow.loadFile('renderer/login.html')
+        }
 
-    // to avoid the white loading screen
-    mainWindow.webContents.on('did-finish-load', function () {
-        mainWindow.show()
+        mainWindow.webContents.on('did-finish-load', () => {
+            mainWindow.show()
+        })
     })
+
 
     // mainWindow.webContents.openDevTools({mode:"undocked"})
     mainWindow.on('closed',  () => {
@@ -46,9 +49,8 @@ function createWindow() {
 }
 
 // when the app is ready
-app.on('ready', () => {
+app.on('ready', async () => {
     createWindow()
-    dbHandle()
 })
 
 // Quit when all windows are closed - (Not macOS - Darwin)
@@ -61,46 +63,17 @@ app.on('activate', () => {
     if (mainWindow === null) createWindow()
 })
 
-
-
-// ================================================================================
-// Db Handler & Logging in
-// ================================================================================
-function dbHandle() {
-    mainWindow.webContents.on('did-finish-load', ()=>{
-        base.dbInit().then( res => {
-            if (res[0] === false) {
-                mainWindow.webContents.send('dbError', {error: res[1]})
-            } else {
-                sequelize = res[1]
-            }
-        })
-    })
-}
-
 // ================================================================================
 // requesting user Authentication
 // ================================================================================
 ipcMain.on('userAuth', async (e, args) => {
-    let loggedIn = false
-    if (sequelize) {
-        loggedIn = await authenticateUser(args.username, args.password, sequelize)
-    }
+    let loggedIn = await db().sequelize.models.User.login(args.username, args.password)
 
     if (loggedIn[0]) {
-
         //setting cookies
-        let cookieid = {url: 'https://zanest.io', name:'userId', value: `${loggedIn[1].id}`}
-        let cookie2 = {url: 'https://zanest.io', name:'userName', value: loggedIn[1].userName}
-        let cookie3 = {url: 'https://zanest.io', name:'fullName', value: loggedIn[1].fullName}
-        let cookie4 = {url: 'https://zanest.io', name:'userType', value: loggedIn[1].userType}
+        await setCookie(loggedIn[1])
+        await mainWindow.loadFile('./renderer/dashboard.html')
 
-        await session.defaultSession.cookies.set(cookieid)
-        await session.defaultSession.cookies.set(cookie2)
-        await session.defaultSession.cookies.set(cookie3)
-        await session.defaultSession.cookies.set(cookie4)
-
-        mainWindow.loadFile('./renderer/dashboard.html')
     } else {
         // return error log
         e.sender.send('userAuthError', loggedIn[1])
@@ -144,3 +117,86 @@ ipcMain.on('logout', (e, args) => {
     mainWindow.loadFile('./renderer/login.html')
 })
 
+// ===================================================================================================
+// Create User
+// ===================================================================================================
+ipcMain.on('userCreation', async (E, args) => {
+    let verify
+    let check
+    try {
+        // add new user to db
+        check = await add(args.fullname, args.username, args.password, args.userType, args.birthDate, args.phoneNumber)
+        if(check[0]) {
+            if ( args.login === true ) {
+                // login to Dashboard
+                setCookie(args)
+            }
+            verify = true
+        } else{
+            verify = false
+            return mainWindow.webContents.send('error', { errorTitle: 'خطا در ایجاد حساب کاربری',
+                                                          errorMessage: check[1],
+                                                          contactAdmin: 'لطفا نام کاربری دیگری را امتحان کنید'})
+        }
+    } catch(err) {
+        console.log(`Error occurred: ${err}`)
+        verify = false
+    }
+    // send Response
+    E.sender.send('responseUserCreation', verify)
+})
+
+// ===================================================================================================
+// load channel response
+// ===================================================================================================
+ipcMain.on('load', (e, args) => {
+
+    let verify = true
+    let path = "./renderer/" + args.page + ".html"
+
+    // if user cookie is staff just allow to access the some limited page.
+    // TODO:  need be complited
+    session.defaultSession.cookies.get({url: 'http://zanest.io'})
+    .then((cookies) => {
+
+        let value
+
+        cookies.forEach( node => {
+            if(node.name === 'userType'){
+                value = node.value
+            }
+        })
+
+        console.log(value + " request for " + path)
+        if (value === 'staff'){
+            switch(args.page) {
+                case "firstLogin":
+                    path = "./renderer/404.html"
+                case "createStudent":
+                    path = "./renderer/404.html"
+            }
+        }
+    }).catch((error) => {
+        console.log(error)
+    })
+
+    mainWindow.loadFile(`${path}`)
+
+})
+
+// ===================================================================================================
+// Cookies Function
+// ===================================================================================================
+async function setCookie(loggedInStatus) {
+    // setting up cookies
+
+    let cookieid = {url: 'https://zanest.io', name:'userId', value: `${loggedInStatus.id}`}
+    let cookie2 = {url: 'https://zanest.io', name:'userName', value: loggedInStatus.userName}
+    let cookie3 = {url: 'https://zanest.io', name:'fullName', value: loggedInStatus.fullName}
+    let cookie4 = {url: 'https://zanest.io', name:'userType', value: loggedInStatus.userType}
+
+    await session.defaultSession.cookies.set(cookieid)
+    await session.defaultSession.cookies.set(cookie2)
+    await session.defaultSession.cookies.set(cookie3)
+    await session.defaultSession.cookies.set(cookie4)
+}
