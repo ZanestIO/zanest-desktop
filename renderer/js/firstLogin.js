@@ -137,6 +137,11 @@ const signupBox = {
         // the logic when submitButton is clicked
         // ==================================================================================
         submitForm() {
+
+            // not being able to click the button multiple times if successfull
+            if (this.submitButton.success)
+                return
+
             // holds the verification result
             let fail = false
             this.processPassRep()
