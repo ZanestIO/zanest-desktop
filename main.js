@@ -209,3 +209,32 @@ async function setCookie(loggedInStatus) {
     await session.defaultSession.cookies.set(cookie3)
     await session.defaultSession.cookies.set(cookie4)
 }
+
+/* 
+    STUDENT CHANNELS
+*/
+
+// ===================================================================================================
+// ADDING STUDENT 
+// ===================================================================================================
+
+ipcMain.on('studentCreation', async(e, args) => {
+    try {
+        const check = db().sequelize.models.Student.add(args)
+        if (check[0]) {
+            // show success notification
+
+            return mainWindow.webContents.send('successNot', { Title: 'ایجاد زبان آموز',
+                                              Message: check[1]})
+
+        } else {
+            // show fail notification
+            return mainWindow.webContents.send('error', { errorTitle: 'خطا در ایجاد زبان آموز جدید',
+                                              errorMessage: check[1],
+                                              contactAdmin: 'لطفا مجددا تلاش کنید'})
+        } 
+
+    } catch(err){
+        console.log(err.msg + "(( STUDENT CREATION ))")
+    }
+})
