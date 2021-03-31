@@ -2,6 +2,7 @@ const {ipcRenderer} = require('electron')
 const Vue = require('vue')
 const notListener = require('./notListener');
 const notification = require('./components/notification')
+const search_add = require('./components/search_add')
 
 let students = {
     data() {
@@ -28,12 +29,19 @@ let students = {
         }
     },
     components: {
-        notification
+        notification,
+        search_add,
+
     },
     methods:  {
         // handles hiding the notification
         closeNot() {
             this.notif.seen = false
+        },
+
+        // sends request to go to student edit page
+        openEditPage(sid) {
+          ipcRenderer.send('load', {page: 'students_edit', id: sid, type: 'student'})
         }
 
     },

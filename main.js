@@ -32,7 +32,7 @@ function createWindow() {
         if (!res) {
             mainWindow.loadFile('renderer/firstLogin.html')
         } else {
-            mainWindow.loadFile('renderer/login.html')
+            mainWindow.loadFile('renderer/students.html')
         }
 
         mainWindow.webContents.on('did-finish-load', () => {
@@ -88,22 +88,32 @@ ipcMain.on('requestUserSession', async (e, args) => {
     arguments = {}
     ses.get({url: 'https://zanest.io', name: 'userId'}).then( cookie => {
       arguments.userId =   cookie[0].value
+    }).catch(err => {
+        console.log("ERROR IN SETTING COOKIE => " + err.msg)
     })
 
     ses.get({url: 'https://zanest.io', name: 'userName'}).then( cookie => {
         arguments.userName =   cookie[0].value
+    }).catch(err => {
+        console.log("ERROR IN SETTING COOKIE => " + err.msg)
     })
 
     ses.get({url: 'https://zanest.io', name: 'userType'}).then( cookie => {
         arguments.userType =   cookie[0].value
+    }).catch(err => {
+        console.log("ERROR IN SETTING COOKIE => " + err.msg)
     })
 
     ses.get({url: 'https://zanest.io', name: 'fullName'}).then( cookie => {
         arguments.fullName =   cookie[0].value
+    }).catch(err => {
+        console.log("ERROR IN SETTING COOKIE => " + err.msg)
     })
 
     ses.get({}).then( (cookies) => {
         e.sender.send('responseUserSession', arguments)
+    }).catch(err => {
+        console.log("ERROR IN SETTING COOKIE => " + err.msg)
     })
 
 })
@@ -149,7 +159,6 @@ ipcMain.on('userCreation', async (E, args) => {
 // load channel response
 // ===================================================================================================
 ipcMain.on('load', (e, args) => {
-
     // holds the last page for a reference
     let lastPage = {url: 'https://zanest.io', name:'lastPage', value: "./renderer/" + args.currentPage + ".html"}
     session.defaultSession.cookies.set(lastPage)
@@ -266,3 +275,39 @@ ipcMain.on('studentUpdate', (e, args) => {
     }
 })
 
+
+// ==================================================================================
+// HANDLING SEARCH RESULT
+// ==================================================================================
+ipcMain.on('search', (e, args)=> {
+    /*
+    Searches Are Done By Containment Not Equality
+    ToDo: adding type checking in here for search
+     */
+
+    let result = []
+    if (args.info.sid) {
+        // ToDo: getting search result from db
+        // db().models.Student.Search(by: id, value: args.info.sid)
+
+    } else if (args.name) {
+        // ToDo: getting search result from db
+        // db().models.Student.Search(by: name, value: args.info.name)
+    }
+
+    // sending back the result
+    // mock for testing ignore it
+    result =  [
+        {
+            name: 'صادق',
+            sid: '2234234234',
+            phone:'424234234',
+        },
+        {
+            name: 'اقبال',
+            sid: '2234234234',
+            phone:'424234234',
+        }
+    ]
+    mainWindow.webContents.send('responseSearch', result)
+})
