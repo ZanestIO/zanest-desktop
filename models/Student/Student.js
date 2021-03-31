@@ -5,6 +5,14 @@ const {DataTypes, Model, Deferrable} = require('sequelize')
 // ==================================================================================
 exports.Student = class Student extends Model {
 
+
+    // add new student
+    static async add(args) {
+        const addStudent = require('./add')
+        return await addStudent(args.socialID, args.parentsName, args.parentNumber, args.fullname,
+             args.sex, args.phonenumber, args.birthdate, args.address)
+    }
+
     // update student info
     static async update(args) {
         const updateStudent = require('./update')
@@ -12,12 +20,11 @@ exports.Student = class Student extends Model {
         return await updateStudent(args.socialID, args.parentsName, args.parentNumber, args.fullname,
             args.sex, args.phonenumber, args.birthdate, args.address )
     }
-
-    // add new student
-    static async add(args) {
-        const addStudent = require('./add')
-        return await addStudent(args.socialID, args.parentsName, args.parentNumber, args.fullname,
-             args.sex, args.phonenumber, args.birthdate, args.address)
+    
+    // delete student
+    static async delete(args) {
+        const addStudent = require('./delete')
+        return await addStudent(args.sid)
     }
 }
 
