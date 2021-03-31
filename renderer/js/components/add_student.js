@@ -228,7 +228,6 @@ module.exports = {
         submit() {
             this.processAll()
             if (this.valid) {
-                console.log('usercreate sent')
                 ipcRenderer.send('studentCreation', {
                     fullname: this.fullname,
                     socialID: this.sid,
@@ -236,12 +235,7 @@ module.exports = {
                     parentNumber: this.parentPhone,
                     sex: this.sex,
                     phonenumber: this.phoneNumber,
-                    // ToDo:
-                    birthdate: {
-                        day: this.birthDate.day,
-                        month: this.birthDate.month,
-                        year: this.birthDate.year,
-                    },
+                    birthdate: `${this.birthDate.year}\\${this.birthDate.month}\\${this.birthDate.day}`,
                     address: this.address
                 })
             }
