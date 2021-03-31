@@ -3,7 +3,6 @@ const {ipcRenderer} = require('electron')
 module.exports = {
     data() {
         return {
-            addingStudent: false,
             searchValue: '',
             searching: false,
             searchLoading: false,
@@ -11,8 +10,8 @@ module.exports = {
             searchResults: []
         }
     },
-    inject: '',
-    emits: 'open-search-result',
+    inject: ['addSeen'],
+    emits: ['open-search-result', 'adding-students'],
     methods: {
 
         // ==================================================================================
@@ -58,8 +57,8 @@ module.exports = {
     // TEMPLATE STRING
     // ==================================================================================
     template: `
-      <section class="search-and-button" :class="{join: addingStudent}">
-      <button class="h-28">
+      <section class="search-and-button" :class="{join: addSeen.value}">
+      <button class="h-28 focus:outline-none" v-on:click="$emit('adding-student')">
         <i class="fas fa-plus"></i>
         زبان آموز جدید
       </button>
