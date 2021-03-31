@@ -209,3 +209,60 @@ async function setCookie(loggedInStatus) {
     await session.defaultSession.cookies.set(cookie3)
     await session.defaultSession.cookies.set(cookie4)
 }
+
+/* 
+    STUDENT CHANNELS
+*/
+
+// ===================================================================================================
+// ADDING STUDENT 
+// ===================================================================================================
+
+ipcMain.on('studentCreation', async(e, args) => {
+    try {
+        const check = db().sequelize.models.Student.add(args)
+        if (check[0]) {
+            // show success notification
+
+            return mainWindow.webContents.send('successNot', { Title: 'ایجاد زبان آموز',
+                                              Message: check[1]})
+
+        } else {
+            // show fail notification
+            return mainWindow.webContents.send('error', { errorTitle: 'خطا در ایجاد زبان آموز جدید',
+                                              errorMessage: check[1],
+                                              contactAdmin: 'لطفا مجدد سعی نمایید'})
+        } 
+
+    } catch(err){
+        console.log(err.msg + "(( STUDENT CREATION ))")
+        return false
+    }
+})
+
+// ===================================================================================================
+// UPDATEING STUDENT INFO 
+// ===================================================================================================
+
+ipcMain.on('studentUpdate', (e, args) => {
+    try {
+        const check = db().sequelize.models.Student.update(args)
+        if (check[0]) {
+            // process successfuly done
+
+            return mainWindow.webContents.send('successNot', {Title: 'به روز رسانی اطلاعات زبان آموز',
+                                                            Message: check[1]})
+        } else {
+            // process failed
+
+            return mainWindow.webContents.send('error', {errorTitle: 'خطا در به روزرسانی اطلاعات',
+                                                        errorMessage: check[1],
+                                                        contactAdmin: 'لطفا مجدد سعی نمایید '})
+        }
+
+    } catch(err) {
+        console.log(err.msg + "(( STUDENT UPDATE ))")
+        return false
+    }
+})
+
