@@ -26,6 +26,12 @@ exports.Student = class Student extends Model {
         const addStudent = require('./delete')
         return await addStudent(args.sid)
     }
+
+    // read student info
+    static async read(args) {
+        const readStudent = require('./show')
+        return await readStudent(args.sid)
+    }
 }
 
 

@@ -314,6 +314,26 @@ ipcMain.on('studentDeletation', (args) => {
 })
 
 
+// ===================================================================================================
+// READ STUDENT INFO
+// ===================================================================================================
+
+ipcMain.on('studentRead', (e, args) => {
+    try {
+        const check = db().sequelize.models.Student.show(args)
+        if(check[0])
+            return check[1]
+        else 
+            return mainWindow.webContents.send('normalNot', {title: 'جستجو ناموفق',
+                                                message: 'نتیجه ای یافت نشد',
+                                                contactAdmin: 'لطفا مجدد سعی نمایید '})
+
+    } catch(err) {
+        console.log(err.msg + "(( STUDENT READ ))")
+    }
+})
+
+
 // ==================================================================================
 // HANDLING SEARCH RESULT
 // ==================================================================================
