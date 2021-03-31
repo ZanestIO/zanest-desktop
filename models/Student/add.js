@@ -21,13 +21,13 @@ module.exports = async (sid, parentname, parentnumber, fullname, sex, phonenumbe
                 birthDate: birthdate, address: address})
 
             await db().sequelize.models.Student.create({socialID: sid, parentName: parentname, parentnumber: parentnumber});
-            // logging and returning
+            // 
             console.log(`${sid} created.`)
             return [true, "زبان اموز با موفقیت ایجاد شد"]
 
         } else {
 
-            // logging and returning
+            // 
             console.log(`can't create ${sid}`)
             return [false, "زبان اموز در سیستم موجود است"]
         }
