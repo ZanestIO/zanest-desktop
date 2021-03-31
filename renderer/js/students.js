@@ -3,6 +3,7 @@ const Vue = require('vue')
 const notListener = require('./notListener');
 const notification = require('./components/notification')
 const search_add = require('./components/search_add')
+const add_student = require('./components/add_student')
 
 let students = {
     data() {
@@ -15,6 +16,9 @@ let students = {
                 title: '',
                 body: '',
                 contactAdmin: false
+            },
+            addBox: {
+                seen: false
             }
         }
     },
@@ -26,12 +30,13 @@ let students = {
             type: Vue.computed(() => this.notif.type),
             body: Vue.computed(() => this.notif.body),
             contactAdmin: Vue.computed(() => this.notif.contactAdmin),
+            addSeen: Vue.computed(() => this.addBox.seen)
         }
     },
     components: {
         notification,
         search_add,
-
+        add_student,
     },
     methods:  {
         // handles hiding the notification
@@ -42,6 +47,12 @@ let students = {
         // sends request to go to student edit page
         openEditPage(sid) {
           ipcRenderer.send('load', {page: 'students_edit', id: sid, type: 'student'})
+        },
+        addStudent() {
+            this.addBox.seen = true
+        },
+        cancelAddStudent() {
+            this.addBox.seen = false
         }
 
     },
