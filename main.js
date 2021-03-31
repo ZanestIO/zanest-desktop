@@ -233,12 +233,13 @@ ipcMain.on('studentCreation', async(e, args) => {
         if (check[0]) {
             // show success notification
 
-            return mainWindow.webContents.send('successNot', { Title: 'ایجاد زبان آموز',
-                                              Message: check[1]})
-
+            return mainWindow.webContents.send('successNot', { title: 'ایجاد زبان آموز',
+                                              message: check[1],
+                                              contactAdmin: ''})
+        
         } else {
             // show fail notification
-            return mainWindow.webContents.send('error', { errorTitle: 'خطا در ایجاد زبان آموز جدید',
+            return mainWindow.webContents.send('errorNot', { errorTitle: 'خطا در ایجاد زبان آموز جدید',
                                               errorMessage: check[1],
                                               contactAdmin: 'لطفا مجدد سعی نمایید'})
         } 
@@ -259,12 +260,13 @@ ipcMain.on('studentUpdate', (e, args) => {
         if (check[0]) {
             // process successfuly done
 
-            return mainWindow.webContents.send('successNot', {Title: 'به روز رسانی اطلاعات زبان آموز',
-                                                            Message: check[1]})
+            return mainWindow.webContents.send('successNot', {title: 'به روز رسانی اطلاعات زبان آموز',
+                                                            message: check[1],
+                                                            contactAdmin: ''})
         } else {
             // process failed
 
-            return mainWindow.webContents.send('error', {errorTitle: 'خطا در به روزرسانی اطلاعات',
+            return mainWindow.webContents.send('errorNot', {errorTitle: 'خطا در به روزرسانی اطلاعات',
                                                         errorMessage: check[1],
                                                         contactAdmin: 'لطفا مجدد سعی نمایید '})
         }
@@ -272,6 +274,31 @@ ipcMain.on('studentUpdate', (e, args) => {
     } catch(err) {
         console.log(err.msg + "(( STUDENT UPDATE ))")
         return false
+    }
+})
+
+
+// ===================================================================================================
+// DELETE STUDENT 
+// ===================================================================================================
+
+ipcMain.on('studentDeletation', (args) => {
+    try {
+        const check = db().sequelize.models.Student.delete(args)
+        if (check[0]) {
+
+            return mainWindow.webContents.send('successNot', {title: ' حذف زبان آموز',
+                                                            message: check[1],
+                                                            contactAdmin: ' '})
+        } else {
+            // process failed
+
+            return mainWindow.webContents.send('errorNot', {errorTitle: 'خطا در به حذف ',
+                                                        errorMessage: check[1],
+                                                        contactAdmin: 'لطفا مجدد سعی نمایید '})
+        }
+    } catch(err) {
+        console.log(err.msg + "(( STUDENT DELETE ))")
     }
 })
 
