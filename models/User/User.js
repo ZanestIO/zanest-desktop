@@ -1,4 +1,5 @@
 const {DataTypes, Model} = require('sequelize')
+const {ipcMain} = require('electron')
 const bcrypt = require('bcrypt')
 // ==================================================================================
 // USER CLASS WITH METHODS
