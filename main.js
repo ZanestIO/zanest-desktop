@@ -32,7 +32,7 @@ function createWindow() {
         if (!res) {
             mainWindow.loadFile('renderer/firstLogin.html')
         } else {
-            mainWindow.loadFile('renderer/login.html')
+            mainWindow.loadFile('renderer/students.html')
         }
 
         mainWindow.webContents.on('did-finish-load', () => {
@@ -88,22 +88,32 @@ ipcMain.on('requestUserSession', async (e, args) => {
     arguments = {}
     ses.get({url: 'https://zanest.io', name: 'userId'}).then( cookie => {
       arguments.userId =   cookie[0].value
+    }).catch(err => {
+        console.log("ERROR IN SETTING COOKIE => " + err.msg)
     })
 
     ses.get({url: 'https://zanest.io', name: 'userName'}).then( cookie => {
         arguments.userName =   cookie[0].value
+    }).catch(err => {
+        console.log("ERROR IN SETTING COOKIE => " + err.msg)
     })
 
     ses.get({url: 'https://zanest.io', name: 'userType'}).then( cookie => {
         arguments.userType =   cookie[0].value
+    }).catch(err => {
+        console.log("ERROR IN SETTING COOKIE => " + err.msg)
     })
 
     ses.get({url: 'https://zanest.io', name: 'fullName'}).then( cookie => {
         arguments.fullName =   cookie[0].value
+    }).catch(err => {
+        console.log("ERROR IN SETTING COOKIE => " + err.msg)
     })
 
     ses.get({}).then( (cookies) => {
         e.sender.send('responseUserSession', arguments)
+    }).catch(err => {
+        console.log("ERROR IN SETTING COOKIE => " + err.msg)
     })
 
 })
@@ -149,7 +159,6 @@ ipcMain.on('userCreation', async (E, args) => {
 // load channel response
 // ===================================================================================================
 ipcMain.on('load', (e, args) => {
-
     // holds the last page for a reference
     let lastPage = {url: 'https://zanest.io', name:'lastPage', value: "./renderer/" + args.currentPage + ".html"}
     session.defaultSession.cookies.set(lastPage)
@@ -224,12 +233,13 @@ ipcMain.on('studentCreation', async(e, args) => {
         if (check[0]) {
             // show success notification
 
-            return mainWindow.webContents.send('successNot', { Title: 'ایجاد زبان آموز',
-                                              Message: check[1]})
-
+            return mainWindow.webContents.send('successNot', { title: 'ایجاد زبان آموز',
+                                              message: check[1],
+                                              contactAdmin: ''})
+        
         } else {
             // show fail notification
-            return mainWindow.webContents.send('error', { errorTitle: 'خطا در ایجاد زبان آموز جدید',
+            return mainWindow.webContents.send('errorNot', { errorTitle: 'خطا در ایجاد زبان آموز جدید',
                                               errorMessage: check[1],
                                               contactAdmin: 'لطفا مجدد سعی نمایید'})
         } 
@@ -250,12 +260,13 @@ ipcMain.on('studentUpdate', (e, args) => {
         if (check[0]) {
             // process successfuly done
 
-            return mainWindow.webContents.send('successNot', {Title: 'به روز رسانی اطلاعات زبان آموز',
-                                                            Message: check[1]})
+            return mainWindow.webContents.send('successNot', {title: 'به روز رسانی اطلاعات زبان آموز',
+                                                            message: check[1],
+                                                            contactAdmin: ''})
         } else {
             // process failed
 
-            return mainWindow.webContents.send('error', {errorTitle: 'خطا در به روزرسانی اطلاعات',
+            return mainWindow.webContents.send('errorNot', {errorTitle: 'خطا در به روزرسانی اطلاعات',
                                                         errorMessage: check[1],
                                                         contactAdmin: 'لطفا مجدد سعی نمایید '})
         }
@@ -266,3 +277,64 @@ ipcMain.on('studentUpdate', (e, args) => {
     }
 })
 
+
+// ===================================================================================================
+// DELETE STUDENT 
+// ===================================================================================================
+
+ipcMain.on('studentDeletation', (args) => {
+    try {
+        const check = db().sequelize.models.Student.delete(args)
+        if (check[0]) {
+
+            return mainWindow.webContents.send('successNot', {title: ' حذف زبان آموز',
+                                                            message: check[1],
+                                                            contactAdmin: ' '})
+        } else {
+            // process failed
+
+            return mainWindow.webContents.send('errorNot', {errorTitle: 'خطا در به حذف ',
+                                                        errorMessage: check[1],
+                                                        contactAdmin: 'لطفا مجدد سعی نمایید '})
+        }
+    } catch(err) {
+        console.log(err.msg + "(( STUDENT DELETE ))")
+    }
+})
+
+
+// ==================================================================================
+// HANDLING SEARCH RESULT
+// ==================================================================================
+ipcMain.on('search', (e, args)=> {
+    /*
+    Searches Are Done By Containment Not Equality
+    ToDo: adding type checking in here for search
+     */
+
+    let result = []
+    if (args.info.sid) {
+        // ToDo: getting search result from db
+        // db().models.Student.Search(by: id, value: args.info.sid)
+
+    } else if (args.name) {
+        // ToDo: getting search result from db
+        // db().models.Student.Search(by: name, value: args.info.name)
+    }
+
+    // sending back the result
+    // mock for testing ignore it
+    result =  [
+        {
+            name: 'صادق',
+            sid: '2234234234',
+            phone:'424234234',
+        },
+        {
+            name: 'اقبال',
+            sid: '2234234234',
+            phone:'424234234',
+        }
+    ]
+    mainWindow.webContents.send('responseSearch', result)
+})

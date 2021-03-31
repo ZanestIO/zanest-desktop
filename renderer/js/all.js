@@ -1,11 +1,10 @@
-const {errorNot} = require("./notification");
 const {ipcRenderer} = require('electron')
 const fullNameHolder = document.querySelector('#fullNameHolder')
 const userTypeHolder = document.querySelector('#userTypeHolder')
 const logout = document.querySelector('#logout')
-const notListener = require('./notListener');
+// const notListener = require('./notListener');
 // setting up notification listeners
-notListener()
+// notListener()
 
 // ===================================================================================================
 // send request for logged in user information
