@@ -5,6 +5,11 @@ const bcrypt = require('bcrypt')
 // USER CLASS WITH METHODS
 // ==================================================================================
 exports.User = class User extends Model {
+    /**
+     *
+     * @returns {Promise<void>}
+     */
+    // TODO
     static async createDefaultAdmin() {
         let adminUser = await User.findOne({
             where: {
@@ -19,16 +24,35 @@ exports.User = class User extends Model {
         }
     }
 
+    /**
+     *
+     * @param username
+     * @param password
+     * @returns {Promise<[boolean, {fullName: *, id: *, userType: *, userName: *}]|[boolean, {password: string}]|[boolean, {userName: string}]>}
+     */
+    // TODO
     static async login(username, password) {
         const UserAuthenticator = require("./userAuth");
         return await UserAuthenticator.login(username, password)
     }
 
+    /**
+     *
+     * @param type
+     * @returns {Promise<boolean>}
+     */
+    // TODO
     static async userTypeExists(type) {
         const UserAuthenticator = require("./userAuth");
         return await UserAuthenticator.userTypeExists(type)
     }
 
+    /**
+     *
+     * @param args
+     * @returns {Promise<*>}
+     */
+    // TODO
     static async add(args) {
         const createUser = require('./add')
         return await createUser(args.fullName, args.userName, args.password, args.userType, args.birthDate, args.phoneNumber)

@@ -6,6 +6,17 @@ const db = require('../Db.js');
 // ================================================================================
 // creates the New User
 // ================================================================================
+/**
+ *
+ * @param fullname
+ * @param username
+ * @param password
+ * @param usertype
+ * @param birthdate
+ * @param phonenumber
+ * @returns {Promise<(boolean|string)[]|(boolean|*)[]>}
+ */
+// TODO
 module.exports = async (fullname=null, username, password, usertype='staff', birthdate=null, phonenumber=null) => {
     let newUser
     try {

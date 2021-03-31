@@ -7,6 +7,13 @@ module.exports = {
 
     // ==================================================================================
     // Logs In Or Throws Error
+    /**
+     *
+     * @param username
+     * @param password
+     * @returns {Promise<(boolean|{userName: string})[]|(boolean|{fullName: (string|*), id, userType: (string|*), userName: (string|*)})[]|(boolean|{password: string})[]>}
+     */
+    // TODO
     async login(username, password) {
         console.log('im here =================================================================')
         console.log(db)
@@ -40,6 +47,12 @@ module.exports = {
 
     // ==================================================================================
     // Checks For Existence Of User Type
+    /**
+     *
+     * @param input_usertype
+     * @returns {Promise<boolean>}
+     */
+    // TODO
     async userTypeExists(input_usertype) {
         let user = await db().sequelize.models.User.findOne({
             where: {
@@ -53,6 +66,12 @@ module.exports = {
 
 // ===================================================================================================
 // finds user in the database
+/**
+ *
+ * @param input_username
+ * @returns {Promise<Model<TModelAttributes, TCreationAttributes>|null>}
+ */
+// TODO
 async function usernameExists(input_username) {
     return await db().sequelize.models.User.findOne({
         where: {
@@ -60,9 +79,16 @@ async function usernameExists(input_username) {
         }
     })
 }
-
+module.exports=usernameExists
 // ===================================================================================================
 // compares two passwords
+/**
+ *
+ * @param user
+ * @param input_password
+ * @returns {void|*}
+ */
+// TODO
 function passwordMatches(user, input_password) {
     let hashedPassword = user.dataValues.password
     return bcrypt.compare(input_password, hashedPassword)

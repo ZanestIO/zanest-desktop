@@ -28,6 +28,11 @@ function createWindow() {
     // mainWindow.removeMenu()
 
 
+    /**
+     *
+     * @type {Promise<void>}
+     */
+    // TODO
     let hasManger = db().sequelize.models.User.userTypeExists('manager').then( res => {
         if (!res) {
             mainWindow.loadFile('renderer/firstLogin.html')
@@ -205,6 +210,12 @@ ipcMain.on('load', (e, args) => {
 // ===================================================================================================
 // Cookies Function
 // ===================================================================================================
+/**
+ *
+ * @param loggedInStatus
+ * @returns {Promise<void>}
+ */
+// TODO
 async function setCookie(loggedInStatus) {
     // setting up cookies
 

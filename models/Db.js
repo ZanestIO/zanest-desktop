@@ -65,3 +65,13 @@ module.exports = function () {
         return database
     }
 }
+
+/*
+const syncAndSeed = async()=>{
+    await sequelize.sync({force:true});
+    const names=['one','two','three'];
+    await Promise.all(names.map(name => User.add({name})));
+}
+module.exports={
+    syncAndSeed
+};*/
