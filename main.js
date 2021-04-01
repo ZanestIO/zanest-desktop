@@ -1,6 +1,7 @@
 const { compareSync } = require("bcrypt");
 const {app, BrowserWindow, ipcMain, session} = require("electron")
 const db = require('./models/Db')
+
 // ==================================================================================
 // INITIALIZING DATABASE
 // ==================================================================================
@@ -12,7 +13,13 @@ db().init()
 let mainWindow;
 
 // Electron `app` is ready
+/**
+ * a function to create main window and
+ * checks if this is the first time
+ * we are using the app
+ */
 function createWindow() {
+
     // windows attributes
     mainWindow = new BrowserWindow({
         width: 1300, height: 800,
@@ -205,6 +212,12 @@ ipcMain.on('load', (e, args) => {
 // ===================================================================================================
 // Cookies Function
 // ===================================================================================================
+/**
+ * a function to set cookies after
+ * @param loggedInStatus
+ * @returns {Promise<void>} this promise contains a boolean and a message
+ */
+// TODO complete this explanation
 async function setCookie(loggedInStatus) {
     // setting up cookies
 
