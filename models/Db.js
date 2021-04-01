@@ -26,6 +26,10 @@ class Db {
 
     // ==================================================================================
     // authenticating the db with logging and info handling
+    /**
+     * a function to check if the database is connected
+     * @returns {Promise<boolean|(boolean|string)[]>}
+     */
     async authenticate() {
         // check if db connection is correct
         try {
@@ -41,6 +45,10 @@ class Db {
 
     // ==================================================================================
     // initializing the database at start of application
+    /**
+     * initialize the database when the app starts
+     * @returns {Promise<boolean>}
+     */
     init = async () => {
         let ConnectionValid = this.authenticate();
         if (ConnectionValid) {
@@ -62,6 +70,10 @@ class Db {
 // ==================================================================================
 // WHAT WE ARE USING THROUGHOUT THE APPLICATION
 // Database.getDB
+/**
+ * checks if DB has been created or not
+ * @returns {Db|*}
+ */
 module.exports = function () {
     if (typeof database !== typeof new Db()) {
         database = new Db()

@@ -7,7 +7,12 @@ const db = require('../Db.js');
 // creates the New User
 // ================================================================================
 /**
+<<<<<<< test
  *
+=======
+ * creates a new user with given args
+ * and add it to DB
+>>>>>>> documentation for functions added
  * @param fullname
  * @param username
  * @param password

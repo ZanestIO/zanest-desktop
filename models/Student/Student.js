@@ -7,6 +7,11 @@ exports.Student = class Student extends Model {
 
 
     // add new student
+    /**
+     * add student's object to DB
+     * @param args (attributes)
+     * @returns {Promise<*>}
+     */
     static async add(args) {
         const addStudent = require('./add')
         return await addStudent(args.socialID, args.parentsName, args.parentNumber, args.fullname,
@@ -14,6 +19,11 @@ exports.Student = class Student extends Model {
     }
 
     // update student info
+    /**
+     * updates some attributes for student
+     * @param args (attributes)
+     * @returns {Promise<*>}
+     */
     static async update(args) {
         const updateStudent = require('./update')
 
@@ -22,6 +32,12 @@ exports.Student = class Student extends Model {
     }
     
     // delete student
+    /**
+     * delete student object from DB and archive
+     * his/her personal info
+     * @param args (attributes)
+     * @returns {Promise<*>}
+     */
     static async delete(args) {
         const addStudent = require('./delete')
         return await addStudent(args.sid)
@@ -38,6 +54,10 @@ exports.Student = class Student extends Model {
 // ==================================================================================
 // STUDENT DATA TO INITIALIZE THE CLASS IN DB 
 // ==================================================================================
+/**
+ * define student's attributes
+ * @type {{options: {modelName: string}, attributes: {parentNumber: {allowNull: boolean, type: *}, socialID: {references: {model: (*|exports.Person), key: string}, allowNull: boolean, type: *, primaryKey: boolean}, parentsName: {type: *}}}}
+ */
 exports.userData = {
     attributes: {
 
@@ -63,7 +83,7 @@ exports.userData = {
         },
 
         parentNumber: {
-            type: DataTypes.INTEGER(),
+            type: DataTypes.STRING(11),
             allowNull: false
         },
 

@@ -5,17 +5,37 @@ const {DataTypes, Model} = require('sequelize')
 // ==================================================================================
 exports.Person = class Person extends Model {
 
+    /**
+     * getter function to get args(attributes)
+     * @returns {Promise<void>}
+     */
     static async getters() {
 
     }
 
+    /**
+     * setter function to set args(attributes)
+     * @param args (attributes)
+     * @returns {Promise<void>}
+     */
     static async setters(args) {
 
     }
 
+    /**
+     * delete person object from DB
+     * @param args (attributes)
+     * @returns {Promise<void>}
+     */
     static async delete(args) {
 
     }
+
+    /**
+     * add person object to DB
+     * @param args (attributes)
+     * @returns {Promise<*>}
+     */
     static async add(args) {
         const createUser = require('./add')
         return await createUser(args.fullName, args.userName, args.password, args.userType, args.birthDate, args.phoneNumber)
@@ -26,6 +46,10 @@ exports.Person = class Person extends Model {
 // ==================================================================================
 // PERSON DATA TO INITIALIZE THE CLASS IN DB
 // ==================================================================================
+/**
+ * define person's attributes
+ * @type {{options: {modelName: string}, attributes: {address: {type: *}, phoneNumber: {type: *}, socialID: {allowNull: boolean, type: *, primeryKey: boolean}, sex: {allowNull: boolean, type: *}, fullName: {allowNull: boolean, type: *}, birthDate: {allowNull: boolean, type: *}}}}
+ */
 exports.userData = {
     attributes: {
 
@@ -51,12 +75,12 @@ exports.userData = {
         },
 
         birthDate: {
-            type: DataTypes.DATEONLY,
+            type: DataTypes.STRING(12),
             allowNull: false,
         },
 
         phoneNumber: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING(11),
             // allow null
         }, 
 
