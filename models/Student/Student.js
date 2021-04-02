@@ -15,8 +15,8 @@ exports.Student = class Student extends Model {
      */
     static async add(args) {
         const addStudent = require('./add')
-        return await addStudent(args.socialID, args.parentsName, args.parentNumber, args.fullname,
-             args.sex, args.phonenumber, args.birthdate, args.address)
+        return await addStudent(args.socialID, args.parentsName, args.parentNumber, args.fullName,
+             args.sex, args.phoneNumber, args.birthDate, args.address)
     }
 
     // update student info
@@ -28,8 +28,8 @@ exports.Student = class Student extends Model {
     static async update(args) {
         const updateStudent = require('./update')
 
-        return await updateStudent(args.socialID, args.parentsName, args.parentNumber, args.fullname,
-            args.sex, args.phonenumber, args.birthdate, args.address )
+        return await updateStudent(args.socialID, args.parentsName, args.parentNumber, args.fullName,
+            args.sex, args.phoneNumber, args.birthDate, args.address )
     }
     
     // delete student

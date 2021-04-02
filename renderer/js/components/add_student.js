@@ -249,6 +249,17 @@ module.exports = {
                 this.birthDate.day.value = ''
                 this.birthDate.month.value = ''
                 this.birthDate.year.value = ''
+
+                // resetting every field
+                resetError(this.name)
+                resetError(this.phone)
+                resetError(this.sid)
+                resetError(this.parentName)
+                resetError(this.parentPhone)
+                resetError(this.address)
+                resetError(this.birthDate.day)
+                resetError(this.birthDate.month)
+                resetError(this.birthDate.year)
             }
         }
 

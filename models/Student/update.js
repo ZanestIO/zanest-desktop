@@ -8,16 +8,16 @@ const db = require('../Db.js');
 /**
  * update attributes that user has changed in DB
  * @param sid
- * @param parentname
- * @param parentnumber
- * @param fullname
+ * @param parentName
+ * @param parentNumber
+ * @param fullName
  * @param sex
- * @param phonenumber
- * @param birthdate
+ * @param phoneNumber
+ * @param birthDate
  * @param address
  * @returns {Promise<(boolean|string)[]|(boolean|*)[]>}
  */
-module.exports = async (sid, parentname, parentnumber, fullname, sex, phonenumber, birthdate, address) => {
+module.exports = async (sid, parentName, parentNumber, fullName, sex, phoneNumber, birthDate, address) => {
     
     try {
         
@@ -41,12 +41,12 @@ module.exports = async (sid, parentname, parentnumber, fullname, sex, phonenumbe
 
         // check update for student
         if (student !== null) {
-            if(student.parentname !== parentname) {
-                student.parentname = parentname
+            if(student.parentname !== parentName) {
+                student.parentname = parentName
                 changed += 1
             }
-            if(student.parentnumber !== parentnumber) {
-                student.parentnumber = parentname
+            if(student.parentnumber !== parentNumber) {
+                student.parentnumber = parentName
                 changed += 1
             }
             await student.save()
@@ -57,20 +57,20 @@ module.exports = async (sid, parentname, parentnumber, fullname, sex, phonenumbe
 
         // check update for person
         if (person !== null) {
-            if(person.fullname !== fullname) {
-                person.parentname = parentname
+            if(person.fullName !== fullName) {
+                person.parentname = parentName
                 changed += 1
             }
             if(person.sex !== sex) {
                 person.sex = sex
                 changed += 1
             }
-            if(person.phonenumber !== phonenumber) {
-                person.phonenumber = phonenumber
+            if(person.phoneNumber !== phoneNumber) {
+                person.phoneNumber = phoneNumber
                 changed += 1
             }
-            if(person.birthdate !== birthdate) {
-                person.birthdate = birthdate
+            if(person.birthDate !== birthDate) {
+                person.birthDate = birthDate
                 changed += 1
             }
             if(person.address !== address) {

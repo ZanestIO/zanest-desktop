@@ -9,16 +9,16 @@ const db = require('../Db.js');
  * creates a new student with given args
  * and add it to DB
  * @param sid
- * @param parentname
- * @param parentnumber
- * @param fullname
+ * @param parentName
+ * @param parentNumber
+ * @param fullName
  * @param sex
- * @param phonenumber
- * @param birthdate
+ * @param phoneNumber
+ * @param birthDate
  * @param address
  * @returns {Promise<(boolean|string)[]|(boolean|*)[]>}
  */
-module.exports = async (sid, parentname, parentnumber, fullname, sex, phonenumber, birthdate, address) => {
+module.exports = async (sid, parentName, parentNumber, fullName, sex, phoneNumber, birthDate, address) => {
     let newStd
     try {
         // check if netStd exist
@@ -30,12 +30,12 @@ module.exports = async (sid, parentname, parentnumber, fullname, sex, phonenumbe
 
         if (newStd === null) {
             
-            await db().sequelize.models.Person.create({fullName: fullname, socialID: sid, address: address,
-                 sex: sex, birthdate: birthdate, phonenumber: phonenumber })
+            await db().sequelize.models.Person.create({fullName: fullName, socialID: sid, address: address,
+                 sex: sex, birthDate: birthDate, phoneNumber: phoneNumber })
 
             console.log(`${sid} before student.`)
 
-            await db().sequelize.models.Student.create({socialID: sid, parentName: parentname, parentNumber: parentnumber});
+            await db().sequelize.models.Student.create({socialID: sid, parentName: parentName, parentNumber: parentNumber});
 
             // 
             console.log(`${sid} created.`)

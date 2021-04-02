@@ -396,3 +396,5 @@ ipcMain.on('search', (e, args)=> {
     // ]
     mainWindow.webContents.send('responseSearch', result)
 })
+
+
