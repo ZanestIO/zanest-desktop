@@ -23,7 +23,7 @@ function createWindow() {
     // windows attributes
     mainWindow = new BrowserWindow({
         width: 1300, height: 800,
-        minHeight: 500, minWidth: 700,
+        minHeight: 500, minWidth: 1000,
         show: false,
         icon: './renderer/media/favicon.png',
         webPreferences: {
