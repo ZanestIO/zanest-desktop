@@ -185,6 +185,7 @@ ipcMain.on('load', (e, args) => {
                 switch(args.page) {
                     case "firstLogin":
                         path = "./renderer/404.html"
+                        
                         break
                     case "createStudent":
                         path = "./renderer/404.html"
@@ -229,24 +230,26 @@ async function setCookie(loggedInStatus) {
 
 ipcMain.on('studentCreation', async(e, args) => {
     try {
-        const check = db().sequelize.models.Student.add(args)
+        const check = await db().sequelize.models.Student.add(args)
         if (check[0]) {
             // show success notification
 
-            return mainWindow.webContents.send('successNot', { title: 'ایجاد زبان آموز',
+            return mainWindow.webContents.send('successNot', { title: '',
                                               message: check[1],
-                                              contactAdmin: ''})
+                                              contactAdmin: false})
         
         } else {
             // show fail notification
-            return mainWindow.webContents.send('errorNot', { errorTitle: 'خطا در ایجاد زبان آموز جدید',
-                                              errorMessage: check[1],
-                                              contactAdmin: 'لطفا مجدد سعی نمایید'})
+            return mainWindow.webContents.send('errorNot', { title: 'خطا در ایجاد زبان آموز جدید',
+                                                            message: check[1],
+                                                            contactAdmin: true})
         } 
 
     } catch(err){
         console.log(err.msg + "(( STUDENT CREATION ))")
-        return false
+        return mainWindow.webContents.send('errorNot', { title: 'خطا در ایجاد زبان آموز جدید',
+                                                        message: err.msg,
+                                                        contactAdmin: true})
     }
 })
 
@@ -260,20 +263,22 @@ ipcMain.on('studentUpdate', (e, args) => {
         if (check[0]) {
             // process successfuly done
 
-            return mainWindow.webContents.send('successNot', {title: 'به روز رسانی اطلاعات زبان آموز',
+            return mainWindow.webContents.send('successNot', {title: '',
                                                             message: check[1],
-                                                            contactAdmin: ''})
+                                                            contactAdmin: false})
         } else {
             // process failed
 
             return mainWindow.webContents.send('errorNot', {errorTitle: 'خطا در به روزرسانی اطلاعات',
                                                         errorMessage: check[1],
-                                                        contactAdmin: 'لطفا مجدد سعی نمایید '})
+                                                        contactAdmin: true })
         }
 
     } catch(err) {
         console.log(err.msg + "(( STUDENT UPDATE ))")
-        return false
+        return mainWindow.webContents.send('errorNot', {errorTitle: 'خطا در به روزرسانی اطلاعات',
+                                                        errorMessage: err.msg,
+                                                        contactAdmin: true })
     }
 })
 
@@ -282,23 +287,28 @@ ipcMain.on('studentUpdate', (e, args) => {
 // DELETE STUDENT 
 // ===================================================================================================
 
-ipcMain.on('studentDeletation', (args) => {
+ipcMain.on('studentDeletion', (args) => {
     try {
         const check = db().sequelize.models.Student.delete(args)
         if (check[0]) {
 
-            return mainWindow.webContents.send('successNot', {title: ' حذف زبان آموز',
+            return mainWindow.webContents.send('successNot', {title: '',
                                                             message: check[1],
-                                                            contactAdmin: ' '})
+                                                            contactAdmin: false})
         } else {
             // process failed
 
-            return mainWindow.webContents.send('errorNot', {errorTitle: 'خطا در به حذف ',
-                                                        errorMessage: check[1],
-                                                        contactAdmin: 'لطفا مجدد سعی نمایید '})
+            return mainWindow.webContents.send('errorNot', {title: 'خطا در حذف ',
+                                                        message: check[1],
+                                                        contactAdmin: true})
         }
     } catch(err) {
         console.log(err.msg + "(( STUDENT DELETE ))")
+        // TODO add notify
+
+        return mainWindow.webContents.send('errorNot', {title: 'خطا در حذف ',
+                                            message: err.msg,
+                                            contactAdmin: true})
     }
 })
 
@@ -306,14 +316,14 @@ ipcMain.on('studentDeletation', (args) => {
 // ===================================================================================================
 // READ STUDENT INFO
 // ===================================================================================================
-
+// TODO: canvert to send channel
 ipcMain.on('studentRead', (e, args) => {
     try {
         const check = db().sequelize.models.Student.show(args)
         if(check[0])
             return check[1]
         else 
-            return mainWindow.webContents.send('normalNot', {title: 'جستجو ناموفق',
+            return mainWindow.webContents.send('normalNot', {title: ' ناموفق',
                                                 message: 'نتیجه ای یافت نشد',
                                                 contactAdmin: 'لطفا مجدد سعی نمایید '})
 
