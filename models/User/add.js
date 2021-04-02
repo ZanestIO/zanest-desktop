@@ -16,7 +16,6 @@ const db = require('../Db.js');
  * @param phonenumber
  * @returns {Promise<(boolean|string)[]|(boolean|*)[]>}
  */
-// TODO
 module.exports = async (fullname=null, username, password, usertype='staff', birthdate=null, phonenumber=null) => {
     let newUser
     try {

@@ -7,9 +7,7 @@
     "start": "electron .",
     "watch": "nodemon --exec electron .",
     "build": "electron-builder build --win",
-    "db:migrate": "babel-node ./scripts/db/migrate",
-    "pretest": "NODE_ENV=test npm run db:migrate",
-    "test": "NODE_PATH=./ NODE_ENV=test mocha --compilers js:babel-core/register --recursive"
+    "test": "mocha"
   },
   "author": "Sadeq Sheikhi",
   "repository": "https://github.com/sadeqsheikhi/zanest-electron",

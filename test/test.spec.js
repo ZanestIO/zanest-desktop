@@ -1,21 +1,6 @@
-const { expect } = require('chai');
-var SequelizeMock = require('sequelize-mock');
-const {User, userData} = require('../models/User/User')
-// const {sequelize} = require('sequelize')
-var dbMock = new SequelizeMock();
+const {expect} = require('chai');
+const db = require('./../models/Db')
 
-// const bcrypt = require('bcrypt')
-
-// ==================================================================================
-// DEFINING MOCK OBJECTS
-// ==================================================================================
-
-User.init(userData.attributes, {sequelize: dbMock, modelName: userData.options.modelName})
-
-
-// Sequelize.prototype.import('../models/User/User.js')
-// Sequelize.prototype.$overrideImport('../models/User/User.js', '../test/mock.js')
-// Sequelize.prototype.import('../models/User/User.js')
 
 /*beforeEach(async function() {
     await db.clear();
@@ -51,22 +36,64 @@ describe('#User', function () {
     });
 });
 */
-describe('my app', ()=>{
+// beforeEach(async function () {
+//     await db().init();
+// });
+
+describe('testing models', () => {
     // beforeEach(()=> db.syncAndSeed());
-   describe('data layer', ()=>{
+    describe('user model', () => {
+        args = {
+            fullName: 'negin ahmadi', userName: 'negin',
+            password: '123456789', userType: 'manager',
+            birthDate: '1378/03/11', phoneNumber: '09185467825'
+        }
 
-       describe('User model', ()=>{
+        // console.log(db().sequelize.models)
+        db().init()
+        db().sequelize.models.User.add(args)
+        describe('add new user to DB', () => {
+            it('the username has been correctly saved', async () => {
+                expect(db().sequelize.models.User.findOne({
+                    where: {
+                        userName: args.userName
+                    }
+                }))
+            });
 
-           it('there are three users', async ()=>{
-               // const users = await User.findAll();
-                // expect(users.length).to.be.equal(3);
-           });
-       });
+            it('the password has been correctly saved', async () => {
+                expect(db().sequelize.models.User.findOne({
+                    where: {
+                        password: args.password
+                    }
+                }))
+            });
 
-       describe('Student model', ()=>{
-           it('student added ', async ()=> {
+        });
 
-           });
-       });
-   });
+        describe('userTypeExist function', () => {
+            it('manager exists in the DB ', async () => {
+                expect(db().sequelize.models.User.findOne({
+                    where: {
+                        userType: 'manager'
+                    }
+                }))
+            });
+
+            it('admin exists in the DB ', async () => {
+                expect(db().sequelize.models.User.findOne({
+                    where: {
+                        userType: 'admin'
+                    }
+                }))
+            });
+        });
+
+
+    });
+    describe('Student model', () => {
+        it('student added ', async () => {
+
+        });
+    });
 });

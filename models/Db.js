@@ -1,5 +1,8 @@
 const {Sequelize, Model} = require('sequelize')
 const {User, userData} = require('./User/User')
+// const {Student, studentData} = require('./Student/Student')
+// const {Person, personData} = require('./Person/Person')
+
 let database
 
 // ==================================================================================
@@ -42,6 +45,8 @@ class Db {
         let ConnectionValid = this.authenticate();
         if (ConnectionValid) {
             User.init(userData.attributes, {sequelize: this.sequelize, modelName: userData.options.modelName})
+            // Student.init(studentData.attributes, {sequelize: this.sequelize, modelName: studentData.options.modelName})
+            // Person.init(personData.attributes, {sequelize: this.sequelize, modelName: personData.options.modelName})
 
             // syncing db
             await this.sequelize.sync()
@@ -66,12 +71,3 @@ module.exports = function () {
     }
 }
 
-/*
-const syncAndSeed = async()=>{
-    await sequelize.sync({force:true});
-    const names=['one','two','three'];
-    await Promise.all(names.map(name => User.add({name})));
-}
-module.exports={
-    syncAndSeed
-};*/
