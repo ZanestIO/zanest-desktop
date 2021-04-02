@@ -6,13 +6,14 @@ const db = require('../Db.js');
 //  UPDATE STUDENT INFO 
 // ================================================================================
 module.exports = async (sid, parentname, parentnumber, fullname, sex, phonenumber, birthdate, address) => {
-    let student
+    
     try {
         
         // count number of element that changed 
         let changed = 0
 
         // find student with social ID 
+        // TODO: add old sid
         const student = await db().sequelize.models.Student.findOne({
         where: {
                 socialID: sid
@@ -20,7 +21,7 @@ module.exports = async (sid, parentname, parentnumber, fullname, sex, phonenumbe
         })
 
         // find person with Social ID
-        const person = await db().sequelize.models.Student.findOne({
+        const person = await db().sequelize.models.Person.findOne({
           where: {
               socialID: sid
           }  
@@ -71,13 +72,10 @@ module.exports = async (sid, parentname, parentnumber, fullname, sex, phonenumbe
         }
 
         // return true if any thing changed and return false if nothing changed 
-        if(changed >= 1) {
-            console.log(`changed ${changed} elements of ${sid}`)
-            return [true, 'تغییرات با موفقیت ثبت شد']
-        } else {
-            console.log(`Already Up to date`)
-            return [false, 'تغییری برای ثبت وجود نداشت']
-        }
+        
+        console.log(`changed ${changed} elements of ${sid}`)
+        return [true, 'تغییرات با موفقیت ثبت شد']
+        
 
         // =======================================
     } catch (err) {
