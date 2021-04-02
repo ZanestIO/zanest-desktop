@@ -390,7 +390,7 @@ ipcMain.on('readStudent', (e, args) => {
 // ==================================================================================
 // HANDLING SEARCH RESULT
 // ==================================================================================
-ipcMain.on('search', (e, args) => {
+ipcMain.on('search', async(e, args) => {
     /*
     Searches Are Done By Containment Not Equality
     ToDo: adding type checking in here for search
@@ -398,27 +398,15 @@ ipcMain.on('search', (e, args) => {
 
     let result = []
     if (args.info.sid) {
-        result = db().models.Student.Search('id', args.info.sid)
+        result = await db().sequelize.models.Student.search('id', args.info.sid)
 
-    } else if (args.name) {
-        result = db().models.Student.search('name', args.info.name)
+    } else if (args.info.name) {
+        result = await db().sequelize.models.Student.search('name', args.info.name)
     }
 
-    // sending back the result
-    // mock for testing ignore it
-    // result =  [
-    //     {
-    //         name: 'صادق',
-    //         sid: '2234234234',
-    //         phone:'424234234',
-    //     },
-    //     {
-    //         name: 'اقبال',
-    //         sid: '2234234234',
-    //         phone:'424234234',
-    //     }
-    // ]
-    mainWindow.webContents.send('responseSearch', result)
+    
+    mainWindow.webContents.send('responseSearch',  result)
+
 })
 
 // ==================================================================================
@@ -440,7 +428,7 @@ async function sendStudentBulk(number = 10, offset = 1) {
             phoneNumber: node.Person.phoneNumber,
             sex: node.Person.sex,
             socialID: node.socialID,
-            birthDate: node.Person.socialID,
+            birthDate: node.Person.birthDate,
             parentNumber: node.parentNumber,
             address: node.Person.address,
             parentsName: node.parentName,

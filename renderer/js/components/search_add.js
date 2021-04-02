@@ -7,7 +7,8 @@ module.exports = {
             searching: false,
             searchLoading: false,
             searchType: 'name',
-            searchResults: []
+            searchResults: [],
+            noResult: false,
         }
     },
     inject: ['addSeen'],
@@ -40,20 +41,23 @@ module.exports = {
             // spins the loading icon
             this.searchLoading = true
 
-            this.renderSearch()
+
+            ipcRenderer.on('responseSearch', (e, result) => {
+                if (result) {
+                    this.noResult = false
+                    this.searchResults = result
+                    this.searchLoading = false
+                    this.searching = true
+                } else {
+                    this.searchResults = []
+                    this.searchLoading = false
+                    this.searching = true
+                    this.noResult = true
+                }
+
+            })
         },
 
-        // ==================================================================================
-        // listens for search results
-        renderSearch() {
-            ipcRenderer.on('responseSearch', (e, args) => {
-                this.searchLoading = false
-                this.searching = true
-                console.log(args)
-                this.searchResults = args
-                console.log(this.searchResults)
-            })
-        }
     },
 
     // ==================================================================================
@@ -65,7 +69,7 @@ module.exports = {
         <i class="fas fa-plus"></i>
         زبان آموز جدید
       </button>
-      <div class="search-box" :class="{open: searching}" >
+      <div class="search-box" :class="{open: searching}">
         <div class="search-field">
           <input type="text" placeholder="جست و جو ..." v-model="searchValue" @input="search">
           <i class="fa fa-circle-notch fa-spin inline-block ml-2" v-if="searchLoading"></i>
@@ -81,15 +85,20 @@ module.exports = {
         <div class="search-result" v-if="searching">
           <overlay></overlay>
           <ul>
-            <li v-for="result in searchResults" @click="$emit('open-search-result', result.sid)">
+            <li v-for="result in searchResults" @click="$emit('open-search-result', result.socialID)">
               <span>
-                {{ result.name }}
+                {{ result.fullName }}
               </span>
               <span>
-                {{ result.sid }}
+                {{ result.socialID }}
               </span>
               <span>
-                {{ result.phone }}
+                {{ result.phoneNumber }}
+              </span>
+            </li>
+            <li v-if="noResult">
+              <span>
+                نتیجه ای برای جست و جو یافت نشد
               </span>
             </li>
           </ul>
