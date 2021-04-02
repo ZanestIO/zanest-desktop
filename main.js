@@ -168,6 +168,8 @@ ipcMain.on('userCreation', async (E, args) => {
 // load channel response
 // ===================================================================================================
 ipcMain.on('load', (e, args) => {
+
+    // ==================================================================================
     // holds the last page for a reference
     let lastPage = {url: 'https://zanest.io', name: 'lastPage', value: "./renderer/" + args.currentPage + ".html"}
     session.defaultSession.cookies.set(lastPage)
@@ -175,9 +177,10 @@ ipcMain.on('load', (e, args) => {
     let verify = true
     let path = "./renderer/" + args.page + ".html"
 
+    // ==================================================================================
     // if user cookie is staff just allow to access the some limited page.
     session.defaultSession.cookies.get({url: 'http://zanest.io'})
-        .then((cookies) => {
+        .then( async(cookies) => {
 
             if (cookies) {
                 // get userType
@@ -194,7 +197,6 @@ ipcMain.on('load', (e, args) => {
                     switch (args.page) {
                         case "firstLogin":
                             path = "./renderer/404.html"
-
                             break
                         case "createStudent":
                             path = "./renderer/404.html"
@@ -204,24 +206,31 @@ ipcMain.on('load', (e, args) => {
             } else {
                 path = "./renderer/404.html"
             }
-            console.log(" start response Student ================================" + args.id)
-            if (args.id) {
-                try {
-                    const check = db().sequelize.models.Student.show(args.id)
 
-                    if (check[0]) {
-                        console.log(check[1])
-                        e.send.sender('responseStudentGetBulk', check[1])
-                    } else
-                        console.log(check[1])
+            await mainWindow.loadFile(path)
 
-                } catch (err) {
-                    console.log(err + "(( get Student Channel ))")
+            if (path !== "./renderer/404.html" ) {
+                console.log(" start response Student ================================" + args.id)
+                if (args.id) {
+                    try {
+                        const student = await db().sequelize.models.Student.show(args.id)
+
+                        if (student[0]) {
+                            console.log(student[1])
+                            mainWindow.webContents.send('getInfo', student[1])
+                        } else {
+                            console.log(student[1])
+                            mainWindow.webContents.send('errorNot', {
+                                title: "خطای بازیابی",
+                                message: "زبان آموز مورد نظر وجود ندارد"
+                            })
+                        }
+                    } catch (err) {
+                        console.log(err + "(( get Student Channel ))")
+                    }
                 }
             }
 
-
-            mainWindow.loadFile(path)
 
         }).catch((error) => {
         console.log(error.msg)
@@ -404,7 +413,7 @@ ipcMain.on('search', async(e, args) => {
         result = await db().sequelize.models.Student.search('name', args.info.name)
     }
 
-    
+
     mainWindow.webContents.send('responseSearch',  result)
 
 })

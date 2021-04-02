@@ -47,7 +47,7 @@ exports.Student = class Student extends Model {
     // read student info
     static async show(args) {
         const readStudent = require('./show')
-        return await readStudent(args.sid)
+        return await readStudent(args)
     }
 
     // search student info
@@ -76,16 +76,6 @@ exports.studentData = {
 
         socialID: {
             type: DataTypes.INTEGER,
-            // references: {
-            //     // This is a reference to another model
-            //     model: Person,
-            //     
-            //     // this is the column name of the referenced model
-            //     key: 'socialID',
-            //     // With postgreSQL, it is optionally possible to declare when to check the foreign key constraint
-            //     //deferrable: Deferrable.INITIALLY_IMMEDIATE
-            // },
-            
             allowNull: false,
             primaryKey: true,
         },
