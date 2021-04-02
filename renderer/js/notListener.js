@@ -41,6 +41,6 @@ module.exports = app => {
         app.notif.contactAdmin = args.contactAdmin
         setTimeout(() => {
             app.notif.seen = false
-        }, 2000)
+        }, 5000)
     })
 }
