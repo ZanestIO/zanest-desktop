@@ -298,7 +298,8 @@ module.exports = {
         },
         confirm_delete() {
             this.deleteBox.seen = false
-            ipcRenderer.send('userDeletion', {id: this.oldSid})
+            alert(this.sid.value)
+            ipcRenderer.send('studentDeletion',  this.sid.value)
         },
         cancelDelete() {
             this.deleteBox.seen = false

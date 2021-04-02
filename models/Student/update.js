@@ -27,7 +27,7 @@ module.exports = async (oldSid, socialID, parentsName, parentNumber, fullName, s
         // TODO: add old sid
         const student = await db().sequelize.models.Student.findOne({
             where: {
-                socialID: oldSid
+                socialID: socialID
             }
         })
 

@@ -1,5 +1,3 @@
-const Model = require('sequelize');
-const db = require('../Db.js');
 
 
 // ================================================================================
@@ -15,6 +13,7 @@ module.exports = async (sid) => {
     let student
     try {
         // check student exist
+        const db = require('../Db.js');
         student = await db().sequelize.models.Student.findOne({
             where: {
                 socialID: sid
@@ -25,7 +24,7 @@ module.exports = async (sid) => {
             
             await db().sequelize.models.Student.destroy({
                 where: {
-                    socialId: sid
+                    socialID: sid
                 }
             });
             // 
@@ -33,14 +32,12 @@ module.exports = async (sid) => {
             return [true, "زبان اموز با موفقیت حذف شد"]
 
         } else {
-
-            // 
             console.log(`User Does't Exist: ${sid}`)
             return [false, "زبان اموز مورد نظر در سیستم موجود نیست"]
         }
         // =======================================
     } catch (err) {
-
+        console.log('exception')
         console.log(err.msg)
         return [false, err.msg]
     }

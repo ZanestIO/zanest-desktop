@@ -24,7 +24,7 @@ module.exports = async (sid, parentName, parentNumber, fullName, sex, phoneNumbe
 
         // check if netStd exist
         // TODO : only check for student
-        newStd = await db().sequelize.models.Person.findOne({
+        newStd = await db().sequelize.models.Student.findOne({
             where: {
                 socialID: sid
             }

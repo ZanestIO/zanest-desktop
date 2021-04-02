@@ -39,9 +39,9 @@ exports.Student = class Student extends Model {
      * @param args (attributes)
      * @returns {Promise<*>}
      */
-    static async delete(args) {
-        const addStudent = require('./delete')
-        return await addStudent(args.sid)
+    static async deleteStd(sid) {
+        const deleteStudent = require('./delete')
+        return await deleteStudent(sid)
     }
 
     // read student info
@@ -77,7 +77,7 @@ exports.studentData = {
         socialID: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            primaryKey: true,
+            unique: true,
         },
 
         parentName: {

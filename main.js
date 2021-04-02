@@ -341,11 +341,12 @@ ipcMain.on('studentUpdate', async(e, args) => {
 // DELETE STUDENT 
 // ===================================================================================================
 
-ipcMain.on('studentDeletion', (args) => {
+ipcMain.on('studentDeletion', async(e,args) => {
     try {
-        const check = db().sequelize.models.Student.delete(args)
+        console.log(args)
+        let check = await db().sequelize.models.Student.deleteStd(args)
         if (check[0]) {
-
+            await mainWindow.loadFile('./renderer/students.html');
             return mainWindow.webContents.send('successNot', {
                 title: '',
                 message: check[1],
