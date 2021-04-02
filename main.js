@@ -1,5 +1,5 @@
 const { compareSync } = require("bcrypt");
-const {app, BrowserWindow, ipcMain, session} = require("electron")
+const {app, BrowserWindow, ipcMain, session, ipcRenderer} = require("electron")
 const db = require('./models/Db')
 
 // ==================================================================================
@@ -52,7 +52,7 @@ function createWindow() {
         })
     })
 
-
+    UnhandledPromiseRejectionWarning
     // mainWindow.webContents.openDevTools({mode:"undocked"})
     mainWindow.on('closed',  () => {
         mainWindow = null
@@ -207,7 +207,23 @@ ipcMain.on('load', (e, args) => {
         } else {
             path = "./renderer/404.html"
         }
+        console.log(" start response Student ================================" + args.id)
+        if(args.id){
+            try {
+                const check = db().sequelize.models.Student.show(args.id)
+                
+                if(check[0]) {
+                    console.log(check[1])
+                    e.send.sender('responseStudentGetBulk', check[1])
+                } else 
+                    console.log(check[1])
+        
+            } catch(err) {
+                console.log(err + "(( get Student Channel ))")
+            }
+        }
 
+        
         mainWindow.loadFile(path)
 
     }).catch((error) => {
@@ -255,6 +271,7 @@ async function setCookie(loggedInStatus) {
 // ===================================================================================================
 
 ipcMain.on('studentCreation', async(e, args) => {
+    console.log(args)
     try {
         const check = await db().sequelize.models.Student.add(args)
         if (check[0]) {
@@ -263,7 +280,7 @@ ipcMain.on('studentCreation', async(e, args) => {
             return mainWindow.webContents.send('successNot', { title: '',
                                               message: check[1],
                                               contactAdmin: false})
-        
+
         } else {
             // show fail notification
             return mainWindow.webContents.send('errorNot', { title: 'خطا در ایجاد زبان آموز جدید',
@@ -272,7 +289,7 @@ ipcMain.on('studentCreation', async(e, args) => {
         } 
 
     } catch(err){
-        console.log(err.msg + "(( STUDENT CREATION ))")
+        console.log(err + "(( STUDENT CREATION ))")
         return mainWindow.webContents.send('errorNot', { title: 'خطا در ایجاد زبان آموز جدید',
                                                         message: err.msg,
                                                         contactAdmin: true})
@@ -330,7 +347,7 @@ ipcMain.on('studentDeletion', (args) => {
         }
     } catch(err) {
         console.log(err.msg + "(( STUDENT DELETE ))")
-        // TODO add notify
+        // 
 
         return mainWindow.webContents.send('errorNot', {title: 'خطا در حذف ',
                                             message: err.msg,
@@ -343,18 +360,18 @@ ipcMain.on('studentDeletion', (args) => {
 // READ STUDENT INFO
 // ===================================================================================================
 // TODO: canvert to send channel
-ipcMain.on('studentRead', (e, args) => {
+ipcMain.on('readStudent', (e, args) => {
     try {
         const check = db().sequelize.models.Student.show(args)
         if(check[0])
-            return check[1]
+            e.send.sender('responseStudentGetBulk', check[1])
         else 
             return mainWindow.webContents.send('normalNot', {title: ' ناموفق',
                                                 message: 'نتیجه ای یافت نشد',
                                                 contactAdmin: 'لطفا مجدد سعی نمایید '})
 
     } catch(err) {
-        console.log(err.msg + "(( STUDENT READ ))")
+        console.log(err + "(( get Student Channel ))")
     }
 })
 
@@ -370,27 +387,25 @@ ipcMain.on('search', (e, args)=> {
 
     let result = []
     if (args.info.sid) {
-        // ToDo: getting search result from db
-        // db().models.Student.Search(by: id, value: args.info.sid)
+        result = db().models.Student.Search('id', args.info.sid)
 
     } else if (args.name) {
-        // ToDo: getting search result from db
-        // db().models.Student.Search(by: name, value: args.info.name)
+        result = db().models.Student.search('name', args.info.name)
     }
 
     // sending back the result
     // mock for testing ignore it
-    result =  [
-        {
-            name: 'صادق',
-            sid: '2234234234',
-            phone:'424234234',
-        },
-        {
-            name: 'اقبال',
-            sid: '2234234234',
-            phone:'424234234',
-        }
-    ]
+    // result =  [
+    //     {
+    //         name: 'صادق',
+    //         sid: '2234234234',
+    //         phone:'424234234',
+    //     },
+    //     {
+    //         name: 'اقبال',
+    //         sid: '2234234234',
+    //         phone:'424234234',
+    //     }
+    // ]
     mainWindow.webContents.send('responseSearch', result)
 })
