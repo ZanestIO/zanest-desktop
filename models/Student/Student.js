@@ -25,10 +25,10 @@ exports.Student = class Student extends Model {
      * @param args (attributes)
      * @returns {Promise<*>}
      */
-    static async update(args) {
+    static async updateStd(args) {
         const updateStudent = require('./update')
 
-        return await updateStudent(args.socialID, args.parentsName, args.parentNumber, args.fullName,
+        return await updateStudent(args.oldSid, args.socialID, args.parentsName, args.parentNumber, args.fullName,
             args.sex, args.phoneNumber, args.birthDate, args.address )
     }
     

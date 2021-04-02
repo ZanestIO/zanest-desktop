@@ -306,12 +306,12 @@ ipcMain.on('studentCreation', async (e, args) => {
 // UPDATEING STUDENT INFO 
 // ===================================================================================================
 
-ipcMain.on('studentUpdate', (e, args) => {
+ipcMain.on('studentUpdate', async(e, args) => {
     try {
-        const check = db().sequelize.models.Student.update(args)
-        if (check[0]) {
-            // process successfuly done
+        const check = await db().sequelize.models.Student.updateStd(args)
 
+        if (check[0]) {
+            // process successfully done
             return mainWindow.webContents.send('successNot', {
                 title: '',
                 message: check[1],
@@ -319,10 +319,9 @@ ipcMain.on('studentUpdate', (e, args) => {
             })
         } else {
             // process failed
-
             return mainWindow.webContents.send('errorNot', {
-                errorTitle: 'خطا در به روزرسانی اطلاعات',
-                errorMessage: check[1],
+                title: 'خطا در به روزرسانی اطلاعات',
+                message: check[1],
                 contactAdmin: true
             })
         }
@@ -330,8 +329,8 @@ ipcMain.on('studentUpdate', (e, args) => {
     } catch (err) {
         console.log(err.msg + "(( STUDENT UPDATE ))")
         return mainWindow.webContents.send('errorNot', {
-            errorTitle: 'خطا در به روزرسانی اطلاعات',
-            errorMessage: err.msg,
+            title: 'خطا در به روزرسانی اطلاعات',
+            message: err.msg,
             contactAdmin: true
         })
     }

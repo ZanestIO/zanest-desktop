@@ -283,9 +283,10 @@ module.exports = {
                     parentNumber: this.parentPhone.value,
                     sex: this.sex.value,
                     phoneNumber: this.phone.value,
-                    birthdate: `${this.birthDate.year.value}/${this.birthDate.month.value}/${this.birthDate.day.value}`,
+                    birthDate: `${this.birthDate.year.value}/${this.birthDate.month.value}/${this.birthDate.day.value}`,
                     address: this.address.value
                 })
+                this.oldSid = this.sid.value
             }
         },
 
