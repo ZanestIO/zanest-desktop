@@ -9,7 +9,7 @@ module.exports = async (sid) => {
     let student
     try {
         // 
-        
+
         // select * from student, person where socialID == sid 
         const info = await db().sequelize.models.Student.findAll({
             include: [{
@@ -20,7 +20,6 @@ module.exports = async (sid) => {
             }]
         }).toJSON() // convert to JSON
 
-     
         if (info !== null) {
 
             console.log(`searched for ${sid}.`)

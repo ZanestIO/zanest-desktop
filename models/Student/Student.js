@@ -1,4 +1,5 @@
-const {DataTypes, Model, Deferrable} = require('sequelize')
+const {DataTypes, Model} = require('sequelize')
+const { Person } = require('../Person/Person')
 
 // ==================================================================================
 // STUDENT CLASS WITH METHODS
@@ -44,9 +45,15 @@ exports.Student = class Student extends Model {
     }
 
     // read student info
-    static async read(args) {
+    static async show(args) {
         const readStudent = require('./show')
         return await readStudent(args.sid)
+    }
+
+    // search student info
+    static async search(searchBy, value) {
+        const searchStudent = require('./search')
+        return await searchStudent(searchBy, value)
     }
 }
 
@@ -58,26 +65,26 @@ exports.Student = class Student extends Model {
  * define student's attributes
  * @type {{options: {modelName: string}, attributes: {parentNumber: {allowNull: boolean, type: *}, socialID: {references: {model: (*|exports.Person), key: string}, allowNull: boolean, type: *, primaryKey: boolean}, parentsName: {type: *}}}}
  */
-exports.userData = {
+exports.studentData = {
     attributes: {
 
         socialID: {
             type: DataTypes.INTEGER,
-            references: {
-                // This is a reference to another model
-                model: Person,
-                
-                // this is the column name of the referenced model
-                key: 'socialID',
-                // With postgreSQL, it is optionally possible to declare when to check the foreign key constraint
-                //deferrable: Deferrable.INITIALLY_IMMEDIATE
-            },
+            // references: {
+            //     // This is a reference to another model
+            //     model: Person,
+            //     
+            //     // this is the column name of the referenced model
+            //     key: 'socialID',
+            //     // With postgreSQL, it is optionally possible to declare when to check the foreign key constraint
+            //     //deferrable: Deferrable.INITIALLY_IMMEDIATE
+            // },
             
             allowNull: false,
             primaryKey: true,
         },
 
-        parentsName: {
+        parentName: {
             type: DataTypes.STRING(50),
             // allowNull is true by default
         },
@@ -86,7 +93,6 @@ exports.userData = {
             type: DataTypes.STRING(11),
             allowNull: false
         },
-
 
     },
     options: {
