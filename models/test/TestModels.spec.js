@@ -51,7 +51,7 @@ describe('testing models', () => {
         // console.log(db().sequelize.models)
         db().init()
         db().sequelize.models.User.add(args)
-        describe('add new user to DB', () => {
+        describe('adding new user to DB', () => {
             it('the username has been correctly saved', async () => {
                 expect(db().sequelize.models.User.findOne({
                     where: {
@@ -101,7 +101,7 @@ describe('testing models', () => {
         db().init()
         db().sequelize.models.Student.add(args)
 
-        describe('add new student to DB', () => {
+        describe('adding new student to DB', () => {
             it('the socialID has been correctly saved', async () => {
                 expect(db().sequelize.models.Student.findOne({
                     where: {
@@ -168,6 +168,30 @@ describe('testing models', () => {
 
         });
 
-        describe('')
+        describe('updating some attributes for student', () => {
+            it('socialID updated successfully', (done) => {
+                expect(db().sequelize.models.Student.findOne({
+                    where: {
+                        socialID: '3840576891'
+                    }
+                }) && db().sequelize.models.Person.findOne({
+                    where: {
+                        socialID: '3840576891'
+                    }
+                }))
+                done();
+            });
+
+            it('parentsName updated successfully', async () => {
+                expect(db().sequelize.models.Student.findOne({
+                    where: {
+                        parentsName: 'kaveh'
+                    }
+                }))
+            });
+
+        });
+
+        
     });
 });
