@@ -36,10 +36,10 @@ exports.Person = class Person extends Model {
      * @param args (attributes)
      * @returns {Promise<*>}
      */
-    static async add(args) {
-        const createUser = require('./add')
-        return await createUser(args.fullName, args.userName, args.password, args.userType, args.birthDate, args.phoneNumber)
-    }
+    //static async add(args) {
+        //const createUser = require('')
+        //return await createUser()
+    //}
 }
 
 
@@ -50,12 +50,12 @@ exports.Person = class Person extends Model {
  * define person's attributes
  * @type {{options: {modelName: string}, attributes: {address: {type: *}, phoneNumber: {type: *}, socialID: {allowNull: boolean, type: *, primeryKey: boolean}, sex: {allowNull: boolean, type: *}, fullName: {allowNull: boolean, type: *}, birthDate: {allowNull: boolean, type: *}}}}
  */
-exports.userData = {
+exports.personData = {
     attributes: {
 
         fullName: {
             type: DataTypes.STRING,
-            allowNull: false
+            //allowNull: false
         },
 
         socialID: {
@@ -76,14 +76,13 @@ exports.userData = {
 
         birthDate: {
             type: DataTypes.STRING(12),
-            allowNull: false,
+            //allowNull: false,
         },
 
         phoneNumber: {
             type: DataTypes.STRING(11),
             // allow null
         }, 
-
 
     },
     options: {
