@@ -26,7 +26,8 @@
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
-    "mockery": "^2.1.0",
+    "chai": "^4.3.4",
+    "mocha": "^8.3.2",
     "sequelize": "^6.5.0",
     "sqlite3": "^5.0.2",
     "vue": "^3.0.7"
