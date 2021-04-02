@@ -265,12 +265,14 @@ ipcMain.on('studentCreation', async (e, args) => {
         const check = await db().sequelize.models.Student.add(args)
         if (check[0]) {
             // show success notification
+            sendStudentBulk(10, 1)
 
             return mainWindow.webContents.send('successNot', {
                 title: '',
                 message: check[1],
                 contactAdmin: false
             })
+
 
         } else {
             // show fail notification
@@ -423,8 +425,11 @@ ipcMain.on('search', (e, args) => {
 // GETTING STUDENTS IN BULK FOR STUDENTS TABLE
 // ==================================================================================
 ipcMain.on("studentGetBulk", async (e, args) => {
+    sendStudentBulk(args.number, args.offset)
+})
 
-    let studentsHolder = await db().sequelize.models.Student.getStudents(args.number, args.offset);
+async function sendStudentBulk(number = 10, offset = 1) {
+    let studentsHolder = await db().sequelize.models.Student.getStudents(number, offset);
     let students = [];
 
     // Todo: Move this to Student > get
@@ -444,5 +449,4 @@ ipcMain.on("studentGetBulk", async (e, args) => {
     })
 
     mainWindow.webContents.send('responseStudentGetBulk', {students: students})
-})
-
+}
