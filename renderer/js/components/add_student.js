@@ -240,15 +240,15 @@ module.exports = {
                 })
 
                 // clearing the fields for another creation
-                this.name.value = ''
-                this.phone.value = ''
-                this.sid.value = ''
-                this.parentName.value = ''
-                this.parentPhone.value = ''
-                this.address.value = ''
-                this.birthDate.day.value = ''
-                this.birthDate.month.value = ''
-                this.birthDate.year.value = ''
+                // this.name.value = ''
+                // this.phone.value = ''
+                // this.sid.value = ''
+                // this.parentName.value = ''
+                // this.parentPhone.value = ''
+                // this.address.value = ''
+                // this.birthDate.day.value = ''
+                // this.birthDate.month.value = ''
+                // this.birthDate.year.value = ''
 
                 // resetting every field
                 resetError(this.name)

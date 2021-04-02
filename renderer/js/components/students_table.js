@@ -3,14 +3,15 @@ const {ipcRenderer} = require('electron')
 module.exports = {
     data() {
         return {
-            students: [studentMock, studentMock],
+            students: [],
         }
     },
     created() {
       // get users information
         ipcRenderer.send('studentGetBulk', {number: 10, offset: 1})
         ipcRenderer.on('responseStudentGetBulk',(e, args) => {
-            this.students = args
+            // console.log(args.students)
+            this.students = args.students
         })
     },
     inject: '',

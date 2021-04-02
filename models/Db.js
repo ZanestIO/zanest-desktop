@@ -56,7 +56,9 @@ class Db {
             Person.init(personData.attributes, {sequelize: this.sequelize, modelName: personData.options.modelName})
             Student.init(studentData.attributes, {sequelize: this.sequelize, modelName: studentData.options.modelName})
 
-            Student.belongsTo(Person)
+            Student.belongsTo(Person, {
+                foreignKey: 'PersonId'
+            })
             // syncing db
             await this.sequelize.sync()
 

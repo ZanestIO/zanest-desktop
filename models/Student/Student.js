@@ -55,6 +55,12 @@ exports.Student = class Student extends Model {
         const searchStudent = require('./search')
         return await searchStudent(searchBy, value)
     }
+
+    static async getStudents(limit, offset) {
+        const searchStudent = require('./get')
+        return await searchStudent(limit, offset)
+    }
+
 }
 
 
