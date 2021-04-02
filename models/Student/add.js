@@ -30,10 +30,13 @@ module.exports = async (sid, parentname, parentnumber, fullname, sex, phonenumbe
 
         if (newStd === null) {
             
-            await db().sequelize.models.Person.create({socialID: sid, fullName: fullname, phoneNumber: phonenumber, sex:sex, 
-                birthDate: birthdate, address: address})
+            await db().sequelize.models.Person.create({fullName: fullname, socialID: sid, address: address,
+                 sex: sex, birthdate: birthdate, phonenumber: phonenumber })
 
-            await db().sequelize.models.Student.create({socialID: sid, parentName: parentname, parentnumber: parentnumber});
+            console.log(`${sid} before student.`)
+
+            await db().sequelize.models.Student.create({socialID: sid, parentName: parentname, parentNumber: parentnumber});
+
             // 
             console.log(`${sid} created.`)
             return [true, "زبان اموز با موفقیت ایجاد شد"]
@@ -44,10 +47,11 @@ module.exports = async (sid, parentname, parentnumber, fullname, sex, phonenumbe
             console.log(`can't create ${sid}`)
             return [false, "زبان اموز در سیستم موجود است"]
         }
+
         // =======================================
     } catch (err) {
 
-        console.log(err.msg)
-        return [false, err.msg]
+        console.log(err)
+        return [false, err]
     }
 }
