@@ -5,6 +5,12 @@ const db = require('../Db.js');
 // ================================================================================
 // delete a Student
 // ================================================================================
+/**
+ * delete student object from DB,
+ * but keep his/her personal info
+ * @param sid
+ * @returns {Promise<(boolean|string)[]|(boolean|*)[]>}
+ */
 module.exports = async (sid) => {
     let student
     try {

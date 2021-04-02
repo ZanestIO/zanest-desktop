@@ -5,6 +5,10 @@ const bcrypt = require('bcrypt')
 // USER CLASS WITH METHODS
 // ==================================================================================
 exports.User = class User extends Model {
+    /**
+     * create default user admin in DB
+     * @returns {Promise<void>}
+     */
     static async createDefaultAdmin() {
         let adminUser = await User.findOne({
             where: {
@@ -19,16 +23,33 @@ exports.User = class User extends Model {
         }
     }
 
+    /**
+     * login with correct username and password
+     * @param username
+     * @param password
+     * @returns {Promise<[boolean, {fullName: *, id: *, userType: string|*, userName: string|*}]|[boolean, {password: string}]|[boolean, {userName: string}]>}
+     */
     static async login(username, password) {
         const UserAuthenticator = require("./userAuth");
         return await UserAuthenticator.login(username, password)
     }
 
+    /**
+     * check if the given userType
+     * exist in the DB
+     * @param type
+     * @returns {Promise<boolean>}
+     */
     static async userTypeExists(type) {
         const UserAuthenticator = require("./userAuth");
         return await UserAuthenticator.userTypeExists(type)
     }
 
+    /**
+     * add new user to DB
+     * @param args
+     * @returns {Promise<*>}
+     */
     static async add(args) {
         const createUser = require('./add')
         return await createUser(args.fullName, args.userName, args.password, args.userType, args.birthDate, args.phoneNumber)
@@ -39,6 +60,10 @@ exports.User = class User extends Model {
 // ==================================================================================
 // USER DATA TO INITIALIZE THE CLASS IN DB
 // ==================================================================================
+/**
+ * define user's attributes
+ * @type {{options: {modelName: string}, attributes: {password: {allowNull: boolean, type: *}, phoneNumber: {type: *}, fullName: {type: *}, userType: {default: string, allowNull: boolean, type: *}, userName: {allowNull: boolean, type: *}, birthDate: {type: *}}}}
+ */
 exports.userData = {
     attributes: {
         fullName: {

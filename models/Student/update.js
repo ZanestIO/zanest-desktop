@@ -5,6 +5,18 @@ const db = require('../Db.js');
 // ================================================================================
 //  UPDATE STUDENT INFO 
 // ================================================================================
+/**
+ * update attributes that user has changed in DB
+ * @param sid
+ * @param parentname
+ * @param parentnumber
+ * @param fullname
+ * @param sex
+ * @param phonenumber
+ * @param birthdate
+ * @param address
+ * @returns {Promise<(boolean|string)[]|(boolean|*)[]>}
+ */
 module.exports = async (sid, parentname, parentnumber, fullname, sex, phonenumber, birthdate, address) => {
     
     try {

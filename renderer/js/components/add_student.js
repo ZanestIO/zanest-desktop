@@ -228,22 +228,27 @@ module.exports = {
         submit() {
             this.processAll()
             if (this.valid) {
-                console.log('usercreate sent')
                 ipcRenderer.send('studentCreation', {
-                    fullname: this.fullname,
-                    socialID: this.sid,
-                    parentsName: this.parentName,
-                    parentNumber: this.parentPhone,
-                    sex: this.sex,
-                    phonenumber: this.phoneNumber,
-                    // ToDo:
-                    birthdate: {
-                        day: this.birthDate.day,
-                        month: this.birthDate.month,
-                        year: this.birthDate.year,
-                    },
-                    address: this.address
+                    fullName: this.name.value,
+                    socialID: this.sid.value,
+                    parentsName: this.parentName.value,
+                    parentNumber: this.parentPhone.value,
+                    sex: this.sex.value,
+                    phoneNumber: this.phone.value,
+                    birthDate: `${this.birthDate.year.value}/${this.birthDate.month.value}/${this.birthDate.day.value}`,
+                    address: this.address.value
                 })
+
+                // clearing the fields for another creation
+                this.name.value = ''
+                this.phone.value = ''
+                this.sid.value = ''
+                this.parentName.value = ''
+                this.parentPhone.value = ''
+                this.address.value = ''
+                this.birthDate.day.value = ''
+                this.birthDate.month.value = ''
+                this.birthDate.year.value = ''
             }
         }
 
@@ -281,7 +286,7 @@ module.exports = {
           <select :class="{fail: sex.err, success: sex.success}" v-model="sex.value" @change="processSex">
             <option value="male">مرد</option>
             <option value="female">زن</option>
-            <option value="bisex">دوجنسه</option>
+            <option value="bisex">نامشخص</option>
           </select>
           <p class="input-error" v-if="sex.err">{{ sex.errMsg }}</p>
         </div>
@@ -312,7 +317,7 @@ module.exports = {
             </div>
 
             <div>
-              <input type="number" placeholder="سال" :class="{fail: birthDate.year.err,  success: birthDate.year.success}"
+              <input type="number" placeholder="سال" min='1300' max="1450" :class="{fail: birthDate.year.err,  success: birthDate.year.success}"
                      v-model="birthDate.year.value" @change="processBirthYear">
               <p class="input-error" v-if="birthDate.year.err">{{ birthDate.year.errMsg }}</p>
             </div>

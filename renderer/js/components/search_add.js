@@ -1,5 +1,5 @@
 const {ipcRenderer} = require('electron')
-
+const overlay = require('./overlay')
 module.exports = {
     data() {
         return {
@@ -12,20 +12,23 @@ module.exports = {
     },
     inject: ['addSeen'],
     emits: ['open-search-result', 'adding-students'],
+    components: {
+        overlay
+    },
     methods: {
 
         // ==================================================================================
         // sends out search request
         search() {
-
             // only send search request if input is more than 3 chars
             if (this.searchValue.length < 3) {
                 this.searchLoading = false
+                this.searching = false
                 return
             }
 
             // creating search object
-            args = { sid: '', name: ''}
+            args = {sid: '', name: ''}
             if (this.searchType === 'sid')
                 args.sid = this.searchValue
             else
@@ -43,7 +46,7 @@ module.exports = {
         // ==================================================================================
         // listens for search results
         renderSearch() {
-            ipcRenderer.on('responseSearch', (e,args) => {
+            ipcRenderer.on('responseSearch', (e, args) => {
                 this.searchLoading = false
                 this.searching = true
                 console.log(args)
@@ -62,7 +65,7 @@ module.exports = {
         <i class="fas fa-plus"></i>
         زبان آموز جدید
       </button>
-      <div class="search-box" :class="{open: searching}">
+      <div class="search-box" :class="{open: searching}" >
         <div class="search-field">
           <input type="text" placeholder="جست و جو ..." v-model="searchValue" @input="search">
           <i class="fa fa-circle-notch fa-spin inline-block ml-2" v-if="searchLoading"></i>
@@ -76,6 +79,7 @@ module.exports = {
         </div>
 
         <div class="search-result" v-if="searching">
+          <overlay></overlay>
           <ul>
             <li v-for="result in searchResults" @click="$emit('open-search-result', result.sid)">
               <span>

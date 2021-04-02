@@ -5,6 +5,19 @@ const db = require('../Db.js');
 // ================================================================================
 // creates the New Student
 // ================================================================================
+/**
+ * creates a new student with given args
+ * and add it to DB
+ * @param sid
+ * @param parentname
+ * @param parentnumber
+ * @param fullname
+ * @param sex
+ * @param phonenumber
+ * @param birthdate
+ * @param address
+ * @returns {Promise<(boolean|string)[]|(boolean|*)[]>}
+ */
 module.exports = async (sid, parentname, parentnumber, fullname, sex, phonenumber, birthdate, address) => {
     let newStd
     try {

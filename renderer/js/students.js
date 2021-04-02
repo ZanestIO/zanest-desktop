@@ -4,6 +4,7 @@ const notListener = require('./notListener');
 const notification = require('./components/notification')
 const search_add = require('./components/search_add')
 const add_student = require('./components/add_student')
+const students_table = require('./components/students_table')
 
 let students = {
     data() {
@@ -37,6 +38,7 @@ let students = {
         notification,
         search_add,
         add_student,
+        students_table,
     },
     methods:  {
         // handles hiding the notification
