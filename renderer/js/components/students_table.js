@@ -36,14 +36,14 @@ module.exports = {
           </th>
         </tr>
         <tr v-for="student in students" v-on:dblclick="$emit('open-search-result')">
-          <td>{{student.fullName}}</td>
-          <td>{{student.phoneNumber}}</td>
-          <td>{{student.sex}}</td>
-          <td>{{student.socialID}}</td>
-          <td>{{student.birthDate}}</td>
-          <td>{{student.parentsName}}</td>
-          <td>{{student.parentNumber}}</td>
-          <td>{{student.address}}</td>
+          <td @click="$emit('open-search-result', student.socialID)">{{student.fullName}}</td>
+          <td @click="$emit('open-search-result', student.socialID)">{{student.phoneNumber}}</td>
+          <td @click="$emit('open-search-result', student.socialID)">{{student.sex}}</td>
+          <td @click="$emit('open-search-result', student.socialID)">{{student.socialID}}</td>
+          <td @click="$emit('open-search-result', student.socialID)">{{student.birthDate}}</td>
+          <td @click="$emit('open-search-result', student.socialID)">{{student.parentsName}}</td>
+          <td @click="$emit('open-search-result', student.socialID)">{{student.parentNumber}}</td>
+          <td @click="$emit('open-search-result', student.socialID)">{{student.address}}</td>
         </tr>
       </table>
       </div>
