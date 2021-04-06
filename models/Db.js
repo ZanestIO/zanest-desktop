@@ -1,10 +1,7 @@
-const {Sequelize, Model} = require('sequelize')
+const {Sequelize} = require('sequelize')
 const { Student, studentData } = require('./Student/Student')
 const { Person, personData } = require('./Person/Person')
 const {User, userData} = require('./User/User')
-// const {Student, studentData} = require('./Student/Student')
-// const {Person, personData} = require('./Person/Person')
-
 let database
 
 // ==================================================================================
@@ -56,15 +53,12 @@ class Db {
         if (ConnectionValid) {
 
             User.init(userData.attributes, {sequelize: this.sequelize, modelName: userData.options.modelName})
-<<<<<<< test
-            // Student.init(studentData.attributes, {sequelize: this.sequelize, modelName: studentData.options.modelName})
-            // Person.init(personData.attributes, {sequelize: this.sequelize, modelName: personData.options.modelName})
-=======
             Person.init(personData.attributes, {sequelize: this.sequelize, modelName: personData.options.modelName})
             Student.init(studentData.attributes, {sequelize: this.sequelize, modelName: studentData.options.modelName})
->>>>>>> add init for student and person model
 
-            Student.belongsTo(Person)
+            Student.belongsTo(Person, {
+                foreignKey: 'PersonId'
+            })
             // syncing db
             await this.sequelize.sync()
 
@@ -91,4 +85,3 @@ module.exports = function () {
         return database
     }
 }
-

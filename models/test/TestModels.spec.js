@@ -1,11 +1,55 @@
-const {expect} = require('chai');
+
+// if you have bcrypt errors while running tests,
+// first uninstall, then reinstall it again
+
+const { expect } = require('chai');
 const db = require('./../Db')
+// const student = require('../Student/Student')
+// const person = require('../Person/Person')
 
 
-/*beforeEach(async function() {
-    await db.clear();
-    await db.save([tobi, loki, jane]);
-});*/
+describe('testing models', ()=>{
+    // beforeEach(()=> db.syncAndSeed());
+    describe('User model', ()=>{
+
+        // confirm db connection is valid
+        args = {
+            fullName: 'negin ahmadi', userName: 'negin',
+            password: '123456789', userType: 'manager',
+            birthDate: '1378/11/03', phoneNumber: '09395824973'
+        }
+
+        // create user in db
+        // db().sequelize.models.User.add(args)
+        // let user = db().sequelize.models.User.add(args)
+
+        describe('User model', ()=>{
+
+            it('there are three users', async ()=>{
+                // const users = await User.findAll();
+                // expect(users.length).to.be.equal(3);
+            });
+        });
+    });
+
+    describe('Student model', ()=>{
+
+        // confirm db connection is valid
+        args = {
+            socialID: 3784962763, parentsName: 'hassan', parentNumber: '09175643585',
+            fullname: 'ali moradi', sex: 'male', phonenumber: '09375824851',
+            birthdate:'1360/10/15', address: 'baharan'
+        }
+
+        // create student in the db
+        // db().sequelize.models.Student.add(args)
+        // student.add(args)
+        it('student added ', async ()=> {
+
+        });
+    });
+});
+
 
 /*
 describe('#User', function () {
@@ -36,162 +80,4 @@ describe('#User', function () {
     });
 });
 */
-// beforeEach(async function () {
-//     await db().init();
-// });
 
-describe('testing models', () => {
-    describe('user model', () => {
-        args = {
-            fullName: 'negin ahmadi', userName: 'negin',
-            password: '123456789', userType: 'manager',
-            birthDate: '1378/03/11', phoneNumber: '09185467825'
-        }
-
-        // console.log(db().sequelize.models)
-        db().init()
-        db().sequelize.models.User.add(args)
-        describe('adding new user to DB', () => {
-            it('the username has been correctly saved', async () => {
-                expect(db().sequelize.models.User.findOne({
-                    where: {
-                        userName: args.userName
-                    }
-                }))
-            });
-
-            it('the password has been correctly saved', async () => {
-                expect(db().sequelize.models.User.findOne({
-                    where: {
-                        password: args.password
-                    }
-                }))
-            });
-
-        });
-
-        describe('userTypeExist function', () => {
-            it('manager exists in the DB ', async () => {
-                expect(db().sequelize.models.User.findOne({
-                    where: {
-                        userType: 'manager'
-                    }
-                }))
-            });
-
-            it('admin exists in the DB ', async () => {
-                expect(db().sequelize.models.User.findOne({
-                    where: {
-                        userType: 'admin'
-                    }
-                }))
-            });
-        });
-
-
-    });
-    describe('Student model', () => {
-        args = {
-            socialID: '3726847598', parentsName: 'hasan',
-            parentNumber: '09372568749', fullname: 'ali akbari',
-            sex: 'male', phonenumber: '09395781542',
-            birthdate: '1360/08/15', address: 'baharan'
-        }
-
-        db().init()
-        db().sequelize.models.Student.add(args)
-
-        describe('adding new student to DB', () => {
-            it('the socialID has been correctly saved', async () => {
-                expect(db().sequelize.models.Student.findOne({
-                    where: {
-                        socialID: args.socialID
-                    }
-                }))
-            });
-
-            it('the parentsName has been correctly saved', async () => {
-                expect(db().sequelize.models.Student.findOne({
-                    where: {
-                        parentsName: args.parentsName
-                    }
-                }))
-            });
-
-            it('the parentNumber has been correctly saved', async () => {
-                expect(db().sequelize.models.Student.findOne({
-                    where: {
-                        parentNumber: args.parentNumber
-                    }
-                }))
-            });
-
-            it('the fullname has been correctly saved', async () => {
-                expect(db().sequelize.models.Student.findOne({
-                    where: {
-                        fullname: args.fullname
-                    }
-                }))
-            });
-
-            it('the sex has been correctly saved', async () => {
-                expect(db().sequelize.models.Student.findOne({
-                    where: {
-                        sex: args.sex
-                    }
-                }))
-            });
-
-            it('the phonenumber has been correctly saved', async () => {
-                expect(db().sequelize.models.Student.findOne({
-                    where: {
-                        phonenumber: args.phonenumber
-                    }
-                }))
-            });
-
-            it('the birthdate has been correctly saved', async () => {
-                expect(db().sequelize.models.Student.findOne({
-                    where: {
-                        birthdate: args.birthdate
-                    }
-                }))
-            });
-
-            it('the address has been correctly saved', async () => {
-                expect(db().sequelize.models.Student.findOne({
-                    where: {
-                        address: args.address
-                    }
-                }))
-            });
-
-        });
-
-        describe('updating some attributes for student', () => {
-            it('socialID updated successfully', (done) => {
-                expect(db().sequelize.models.Student.findOne({
-                    where: {
-                        socialID: '3840576891'
-                    }
-                }) && db().sequelize.models.Person.findOne({
-                    where: {
-                        socialID: '3840576891'
-                    }
-                }))
-                done();
-            });
-
-            it('parentsName updated successfully', async () => {
-                expect(db().sequelize.models.Student.findOne({
-                    where: {
-                        parentsName: 'kaveh'
-                    }
-                }))
-            });
-
-        });
-
-        
-    });
-});

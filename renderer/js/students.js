@@ -1,23 +1,13 @@
 const {ipcRenderer} = require('electron')
 const Vue = require('vue')
-const notListener = require('./notListener');
-const notification = require('./components/notification')
 const search_add = require('./components/search_add')
 const add_student = require('./components/add_student')
 const students_table = require('./components/students_table')
+const footer = require('./components/footer')
 
 let students = {
     data() {
         return {
-
-            // notification data
-            notif: {
-                seen: false,
-                type: 'normal',
-                title: '',
-                body: '',
-                contactAdmin: false
-            },
             addBox: {
                 seen: false
             }
@@ -25,26 +15,16 @@ let students = {
     },
     provide() {
         return {
-            // providing for notifications
-            title: Vue.computed(() => this.notif.title),
-            seen: Vue.computed(() => this.notif.seen),
-            type: Vue.computed(() => this.notif.type),
-            body: Vue.computed(() => this.notif.body),
-            contactAdmin: Vue.computed(() => this.notif.contactAdmin),
             addSeen: Vue.computed(() => this.addBox.seen)
         }
     },
     components: {
-        notification,
         search_add,
         add_student,
         students_table,
+        footer,
     },
     methods:  {
-        // handles hiding the notification
-        closeNot() {
-            this.notif.seen = false
-        },
 
         // sends request to go to student edit page
         openEditPage(sid) {
@@ -61,6 +41,3 @@ let students = {
 }
 
 let app = Vue.createApp(students).mount("#main")
-
-// setting up notification listeners
-notListener(app)

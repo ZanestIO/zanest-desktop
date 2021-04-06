@@ -1,14 +1,11 @@
-const Model = require('sequelize');
-const db = require('../Db.js');
-
-
 // ================================================================================
 //  UPDATE STUDENT INFO 
 // ================================================================================
 /**
  * update attributes that user has changed in DB
- * @param sid
- * @param parentName
+ * @param oldSid
+ * @param socialID
+ * @param parentsName
  * @param parentNumber
  * @param fullName
  * @param sex
@@ -17,36 +14,46 @@ const db = require('../Db.js');
  * @param address
  * @returns {Promise<(boolean|string)[]|(boolean|*)[]>}
  */
-module.exports = async (sid, parentName, parentNumber, fullName, sex, phoneNumber, birthDate, address) => {
+module.exports = async (oldSid, socialID, parentsName, parentNumber, fullName, sex, phoneNumber, birthDate, address ) => {
     
     try {
-        
+        const db = require('../Db.js');
         // count number of element that changed 
         let changed = 0
+
+
 
         // find student with social ID 
         // TODO: add old sid
         const student = await db().sequelize.models.Student.findOne({
-        where: {
-                socialID: sid
+            where: {
+                socialID: socialID
             }
         })
+
+
 
         // find person with Social ID
         const person = await db().sequelize.models.Person.findOne({
           where: {
-              socialID: sid
+              id: student.dataValues.PersonId
           }  
         })
 
+        console.log(student)
+
         // check update for student
         if (student !== null) {
-            if(student.parentname !== parentName) {
-                student.parentname = parentName
+            if(student.parentName !== parentsName) {
+                student.parentName = parentsName
                 changed += 1
             }
-            if(student.parentnumber !== parentNumber) {
-                student.parentnumber = parentName
+            if(student.socialID !== socialID) {
+                student.socialID = socialID
+                changed += 1
+            }
+            if(student.parentNumber !== parentNumber) {
+                student.parentNumber = parentNumber
                 changed += 1
             }
             await student.save()
@@ -55,10 +62,18 @@ module.exports = async (sid, parentName, parentNumber, fullName, sex, phoneNumbe
             console.log("info of student tabe don't change")
         }
 
+        console.log('im person')
+        console.log(person)
+
+
         // check update for person
         if (person !== null) {
             if(person.fullName !== fullName) {
-                person.parentname = parentName
+                person.fullName = fullName
+                changed += 1
+            }
+            if(student.socialID !== socialID) {
+                student.socialID = socialID
                 changed += 1
             }
             if(person.sex !== sex) {
@@ -78,20 +93,18 @@ module.exports = async (sid, parentName, parentNumber, fullName, sex, phoneNumbe
                 changed += 1
             }
             await person.save()
-
         } else {
             console.log("info of Person table don't change")
         }
 
-        // return true if any thing changed and return false if nothing changed 
-        
-        console.log(`changed ${changed} elements of ${sid}`)
+        // return true if any thing changed and return false if nothing changed
+        console.log(`changed ${changed} elements of ${socialID}`)
         return [true, 'تغییرات با موفقیت ثبت شد']
         
 
         // =======================================
     } catch (err) {
-
+        console.log('im exception')
         console.log(err.msg)
         return [false, err.msg]
     }

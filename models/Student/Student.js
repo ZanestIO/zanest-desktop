@@ -25,10 +25,10 @@ exports.Student = class Student extends Model {
      * @param args (attributes)
      * @returns {Promise<*>}
      */
-    static async update(args) {
+    static async updateStd(args) {
         const updateStudent = require('./update')
 
-        return await updateStudent(args.socialID, args.parentsName, args.parentNumber, args.fullName,
+        return await updateStudent(args.oldSid, args.socialID, args.parentsName, args.parentNumber, args.fullName,
             args.sex, args.phoneNumber, args.birthDate, args.address )
     }
     
@@ -39,15 +39,15 @@ exports.Student = class Student extends Model {
      * @param args (attributes)
      * @returns {Promise<*>}
      */
-    static async delete(args) {
-        const addStudent = require('./delete')
-        return await addStudent(args.sid)
+    static async deleteStd(sid) {
+        const deleteStudent = require('./delete')
+        return await deleteStudent(sid)
     }
 
     // read student info
     static async show(args) {
         const readStudent = require('./show')
-        return await readStudent(args.sid)
+        return await readStudent(args)
     }
 
     // search student info
@@ -55,6 +55,12 @@ exports.Student = class Student extends Model {
         const searchStudent = require('./search')
         return await searchStudent(searchBy, value)
     }
+
+    static async getStudents(limit, offset) {
+        const searchStudent = require('./get')
+        return await searchStudent(limit, offset)
+    }
+
 }
 
 
@@ -70,18 +76,8 @@ exports.studentData = {
 
         socialID: {
             type: DataTypes.INTEGER,
-            // references: {
-            //     // This is a reference to another model
-            //     model: Person,
-            //     
-            //     // this is the column name of the referenced model
-            //     key: 'socialID',
-            //     // With postgreSQL, it is optionally possible to declare when to check the foreign key constraint
-            //     //deferrable: Deferrable.INITIALLY_IMMEDIATE
-            // },
-            
             allowNull: false,
-            primaryKey: true,
+            unique: true,
         },
 
         parentName: {

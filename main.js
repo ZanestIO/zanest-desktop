@@ -1,4 +1,4 @@
-const { compareSync } = require("bcrypt");
+const {compareSync} = require("bcrypt");
 const {app, BrowserWindow, ipcMain, session, ipcRenderer} = require("electron")
 const db = require('./models/Db')
 
@@ -35,14 +35,9 @@ function createWindow() {
     // mainWindow.removeMenu()
 
 
-    /**
-     *
-     * @type {Promise<void>}
-     */
-    // TODO
-    let hasManger = db().sequelize.models.User.userTypeExists('manager').then( res => {
+    let hasManger = db().sequelize.models.User.userTypeExists('manager').then(res => {
         if (!res) {
-            mainWindow.loadFile('renderer/firstLogin.html')
+            mainWindow.loadFile('renderer/students.html')
         } else {
             mainWindow.loadFile('renderer/students.html')
         }
@@ -54,7 +49,7 @@ function createWindow() {
 
     UnhandledPromiseRejectionWarning
     // mainWindow.webContents.openDevTools({mode:"undocked"})
-    mainWindow.on('closed',  () => {
+    mainWindow.on('closed', () => {
         mainWindow = null
     })
 }
@@ -98,31 +93,31 @@ ipcMain.on('userAuth', async (e, args) => {
 ipcMain.on('requestUserSession', async (e, args) => {
     let ses = session.defaultSession.cookies
     arguments = {}
-    ses.get({url: 'https://zanest.io', name: 'userId'}).then( cookie => {
-      arguments.userId =   cookie[0].value
+    ses.get({url: 'https://zanest.io', name: 'userId'}).then(cookie => {
+        arguments.userId = cookie[0].value
     }).catch(err => {
         console.log("ERROR IN SETTING COOKIE => " + err.msg)
     })
 
-    ses.get({url: 'https://zanest.io', name: 'userName'}).then( cookie => {
-        arguments.userName =   cookie[0].value
+    ses.get({url: 'https://zanest.io', name: 'userName'}).then(cookie => {
+        arguments.userName = cookie[0].value
     }).catch(err => {
         console.log("ERROR IN SETTING COOKIE => " + err.msg)
     })
 
-    ses.get({url: 'https://zanest.io', name: 'userType'}).then( cookie => {
-        arguments.userType =   cookie[0].value
+    ses.get({url: 'https://zanest.io', name: 'userType'}).then(cookie => {
+        arguments.userType = cookie[0].value
     }).catch(err => {
         console.log("ERROR IN SETTING COOKIE => " + err.msg)
     })
 
-    ses.get({url: 'https://zanest.io', name: 'fullName'}).then( cookie => {
-        arguments.fullName =   cookie[0].value
+    ses.get({url: 'https://zanest.io', name: 'fullName'}).then(cookie => {
+        arguments.fullName = cookie[0].value
     }).catch(err => {
         console.log("ERROR IN SETTING COOKIE => " + err.msg)
     })
 
-    ses.get({}).then( (cookies) => {
+    ses.get({}).then((cookies) => {
         e.sender.send('responseUserSession', arguments)
     }).catch(err => {
         console.log("ERROR IN SETTING COOKIE => " + err.msg)
@@ -147,19 +142,21 @@ ipcMain.on('userCreation', async (E, args) => {
     try {
         // add new user to db
         check = await db().sequelize.models.User.add(args)
-        if(check[0]) {
-            if ( args.login === true ) {
+        if (check[0]) {
+            if (args.login === true) {
                 // login to Dashboard
                 setCookie(args)
             }
             verify = true
-        } else{
+        } else {
             verify = false
-            return mainWindow.webContents.send('error', { errorTitle: 'خطا در ایجاد حساب کاربری',
-                                                          errorMessage: check[1],
-                                                          contactAdmin: 'لطفا نام کاربری دیگری را امتحان کنید'})
+            return mainWindow.webContents.send('error', {
+                errorTitle: 'خطا در ایجاد حساب کاربری',
+                errorMessage: check[1],
+                contactAdmin: 'لطفا نام کاربری دیگری را امتحان کنید'
+            })
         }
-    } catch(err) {
+    } catch (err) {
         console.log(`Error occurred: ${err}`)
         verify = false
     }
@@ -171,62 +168,71 @@ ipcMain.on('userCreation', async (E, args) => {
 // load channel response
 // ===================================================================================================
 ipcMain.on('load', (e, args) => {
+
+    // ==================================================================================
     // holds the last page for a reference
-    let lastPage = {url: 'https://zanest.io', name:'lastPage', value: "./renderer/" + args.currentPage + ".html"}
+    let lastPage = {url: 'https://zanest.io', name: 'lastPage', value: "./renderer/" + args.currentPage + ".html"}
     session.defaultSession.cookies.set(lastPage)
 
     let verify = true
     let path = "./renderer/" + args.page + ".html"
 
+    // ==================================================================================
     // if user cookie is staff just allow to access the some limited page.
     session.defaultSession.cookies.get({url: 'http://zanest.io'})
-    .then((cookies) => {
+        .then( async(cookies) => {
 
-        if (cookies) {
-            // get userType
-            let value
-            cookies.forEach( node => {
-                if(node.name === 'userType'){
-                    value = node.value
+            if (cookies) {
+                // get userType
+                let value
+                cookies.forEach(node => {
+                    if (node.name === 'userType') {
+                        value = node.value
+                    }
+                })
+                console.log(value + " request for " + path)
+
+
+                if (value === 'staff') {
+                    switch (args.page) {
+                        case "firstLogin":
+                            path = "./renderer/404.html"
+                            break
+                        case "createStudent":
+                            path = "./renderer/404.html"
+                            break
+                    }
                 }
-            })
-            console.log(value + " request for " + path)
+            } else {
+                path = "./renderer/404.html"
+            }
 
+            await mainWindow.loadFile(path)
 
-            if (value === 'staff'){
-                switch(args.page) {
-                    case "firstLogin":
-                        path = "./renderer/404.html"
-                        
-                        break
-                    case "createStudent":
-                        path = "./renderer/404.html"
-                        break
+            if (path !== "./renderer/404.html" ) {
+                console.log(" start response Student ================================" + args.id)
+                if (args.id) {
+                    try {
+                        const student = await db().sequelize.models.Student.show(args.id)
+
+                        if (student[0]) {
+                            console.log(student[1])
+                            mainWindow.webContents.send('getInfo', student[1])
+                        } else {
+                            console.log(student[1])
+                            mainWindow.webContents.send('errorNot', {
+                                title: "خطای بازیابی",
+                                message: "زبان آموز مورد نظر وجود ندارد"
+                            })
+                        }
+                    } catch (err) {
+                        console.log(err + "(( get Student Channel ))")
+                    }
                 }
             }
-        } else {
-            path = "./renderer/404.html"
-        }
-        console.log(" start response Student ================================" + args.id)
-        if(args.id){
-            try {
-                const check = db().sequelize.models.Student.show(args.id)
-                
-                if(check[0]) {
-                    console.log(check[1])
-                    e.send.sender('responseStudentGetBulk', check[1])
-                } else 
-                    console.log(check[1])
-        
-            } catch(err) {
-                console.log(err + "(( get Student Channel ))")
-            }
-        }
 
-        
-        mainWindow.loadFile(path)
 
-    }).catch((error) => {
+        }).catch((error) => {
         console.log(error.msg)
     })
 })
@@ -235,26 +241,18 @@ ipcMain.on('load', (e, args) => {
 // Cookies Function
 // ===================================================================================================
 /**
-<<<<<<< test
- *
- * @param loggedInStatus
- * @returns {Promise<void>}
- */
-// TODO
-=======
  * a function to set cookies after
  * @param loggedInStatus
  * @returns {Promise<void>} this promise contains a boolean and a message
  */
 // TODO complete this explanation
->>>>>>> documentation for functions added
 async function setCookie(loggedInStatus) {
     // setting up cookies
 
-    let cookieid = {url: 'https://zanest.io', name:'userId', value: `${loggedInStatus.id}`}
-    let cookie2 = {url: 'https://zanest.io', name:'userName', value: loggedInStatus.userName}
-    let cookie3 = {url: 'https://zanest.io', name:'fullName', value: loggedInStatus.fullName}
-    let cookie4 = {url: 'https://zanest.io', name:'userType', value: loggedInStatus.userType}
+    let cookieid = {url: 'https://zanest.io', name: 'userId', value: `${loggedInStatus.id}`}
+    let cookie2 = {url: 'https://zanest.io', name: 'userName', value: loggedInStatus.userName}
+    let cookie3 = {url: 'https://zanest.io', name: 'fullName', value: loggedInStatus.fullName}
+    let cookie4 = {url: 'https://zanest.io', name: 'userType', value: loggedInStatus.userType}
 
     await session.defaultSession.cookies.set(cookieid)
     await session.defaultSession.cookies.set(cookie2)
@@ -270,29 +268,37 @@ async function setCookie(loggedInStatus) {
 // ADDING STUDENT 
 // ===================================================================================================
 
-ipcMain.on('studentCreation', async(e, args) => {
+ipcMain.on('studentCreation', async (e, args) => {
     console.log(args)
     try {
         const check = await db().sequelize.models.Student.add(args)
         if (check[0]) {
             // show success notification
+            sendStudentBulk(10, 1)
 
-            return mainWindow.webContents.send('successNot', { title: '',
-                                              message: check[1],
-                                              contactAdmin: false})
+            return mainWindow.webContents.send('successNot', {
+                title: '',
+                message: check[1],
+                contactAdmin: false
+            })
+
 
         } else {
             // show fail notification
-            return mainWindow.webContents.send('errorNot', { title: 'خطا در ایجاد زبان آموز جدید',
-                                                            message: check[1],
-                                                            contactAdmin: true})
-        } 
+            return mainWindow.webContents.send('errorNot', {
+                title: 'خطا در ایجاد زبان آموز جدید',
+                message: check[1],
+                contactAdmin: true
+            })
+        }
 
-    } catch(err){
+    } catch (err) {
         console.log(err + "(( STUDENT CREATION ))")
-        return mainWindow.webContents.send('errorNot', { title: 'خطا در ایجاد زبان آموز جدید',
-                                                        message: err.msg,
-                                                        contactAdmin: true})
+        return mainWindow.webContents.send('errorNot', {
+            title: 'خطا در ایجاد زبان آموز جدید',
+            message: err.msg,
+            contactAdmin: true
+        })
     }
 })
 
@@ -300,28 +306,33 @@ ipcMain.on('studentCreation', async(e, args) => {
 // UPDATEING STUDENT INFO 
 // ===================================================================================================
 
-ipcMain.on('studentUpdate', (e, args) => {
+ipcMain.on('studentUpdate', async(e, args) => {
     try {
-        const check = db().sequelize.models.Student.update(args)
-        if (check[0]) {
-            // process successfuly done
+        const check = await db().sequelize.models.Student.updateStd(args)
 
-            return mainWindow.webContents.send('successNot', {title: '',
-                                                            message: check[1],
-                                                            contactAdmin: false})
+        if (check[0]) {
+            // process successfully done
+            return mainWindow.webContents.send('successNot', {
+                title: '',
+                message: check[1],
+                contactAdmin: false
+            })
         } else {
             // process failed
-
-            return mainWindow.webContents.send('errorNot', {errorTitle: 'خطا در به روزرسانی اطلاعات',
-                                                        errorMessage: check[1],
-                                                        contactAdmin: true })
+            return mainWindow.webContents.send('errorNot', {
+                title: 'خطا در به روزرسانی اطلاعات',
+                message: check[1],
+                contactAdmin: true
+            })
         }
 
-    } catch(err) {
+    } catch (err) {
         console.log(err.msg + "(( STUDENT UPDATE ))")
-        return mainWindow.webContents.send('errorNot', {errorTitle: 'خطا در به روزرسانی اطلاعات',
-                                                        errorMessage: err.msg,
-                                                        contactAdmin: true })
+        return mainWindow.webContents.send('errorNot', {
+            title: 'خطا در به روزرسانی اطلاعات',
+            message: err.msg,
+            contactAdmin: true
+        })
     }
 })
 
@@ -330,28 +341,35 @@ ipcMain.on('studentUpdate', (e, args) => {
 // DELETE STUDENT 
 // ===================================================================================================
 
-ipcMain.on('studentDeletion', (args) => {
+ipcMain.on('studentDeletion', async(e,args) => {
     try {
-        const check = db().sequelize.models.Student.delete(args)
+        console.log(args)
+        let check = await db().sequelize.models.Student.deleteStd(args)
         if (check[0]) {
-
-            return mainWindow.webContents.send('successNot', {title: '',
-                                                            message: check[1],
-                                                            contactAdmin: false})
+            await mainWindow.loadFile('./renderer/students.html');
+            return mainWindow.webContents.send('successNot', {
+                title: '',
+                message: check[1],
+                contactAdmin: false
+            })
         } else {
             // process failed
 
-            return mainWindow.webContents.send('errorNot', {title: 'خطا در حذف ',
-                                                        message: check[1],
-                                                        contactAdmin: true})
+            return mainWindow.webContents.send('errorNot', {
+                title: 'خطا در حذف ',
+                message: check[1],
+                contactAdmin: true
+            })
         }
-    } catch(err) {
+    } catch (err) {
         console.log(err.msg + "(( STUDENT DELETE ))")
         // 
 
-        return mainWindow.webContents.send('errorNot', {title: 'خطا در حذف ',
-                                            message: err.msg,
-                                            contactAdmin: true})
+        return mainWindow.webContents.send('errorNot', {
+            title: 'خطا در حذف ',
+            message: err.msg,
+            contactAdmin: true
+        })
     }
 })
 
@@ -363,14 +381,16 @@ ipcMain.on('studentDeletion', (args) => {
 ipcMain.on('readStudent', (e, args) => {
     try {
         const check = db().sequelize.models.Student.show(args)
-        if(check[0])
+        if (check[0])
             e.send.sender('responseStudentGetBulk', check[1])
-        else 
-            return mainWindow.webContents.send('normalNot', {title: ' ناموفق',
-                                                message: 'نتیجه ای یافت نشد',
-                                                contactAdmin: 'لطفا مجدد سعی نمایید '})
+        else
+            return mainWindow.webContents.send('normalNot', {
+                title: ' ناموفق',
+                message: 'نتیجه ای یافت نشد',
+                contactAdmin: 'لطفا مجدد سعی نمایید '
+            })
 
-    } catch(err) {
+    } catch (err) {
         console.log(err + "(( get Student Channel ))")
     }
 })
@@ -379,7 +399,7 @@ ipcMain.on('readStudent', (e, args) => {
 // ==================================================================================
 // HANDLING SEARCH RESULT
 // ==================================================================================
-ipcMain.on('search', (e, args)=> {
+ipcMain.on('search', async(e, args) => {
     /*
     Searches Are Done By Containment Not Equality
     ToDo: adding type checking in here for search
@@ -387,27 +407,43 @@ ipcMain.on('search', (e, args)=> {
 
     let result = []
     if (args.info.sid) {
-        result = db().models.Student.Search('id', args.info.sid)
+        result = await db().sequelize.models.Student.search('id', args.info.sid)
 
-    } else if (args.name) {
-        result = db().models.Student.search('name', args.info.name)
+    } else if (args.info.name) {
+        result = await db().sequelize.models.Student.search('name', args.info.name)
     }
 
-    // sending back the result
-    // mock for testing ignore it
-    // result =  [
-    //     {
-    //         name: 'صادق',
-    //         sid: '2234234234',
-    //         phone:'424234234',
-    //     },
-    //     {
-    //         name: 'اقبال',
-    //         sid: '2234234234',
-    //         phone:'424234234',
-    //     }
-    // ]
-    mainWindow.webContents.send('responseSearch', result)
+
+    mainWindow.webContents.send('responseSearch',  result)
+
 })
 
+// ==================================================================================
+// GETTING STUDENTS IN BULK FOR STUDENTS TABLE
+// ==================================================================================
+ipcMain.on("studentGetBulk", async (e, args) => {
+    sendStudentBulk(args.number, args.offset)
+})
 
+async function sendStudentBulk(number = 10, offset = 1) {
+    let studentsHolder = await db().sequelize.models.Student.getStudents(number, offset);
+    let students = [];
+
+    // Todo: Move this to Student > get
+    studentsHolder = JSON.parse(studentsHolder);
+    studentsHolder.forEach(node => {
+        let student = {
+            fullName: node.Person.fullName,
+            phoneNumber: node.Person.phoneNumber,
+            sex: node.Person.sex,
+            socialID: node.socialID,
+            birthDate: node.Person.birthDate,
+            parentNumber: node.parentNumber,
+            address: node.Person.address,
+            parentsName: node.parentName,
+        }
+        students.push(student)
+    })
+
+    mainWindow.webContents.send('responseStudentGetBulk', {students: students})
+}

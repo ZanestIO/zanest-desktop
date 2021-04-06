@@ -1,6 +1,7 @@
 const {ipcRenderer} = require('electron')
 const confirm_alert = require('./confirmAlert')
 const Vue = require('vue')
+
 const errors = {
     empty: 'نمی تواند خالی باشد',
     max(num) {
@@ -15,7 +16,6 @@ const errors = {
     invalid: "کاراکتر غیرمجاز",
     onlyNum: 'فقط استفاده از اعداد مجاز',
     onlyLetter: 'فقط استفاده از حروف مجاز'
-
 }
 
 module.exports = {
@@ -283,9 +283,10 @@ module.exports = {
                     parentNumber: this.parentPhone.value,
                     sex: this.sex.value,
                     phoneNumber: this.phone.value,
-                    birthdate: `${this.birthDate.year.value}/${this.birthDate.month.value}/${this.birthDate.day.value}`,
+                    birthDate: `${this.birthDate.year.value}/${this.birthDate.month.value}/${this.birthDate.day.value}`,
                     address: this.address.value
                 })
+                this.oldSid = this.sid.value
             }
         },
 
@@ -297,7 +298,7 @@ module.exports = {
         },
         confirm_delete() {
             this.deleteBox.seen = false
-            ipcRenderer.send('userDeletion', {id: this.oldSid})
+            ipcRenderer.send('studentDeletion',  this.sid.value)
         },
         cancelDelete() {
             this.deleteBox.seen = false

@@ -6,11 +6,7 @@ const bcrypt = require('bcrypt')
 // ==================================================================================
 exports.User = class User extends Model {
     /**
-<<<<<<< test
-     *
-=======
      * create default user admin in DB
->>>>>>> documentation for functions added
      * @returns {Promise<void>}
      */
     static async createDefaultAdmin() {
@@ -28,17 +24,10 @@ exports.User = class User extends Model {
     }
 
     /**
-<<<<<<< test
-     *
-     * @param username
-     * @param password
-     * @returns {Promise<[boolean, {fullName: *, id: *, userType: *, userName: *}]|[boolean, {password: string}]|[boolean, {userName: string}]>}
-=======
      * login with correct username and password
      * @param username
      * @param password
      * @returns {Promise<[boolean, {fullName: *, id: *, userType: string|*, userName: string|*}]|[boolean, {password: string}]|[boolean, {userName: string}]>}
->>>>>>> documentation for functions added
      */
     static async login(username, password) {
         const UserAuthenticator = require("./userAuth");
@@ -46,12 +35,8 @@ exports.User = class User extends Model {
     }
 
     /**
-<<<<<<< test
-     *
-=======
      * check if the given userType
      * exist in the DB
->>>>>>> documentation for functions added
      * @param type
      * @returns {Promise<boolean>}
      */
@@ -61,11 +46,7 @@ exports.User = class User extends Model {
     }
 
     /**
-<<<<<<< test
-     *
-=======
      * add new user to DB
->>>>>>> documentation for functions added
      * @param args
      * @returns {Promise<*>}
      */
