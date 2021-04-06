@@ -3,6 +3,7 @@ const secondary_menu = require('./components/secondary_menu')
 const primary_menu = require('./components/primary_menu')
 const notification = require('./components/notification')
 const notListener = require('./notListener')
+const footer_el = require('./components/footer')
 const Vue = require('vue')
 
 // ==================================================================================
@@ -35,6 +36,7 @@ let menuComponent = {
         primary_menu,
         secondary_menu,
         notification,
+        footer_el
     },
     methods: {
         requestPage(pageName) {

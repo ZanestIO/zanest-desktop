@@ -1,28 +1,12 @@
 const {ipcRenderer} = require('electron')
 const confirm_alert = require('./confirmAlert')
 const Vue = require('vue')
-
-const errors = {
-    empty: 'نمی تواند خالی باشد',
-    max(num) {
-        return `نباید از ${num} بزرگتر باشد`
-    },
-    min(num) {
-        return `نباید از ${num} کوچکتر باشد`
-    },
-    exact(num) {
-        return `باید ${num} رقم باشد.`
-    },
-    invalid: "کاراکتر غیرمجاز",
-    onlyNum: 'فقط استفاده از اعداد مجاز',
-    onlyLetter: 'فقط استفاده از حروف مجاز'
-}
+const {resetError, isEmpty, exact, smallerThan, biggerThan, isNumber, isLetter} = require('./../utils/validation')
 
 module.exports = {
     data() {
         return {
             valid: true,
-            oldSid: '',
             changed: false,
             deleteBox: {
                 seen: false,
@@ -286,7 +270,6 @@ module.exports = {
                     birthDate: `${this.birthDate.year.value}/${this.birthDate.month.value}/${this.birthDate.day.value}`,
                     address: this.address.value
                 })
-                this.oldSid = this.sid.value
             }
         },
 
@@ -424,71 +407,4 @@ module.exports = {
       </div>
       </section>
     `
-}
-
-
-// ==================================================================================
-// utility functions to use
-// ==================================================================================
-function resetError(input) {
-    input.err = false
-    input.success = false
-}
-
-function isEmpty(input) {
-    if (input.value.length === 0) {
-        input.err = true
-        input.errMsg = errors.empty
-        return true
-    }
-    return false
-}
-
-function exact(input, num) {
-    if (input.value.length !== num) {
-        input.err = true
-        input.errMsg = errors.exact(num)
-        return true
-    }
-    return false
-}
-
-function smallerThan(input, num) {
-    if (input.value < num) {
-        input.err = true
-        input.errMsg = errors.min(num)
-        return true
-    }
-    return false
-}
-
-function biggerThan(input, num) {
-    if (input.value > num) {
-        input.err = true
-        input.errMsg = errors.max(num)
-        return true
-    }
-    return false
-}
-
-function isNumber(input) {
-    let numbers = new RegExp(/^\d+$/)
-    if (!numbers.test(input.value)) {
-        input.err = true
-        input.errMsg = errors.onlyLetter
-        return true
-    }
-    return false
-}
-
-function isLetter(input) {
-    let numbers = new RegExp('[0-9]')
-    let symbols = new RegExp('[-!#$%^&*()_+|~=`{}\\[\\]:";\'<>?,.\\/]')
-
-    if (numbers.test(input.value) || symbols.test(input.value)) {
-        input.err = true
-        input.errMsg = errors.onlyLetter
-        return true
-    }
-    return false
 }

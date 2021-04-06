@@ -3,8 +3,8 @@ const {ipcRenderer} = require('electron')
 module.exports = {
     data() {
         return {
-            usertype: 'نامشخص',
-            fullName: 'نامشخص',
+            usertype: '',
+            fullName: '',
             themesMenu: false,
             userMenu: false,
             notifyMenu: false,
@@ -12,11 +12,11 @@ module.exports = {
     },
     created() {
         ipcRenderer.send('requestUserSession')
-
+        this.userType = 'undefined';
+        this.fullName = 'undefined';
         // _____________________________________________________
         // processing logged in user info
         ipcRenderer.on('responseUserSession', (event, args) => {
-        let userType
         switch (args.userType) {
         case "admin":
             this.userType = 'ادمین'
@@ -118,11 +118,11 @@ module.exports = {
           <ul class="p-2 pl-5 main-dropdown w-40 text-right" v-if="userMenu">
             <li class="main-dropdown-li flex-col justify-center text-gray-200 flex-wrap border-b-2 border-gray-500 py-5">
                         <span id="fullNameHolder">
-                            Null
+                            {{ fullName }}
                         </span>
 
               <span id="userTypeHolder">
-                                Null
+                                {{ userType }}
                             </span>
             </li>
             <li class="main-dropdown-li justify-end border-b-2 border-gray-500 py-5">
