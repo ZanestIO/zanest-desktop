@@ -1,6 +1,7 @@
 const {ipcRenderer} = require('electron')
 const confirm_alert = require('./confirmAlert')
 const Vue = require('vue')
+
 const errors = {
     empty: 'نمی تواند خالی باشد',
     max(num) {
@@ -15,7 +16,6 @@ const errors = {
     invalid: "کاراکتر غیرمجاز",
     onlyNum: 'فقط استفاده از اعداد مجاز',
     onlyLetter: 'فقط استفاده از حروف مجاز'
-
 }
 
 module.exports = {
@@ -298,7 +298,6 @@ module.exports = {
         },
         confirm_delete() {
             this.deleteBox.seen = false
-            alert(this.sid.value)
             ipcRenderer.send('studentDeletion',  this.sid.value)
         },
         cancelDelete() {

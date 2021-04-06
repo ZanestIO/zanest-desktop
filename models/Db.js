@@ -1,4 +1,4 @@
-const {Sequelize, Model} = require('sequelize')
+const {Sequelize} = require('sequelize')
 const { Student, studentData } = require('./Student/Student')
 const { Person, personData } = require('./Person/Person')
 const {User, userData} = require('./User/User')
