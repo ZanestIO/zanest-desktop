@@ -1,8 +1,7 @@
 const {ipcRenderer} = require('electron')
 const Vue = require('vue')
 const notListener = require('./notListener');
-// setting up notification listeners
-notListener()
+const notification = require('./components/notification')
 
 // main vue element containing all the others
 let loginBox = {
@@ -79,7 +78,7 @@ let loginBox = {
 }
 
 let app = Vue.createApp(loginBox).mount('#loginBox')
-
+notListener(app)
 // ==================================================================================
 // firing submitForm with Enter
 document.querySelector('#loginBox').addEventListener('keyup', async e => {

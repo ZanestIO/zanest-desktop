@@ -1,8 +1,7 @@
 const {ipcRenderer} = require('electron')
 const Vue = require('vue')
+const notification = require('./components/notification')
 const notListener = require('./notListener');
-// setting up notification listeners
-notListener()
 
 // main vue element associated with #signup-box
 const signupBox = {
@@ -46,6 +45,9 @@ const signupBox = {
                 success: false
             }
         }
+    },
+    components: {
+        notification
     },
     methods: {
         // ==================================================================================
@@ -193,6 +195,7 @@ const signupBox = {
 }
 let app = Vue.createApp(signupBox).mount('#signup-box')
 
+notListener(app)
 // ==================================================================================
 // listening for the response from server
 // ==================================================================================

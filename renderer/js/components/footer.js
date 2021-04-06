@@ -5,7 +5,7 @@ module.exports = {
         }
     },
     template: `
-      <footer>
+      <teleport to="#footer">
       <p>
         تمامی حقوق متعلق به زانست می باشد
       </p>
@@ -19,6 +19,6 @@ module.exports = {
           <option value="#">پاییز 78-98</option>
         </select>
       </div>
-      </footer>
+      </teleport>
     `
 }
