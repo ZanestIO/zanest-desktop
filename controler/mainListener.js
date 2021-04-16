@@ -1,11 +1,11 @@
 
-const {cstd,ustd,dstd,rstd,getBulk} = require('./Channel/stdchannel/studentCh')
+const {cstd,ustd,dstd,rstd,getBulk} = require('./Channel/student/studentCh')
 const {searchEvent} = require('./Channel/search/searchCh')
-const {userChannel} = require('./Channel/userChannel/userCh')
+const {userChannel} = require('./Channel/user/userCh')
 const {load} = require('./Channel/session/loadCh')
 const {sesRequest} = require('./Channel/session/reqUserSessionCh')
-const {userAuth} = require('./Channel/userChannel/authCh')
-const {logout} = require('./Channel/userChannel/logout')
+const {userAuth} = require('./Channel/user/authCh')
+const {logout} = require('./Channel/user/logoutCh')
 
 
 module.exports = {
