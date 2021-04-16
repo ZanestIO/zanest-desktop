@@ -1,6 +1,8 @@
 const {DataTypes, Model} = require('sequelize')
 const {ipcMain} = require('electron')
 const bcrypt = require('bcrypt')
+const {log} = require('./../../logger')
+const message = require('./../../controler/massege')
 // ==================================================================================
 // USER CLASS WITH METHODS
 // ==================================================================================
@@ -10,6 +12,8 @@ exports.User = class User extends Model {
      * @returns {Promise<void>}
      */
     static async createDefaultAdmin() {
+        log.record('debug', message.reqCreateDefaultAdmin)
+
         let adminUser = await User.findOne({
             where: {
                 userName: 'admin'
@@ -30,6 +34,8 @@ exports.User = class User extends Model {
      * @returns {Promise<[boolean, {fullName: *, id: *, userType: string|*, userName: string|*}]|[boolean, {password: string}]|[boolean, {userName: string}]>}
      */
     static async login(username, password) {
+        log.record('debug', message.reqLogin)
+
         const UserAuthenticator = require("./userAuth");
         return await UserAuthenticator.login(username, password)
     }
@@ -41,6 +47,8 @@ exports.User = class User extends Model {
      * @returns {Promise<boolean>}
      */
     static async userTypeExists(type) {
+        log.record('debug', message.reqUserTypeExists)
+
         const UserAuthenticator = require("./userAuth");
         return await UserAuthenticator.userTypeExists(type)
     }
@@ -51,6 +59,8 @@ exports.User = class User extends Model {
      * @returns {Promise<*>}
      */
     static async add(args) {
+        log.record('debug', message.reqUserCreationRequest)
+
         const createUser = require('./add')
         return await createUser(args.fullName, args.userName, args.password, args.userType, args.birthDate, args.phoneNumber)
     }

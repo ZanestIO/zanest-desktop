@@ -1,6 +1,6 @@
-const Model = require('sequelize');
 const db = require('../Db.js');
-
+const {log} = require('./../../logger')
+const message = require('./../../controler/massege');
 
 // ================================================================================
 // creates the New Student
@@ -23,37 +23,33 @@ module.exports = async (sid, parentName, parentNumber, fullName, sex, phoneNumbe
     try {
 
         // check if netStd exist
-        // TODO : only check for student
         newStd = await db().sequelize.models.Student.findOne({
             where: {
                 socialID: sid
             }
         })
-
+        // if new student does not exist create it. 
         if (newStd === null) {
             
             let personHolder = await db().sequelize.models.Person.create({fullName: fullName, socialID: sid, address: address,
                  sex: sex, birthDate: birthDate, phoneNumber: phoneNumber })
 
-            console.log(`${sid} before student.`)
             const PersonId = personHolder.dataValues.id
             await db().sequelize.models.Student.create({socialID: sid, parentName: parentName, parentNumber: parentNumber, PersonId: PersonId});
 
-            // 
-            console.log(`${sid} created.`)
-            return [true, "زبان اموز با موفقیت ایجاد شد"]
+            const msg = message.successCreateStudent(sid)
+            console.log(msg)
+            log.record('info', msg)
+            return [true, msg]
 
         } else {
-
-            // 
-            console.log(`can't create ${sid}`)
-            return [false, "زبان اموز در سیستم موجود است"]
+            const msg = message.availableStudent(sid)
+            log.record('error', msg)
+            return [false, msg]
         }
 
-        // =======================================
     } catch (err) {
-
-        console.log(err)
+        log.record('error', err +":in:"+ __filename)
         return [false, err]
     }
 }

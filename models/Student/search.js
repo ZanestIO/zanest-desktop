@@ -1,5 +1,7 @@
 const db = require('../Db.js')
 const sequelize = require('sequelize')
+const {log} = require('./../../logger')
+const message = require('./../../controler/massege')
 const Op = sequelize.Op
 // ================================================================================
 // RETURN INFO OF SOME STUDENT
@@ -22,14 +24,14 @@ module.exports = async (searchBy, value) => {
             })
 
         } else if (searchBy === 'id') {
-
+            // TODO: fix search Issue
             info = await db().sequelize.models.Person.findAll({
-                attributes: ["fullName", "socialID", "phoneNumber"],
                 where: {
                     socialID: {
                         [Op.substring]: value
                     }
                 },
+                attributes: ["fullName", "socialID", "phoneNumber"],
                 offset: 1,
                 limit: 5
             })
@@ -44,15 +46,16 @@ module.exports = async (searchBy, value) => {
                 }
                 results.push(holder)
             })
-
             return results
+
         } else {
+            log.record('error', message.failSearch(info[0]))
             return false
         }
 
         // =======================================
     } catch (err) {
-        console.log(err.msg)
-        return [false, err.msg]
+        log.record('error', err +":in:"+ __filename)
+        return [false, err]
     }
 }

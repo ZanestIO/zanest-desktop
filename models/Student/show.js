@@ -1,11 +1,13 @@
+const db = require('../Db.js');
+const {Person} = require('./../Person/Person')
+const {log} = require('./../../logger')
+const message = require('./../../controler/massege')
+
 // ================================================================================
 // RETURN INFO OF SOME STUDENT
 // ================================================================================
 module.exports = async (sid) => {
     try {
-
-        const db = require('../Db.js');
-        const {Person} = require('./../Person/Person')
 
         // select * from student, person where socialID == sid
         let info = await db().sequelize.models.Student.findAll({
@@ -20,9 +22,9 @@ module.exports = async (sid) => {
         })
 
         if (info !== null) {
-            console.log(`searched for ${sid}.`)
+            log.record('info', message.searchStudent(sid))
             info = info[0]
-            console.log(info['Person.fullName'])
+
             let result =
                 {
                     fullName: info['Person.fullName'],
@@ -35,14 +37,14 @@ module.exports = async (sid) => {
                     parentsName: info.parentName,
                 }
             return [true, result]
+
         } else {
-            console.log(`${sid} not found`)
-            return [false, 'زبان آموز در سیستم موجود نیست']
+            log.record('info', message.incStudent)
+            return [false, message.incStudent]
         }
         // =======================================
     } catch (err) {
-        console.log("im exception")
-        console.log(err.msg)
-        return [false, err.msg]
+        log.record('error', err)
+        return [false, err]
     }
 }

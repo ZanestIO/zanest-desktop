@@ -1,5 +1,7 @@
 const bcrypt = require('bcrypt');
 const db = require('./../Db.js')
+const {log} = require('./../../logger')
+const message= require('./../../controler/massege')
 // ================================================================================
 // handles user Authentication
 // ================================================================================
@@ -15,8 +17,7 @@ module.exports = {
      * @returns {Promise<(boolean|{fullName, id, userType: (string|{default: string, allowNull: boolean, type: *}|*), userName: (string|{allowNull: boolean, type: *}|*)})[]|(boolean|{password: string})[]|(boolean|{userName: string})[]>}
      */
     async login(username, password) {
-        console.log('im here =================================================================')
-        console.log(db)
+
         let user = await usernameExists(username)
 
         // if there is a user
@@ -26,6 +27,9 @@ module.exports = {
             passMatch = await passwordMatches(user, password)
 
             if (passMatch) {
+                // successfuly login
+                log.record('warn', message.successLogin(user.dataValues.userName))
+
                 return [true, {
                     id: user.dataValues.id,
                     fullName: user.dataValues.fullName,
@@ -33,14 +37,18 @@ module.exports = {
                     userType: user.dataValues.userType
                 }]
             } else {
+                log.record('info', message.incUsername)
+
                 return [false, {
-                    password: "رمز عبور واردشده اشتباه است"
+                    password: message.incPassword
                 }]
+
             }
             // if there is no user with given username
         } else {
+            log.record('info', message.incUsername)
             return [false, {
-                userName: "نام کاربری در سیستم موجود نیست"
+                userName: message.incUsername
             }]
         }
     },

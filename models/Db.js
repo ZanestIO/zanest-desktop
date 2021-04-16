@@ -2,6 +2,7 @@ const {Sequelize} = require('sequelize')
 const { Student, studentData } = require('./Student/Student')
 const { Person, personData } = require('./Person/Person')
 const {User, userData} = require('./User/User')
+const {log} = require('./../logger')
 let database
 
 // ==================================================================================
@@ -17,9 +18,9 @@ class Db {
                 storage: "./zanest.sqlite"
             })
         } catch (err) {
-            let msg = "Database Creation Error =>" + err.message
+            let msg = "Database Creation Error =>" + err.message +':in:'+ __filename
             // for logging in the console
-            console.log(msg)
+            log.record('error', msg )
         }
     }
 
@@ -35,9 +36,9 @@ class Db {
             await this.sequelize.authenticate();
             return true
         } catch (error) {
-            let msg = "Database Authentication Error =>" + error.message
+            let msg = "Database Authentication Error =>" + error.message +':in:'+ __filename
 
-            console.log("Database Authentication Error =>" + error.message)
+            log.record('error', msg )
             return [false, msg]
         }
     }
