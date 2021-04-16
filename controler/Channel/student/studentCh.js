@@ -1,23 +1,21 @@
 const db = require('./../../../models/Db')
 const {webContentsSend, setLoadFile} = require('./../../../main')
+const {log} = require('./../../../logger')
+const message = require('./../../massege')
 
 // ===================================================================================================
 // ADDING STUDENT 
 // ===================================================================================================
 module.cstd = {
     cstd: global.share.ipcMain.on('studentCreation', async (e, args) => {
-        
-        console.log(args)
 
         try {
             const check = await db().sequelize.models.Student.add(args)
-
-            console.log(check[0] + '<.std.>')
             
             if (check[0]) {
                 // show success notification
                 sendStudentBulk(10, 1)
-    
+                
                 return webContentsSend('successNot', {
                     title: '',
                     message: check[1],
@@ -27,16 +25,16 @@ module.cstd = {
             } else {
                 // show fail notification
                 return webContentsSend('errorNot', {
-                    title: 'خطا در ایجاد زبان آموز جدید',
+                    title: message.errCreatestd,
                     message: check[1],
                     contactAdmin: true
                 })
             }
     
         } catch (err) {
-            console.log(err + "(( STUDENT CREATION ))")
+            log.record('error', err +":in:"+ __filename)
             return webContentsSend('errorNot', {
-                title: 'خطا در ایجاد زبان آموز جدید',
+                title: message.errCreatestd,
                 message: err,
                 contactAdmin: true
             })
@@ -63,16 +61,16 @@ module.ustd = {
             } else {
                 // process failed
                 return webContentsSend('errorNot', {
-                    title: 'خطا در به روزرسانی اطلاعات',
+                    title: message.errUpdateStd,
                     message: check[1],
                     contactAdmin: true
                 })
             }
     
         } catch (err) {
-            console.log(+ "(( STUDENT UPDATE ))")
+            log.record('error', err +":in:"+ __filename)
             return webContentsSend('errorNot', {
-                title: 'خطا در به روزرسانی اطلاعات',
+                title: message.errUpdateStd,
                 message: err,
                 contactAdmin: true
             })
@@ -88,7 +86,7 @@ module.ustd = {
 module.dstd = {
     dstd: global.share.ipcMain.on('studentDeletion', async(e,args) => {
         try {
-            console.log(args)
+
             let check = await db().sequelize.models.Student.deleteStd(args)
             if (check[0]) {
 
@@ -99,21 +97,19 @@ module.dstd = {
                     message: check[1],
                     contactAdmin: false
                 })
+
             } else {
                 // process failed
-    
                 return webContentsSend('errorNot', {
-                    title: 'خطا در حذف ',
+                    title: message.errDeleteStd,
                     message: check[1],
                     contactAdmin: true
                 })
             }
         } catch (err) {
-            console.log(err+ "(( STUDENT DELETE ))")
-            // 
-    
+            log.record('error', err +":in:"+ __filename)
             return webContentsSend('errorNot', {
-                title: 'خطا در حذف ',
+                title: message.errDeleteStd,
                 message: err,
                 contactAdmin: true
             })
@@ -132,13 +128,13 @@ module.rstd = {
                 webContentsSend('responseStudentGetBulk', check[1])
             else
                 return webContentsSend('normalNot', {
-                    title: ' ناموفق',
-                    message: 'نتیجه ای یافت نشد',
-                    contactAdmin: 'لطفا مجدد سعی نمایید '
+                    title: '',
+                    message: message.notFound,
+                    contactAdmin: false,
                 })
     
         } catch (err) {
-            console.log(err + "(( get Student Channel ))")
+            log.record('error', err +":in:"+ __filename)
         }
     })
 }
@@ -152,7 +148,7 @@ module.getBulk = {
     })
 }
 
-async function sendStudentBulk(number = 10, offset = 1, e) {
+async function sendStudentBulk(number = 10, offset = 1) {
     let studentsHolder = await db().sequelize.models.Student.getStudents(number, offset);
     let students = [];
 

@@ -1,6 +1,7 @@
 const db = require('../../../models/Db')
 const {webContentsSend, setCookies} = require('../../../main')
-
+const {log} = require('./../../../logger')
+const message = require('./../../massege')
 // ===================================================================================================
 // Create User
 // ===================================================================================================
@@ -12,26 +13,24 @@ module.exports = {
             // add new user to db
             check = await db().sequelize.models.User.add(args)
             if (check[0]) {
-
+                log.record('info', message.successUserCretion(args.username))
                 if (args.login === true) {
-                    // login to Dashboard
+                    // SET COOKIES for login to Dashboard
                     setCookies(args)
                 }
                 verify = true
 
             } else {
-
                 verify = false
                 return webContentsSend('error', {
-                    errorTitle: 'خطا در ایجاد حساب کاربری',
+                    errorTitle: message.errUser,
                     errorMessage: check[1],
-                    contactAdmin: 'لطفا نام کاربری دیگری را امتحان کنید'
+                    contactAdmin: true
                 })
-
+                
             }
         } catch (err) {
-
-            console.log(`Error occurred: ${err}`)
+            log.record('error', err +":in:"+ __filename)
             verify = false
         }
         // send Response

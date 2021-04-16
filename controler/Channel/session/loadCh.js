@@ -1,6 +1,7 @@
 const db = require('./../../../models/Db')
 const {webContentsSend, setLoadFile} = require('./../../../main')
-
+const {log} = require('./../../../logger')
+const message = require('./../../massege')
 // ===================================================================================================
 // load channel response
 // ===================================================================================================
@@ -12,8 +13,14 @@ module.exports = {
         let lastPage = {url: 'https://zanest.io', name: 'lastPage', value: "./renderer/" + args.currentPage + ".html"}
 
         global.share.session.defaultSession.cookies.set(lastPage)
-        // TODO: if last page is page do nothing
-        // let verify = true
+
+        // TODO: why args.current page is undefined ? fix issue
+        if (args.currentPage == args.lastPage) {
+
+            // return 
+            console.log(lastPage.value+ " -------------- " + args.page)
+        } 
+
         let path = "./renderer/" + args.page + ".html"
 
         // ==================================================================================
@@ -29,7 +36,7 @@ module.exports = {
                             value = node.value
                         }
                     })
-                    console.log(value + " request for " + path)
+                    log.record('info', value + " request for " + path)
 
                     if (value === 'staff') {
                         switch (args.page) {
@@ -47,32 +54,36 @@ module.exports = {
 
                 await setLoadFile(path)
 
-                if (path !== "./renderer/404.html" ) {
-                    //console.log(" start response Student ================================" + args.id)
-                    if (args.id) {
-                        //TODO: Type checking
-                        // Convert to function
-                        try {
-                            const student = await db().sequelize.models.Student.show(args.id)
+                accessAuth(path, args.id)
 
-                            if (student[0]) {
-                                console.log(student[1])
-                                webContentsSend('getInfo', student[1])
-                            } else {
-                                console.log(student[1])
-                                webContentsSend('errorNot', {
-                                    title: "خطای بازیابی",
-                                    message: "زبان آموز مورد نظر وجود ندارد"
-                                })
-                            }
-                        } catch (err) {
-                            console.log(err + "(( get Student Channel ))")
-                        }
-                    }
-                }
-
-            }).catch((error) => {
-            console.log(error)
+            }).catch((err) => {
+                log.record('error', err +":in:"+ __filename)
         })
     })
 }
+
+async function accessAuth(path, id) {
+    if (path !== "./renderer/404.html" ) {
+        if (id) {
+            //TODO: Type checking
+            try {
+                const student = await db().sequelize.models.Student.show(id)
+    
+                if (student[0]) {
+                    log.record('info', message.reqGetInfo(id))
+                    webContentsSend('getInfo', student[1])
+                } else {
+                    log.record('error', message.incStudent)
+                    webContentsSend('errorNot', {
+                        title: message.error,
+                        message: message.incStudent,
+                        contactAdmin: true,
+                    })
+                }
+            } catch (err) {
+                log.record('error', err +":in:"+ __filename)
+            }
+        }
+    }
+}
+

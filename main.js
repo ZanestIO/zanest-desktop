@@ -1,5 +1,4 @@
-const {compareSync} = require("bcrypt");
-const {app, BrowserWindow, ipcMain, session, ipcRenderer, webContents} = require("electron")
+const {app, BrowserWindow, ipcMain, session, ipcRenderer, webContents} = require("electron");
 const db = require('./models/Db')
 
 // ==================================================================================
@@ -96,7 +95,7 @@ async function setCookie(loggedInStatus) {
 
 
 //
-global.share = { ipcMain } 
+global.share = { ipcMain ,session} 
 
 
 // setter function for loading file to mainWindow
@@ -115,5 +114,3 @@ module.exports.setCookies = async (loginSt) => {
 
 // import all listener 
 require('./controler/mainListener') 
-
-

@@ -1,4 +1,5 @@
-
+const {log} = require('./../../logger')
+const message = require('./../../controler/massege')
 
 // ================================================================================
 // delete a Student
@@ -28,17 +29,18 @@ module.exports = async (sid) => {
                 }
             });
             // 
-            console.log(`${sid} deleted.`)
-            return [true, "زبان اموز با موفقیت حذف شد"]
+            const msg = message.successDeleteStudent(sid)
+            log.record('info',msg )
+            return [true, msg]
 
         } else {
-            console.log(`User Does't Exist: ${sid}`)
-            return [false, "زبان اموز مورد نظر در سیستم موجود نیست"]
+            const msg = message.incStudent
+            log.record('info', msg)
+            return [false, msg]
         }
         // =======================================
     } catch (err) {
-        console.log('exception')
-        console.log(err.msg)
-        return [false, err.msg]
+        log.record('error', err +":in:"+ __filename)
+        return [false, err]
     }
 }

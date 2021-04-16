@@ -1,3 +1,7 @@
+const db = require('../Db.js');
+const {log} = require('./../../logger')
+const message = require('./../../controler/massege')
+
 // ================================================================================
 //  UPDATE STUDENT INFO 
 // ================================================================================
@@ -17,21 +21,15 @@
 module.exports = async (oldSid, socialID, parentsName, parentNumber, fullName, sex, phoneNumber, birthDate, address ) => {
     
     try {
-        const db = require('../Db.js');
         // count number of element that changed 
         let changed = 0
 
-
-
         // find student with social ID 
-        // TODO: add old sid
         const student = await db().sequelize.models.Student.findOne({
             where: {
                 socialID: socialID
             }
         })
-
-
 
         // find person with Social ID
         const person = await db().sequelize.models.Person.findOne({
@@ -39,8 +37,6 @@ module.exports = async (oldSid, socialID, parentsName, parentNumber, fullName, s
               id: student.dataValues.PersonId
           }  
         })
-
-        console.log(student)
 
         // check update for student
         if (student !== null) {
@@ -59,12 +55,8 @@ module.exports = async (oldSid, socialID, parentsName, parentNumber, fullName, s
             await student.save()
 
         } else {
-            console.log("info of student tabe don't change")
+           log.record('info', message.updateStudentInfo)
         }
-
-        console.log('im person')
-        console.log(person)
-
 
         // check update for person
         if (person !== null) {
@@ -93,20 +85,18 @@ module.exports = async (oldSid, socialID, parentsName, parentNumber, fullName, s
                 changed += 1
             }
             await person.save()
+
         } else {
-            console.log("info of Person table don't change")
+            log.record('info', message.updatePersonInfo)
         }
 
-        // return true if any thing changed and return false if nothing changed
-        console.log(`changed ${changed} elements of ${socialID}`)
-        return [true, 'تغییرات با موفقیت ثبت شد']
+        const msg = message.updateinfo(changed ,oldSid)
+        log.record('info', msg)
+        return [true, msg]
         
-
-        // =======================================
     } catch (err) {
-        console.log('im exception')
-        console.log(err.msg)
-        return [false, err.msg]
+        log.record('error', err)
+        return [false, err]
     }
 }
 

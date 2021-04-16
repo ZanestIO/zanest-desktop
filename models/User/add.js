@@ -1,7 +1,8 @@
 const bcrypt = require('bcrypt');
 const Model = require('sequelize');
 const db = require('../Db.js');
-
+const {log} = require('./../../logger')
+const message = require('./../../controler/massege')
 
 // ================================================================================
 // creates the New User
@@ -33,20 +34,20 @@ module.exports = async (fullname=null, username, password, usertype='staff', bir
                     birthDate: birthdate, phoneNumber: phonenumber });
             })
 
-            // logging and returning
-            console.log(`${username} created.`)
-            return [true, "نام کاربری با موفقیت ایجاد شد"]
+            const msg = message.successUserCretion(username)
+            log.record('info', msg)
+
+            return [true, msg]
 
         } else {
+            const msg = message.userNameExist(username)
+            log.record('error', msg)
+            return [false, msg]
 
-            // logging and returning
-            console.log(`can't create ${username}`)
-            return [false, "نام کاربری در سیستم موجود است"]
         }
-        // =======================================
-    } catch (err) {
 
-        console.log(err.msg)
-        return [false, err.msg]
+    } catch (err) {
+        log.record('error', exception +":"+ __filename + ":" + err)
+        return [false, err]
     }
 }
