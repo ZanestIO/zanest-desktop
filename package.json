@@ -22,7 +22,8 @@
     "bcrypt": "^5.0.1",
     "sequelize": "^6.5.0",
     "sqlite3": "^5.0.2",
-    "vue": "^3.0.7"
+    "vue": "^3.0.7",
+    "winston": "^3.3.3"
   },
   "build": {
     "appId": "ir.zanest.zanest",
