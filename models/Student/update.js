@@ -27,7 +27,7 @@ module.exports = async (oldSid, socialID, parentsName, parentNumber, fullName, s
         // find student with social ID 
         const student = await db().sequelize.models.Student.findOne({
             where: {
-                socialID: socialID
+                socialId: socialID
             }
         })
 
@@ -53,10 +53,7 @@ module.exports = async (oldSid, socialID, parentsName, parentNumber, fullName, s
                 changed += 1
             }
             await student.save()
-
-        } else {
-           log.record('info', message.updateStudentInfo)
-        }
+        } 
 
         // check update for person
         if (person !== null) {
@@ -86,13 +83,11 @@ module.exports = async (oldSid, socialID, parentsName, parentNumber, fullName, s
             }
             await person.save()
 
-        } else {
-            log.record('info', message.updatePersonInfo)
         }
 
-        const msg = message.updateinfo(changed ,oldSid)
+        const msg = message.request('update', fullName, true ,oldSid) + `(تغییرات:${changed})`
         log.record('info', msg)
-        return [true, msg]
+        return [true, msg ]
         
     } catch (err) {
         log.record('error', err)

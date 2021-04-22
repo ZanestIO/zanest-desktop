@@ -11,12 +11,12 @@ module.exports = {
     
         if (loggedIn[0]) {
             //setting cookies
-            log.record('info', message.successUserAuth(args.username))
+            log.record('info', message.auth('User', true))
             await setCookies(loggedIn[1])
             await setLoadFile('./renderer/dashboard.html')
         } else {
             // return error log
-            log.record('info', message.failUserAuth(args.username))
+            log.record('info', message.auth('User', false))
             webContentsSend('userAuthError', loggedIn[1])
         }
     })

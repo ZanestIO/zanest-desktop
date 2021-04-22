@@ -32,12 +32,14 @@ module.exports = async (searchBy, value) => {
                     }
                 },
                 attributes: ["fullName", "socialID", "phoneNumber"],
-                offset: 1,
-                limit: 5
+                //offset: 1,
+                //limit: 5
             })
         }
+
         let results = []
         if (info[0]) {
+            log.record('error', message.request('search', 'student', true, value))
             info.forEach(node => {
                 holder = {
                     fullName: node.dataValues.fullName,
@@ -49,7 +51,7 @@ module.exports = async (searchBy, value) => {
             return results
 
         } else {
-            log.record('error', message.failSearch(info[0]))
+            log.record('error', message.request('search', 'student', false, value))
             return false
         }
 

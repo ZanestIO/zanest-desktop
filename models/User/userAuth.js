@@ -28,7 +28,7 @@ module.exports = {
 
             if (passMatch) {
                 // successfuly login
-                log.record('warn', message.successLogin(user.dataValues.userName))
+                log.record('info', message.successLogin(user.dataValues.userName))
 
                 return [true, {
                     id: user.dataValues.id,
@@ -37,7 +37,7 @@ module.exports = {
                     userType: user.dataValues.userType
                 }]
             } else {
-                log.record('info', message.incUsername)
+                log.record('warn', message.incPassowrd)
 
                 return [false, {
                     password: message.incPassword
@@ -46,9 +46,10 @@ module.exports = {
             }
             // if there is no user with given username
         } else {
-            log.record('info', message.incUsername)
+            const msg = message.check('User', false)
+            log.record('info', msg)
             return [false, {
-                userName: message.incUsername
+                userName: msg
             }]
         }
     },
@@ -62,6 +63,7 @@ module.exports = {
      * @returns {Promise<boolean>}
      */
     async userTypeExists(input_usertype) {
+        log.record('info', message.reqUserTypeExists)
         let user = await db().sequelize.models.User.findOne({
             where: {
                 userType: input_usertype

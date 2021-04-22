@@ -25,7 +25,7 @@ module.cstd = {
             } else {
                 // show fail notification
                 return webContentsSend('errorNot', {
-                    title: message.errCreatestd,
+                    title: message.title('create', 'زبان اموز'),
                     message: check[1],
                     contactAdmin: true
                 })
@@ -34,7 +34,7 @@ module.cstd = {
         } catch (err) {
             log.record('error', err +":in:"+ __filename)
             return webContentsSend('errorNot', {
-                title: message.errCreatestd,
+                title: message.title('create', 'زبان اموز'),
                 message: err,
                 contactAdmin: true
             })
@@ -61,7 +61,7 @@ module.ustd = {
             } else {
                 // process failed
                 return webContentsSend('errorNot', {
-                    title: message.errUpdateStd,
+                    title: message.title('update', 'زبان اموز'),
                     message: check[1],
                     contactAdmin: true
                 })
@@ -70,7 +70,7 @@ module.ustd = {
         } catch (err) {
             log.record('error', err +":in:"+ __filename)
             return webContentsSend('errorNot', {
-                title: message.errUpdateStd,
+                title: message.title('update', 'زبان اموز'),
                 message: err,
                 contactAdmin: true
             })
@@ -86,7 +86,7 @@ module.ustd = {
 module.dstd = {
     dstd: global.share.ipcMain.on('studentDeletion', async(e,args) => {
         try {
-
+    
             let check = await db().sequelize.models.Student.deleteStd(args)
             if (check[0]) {
 
@@ -101,7 +101,7 @@ module.dstd = {
             } else {
                 // process failed
                 return webContentsSend('errorNot', {
-                    title: message.errDeleteStd,
+                    title: message.title('delete', 'زبان آموز'),
                     message: check[1],
                     contactAdmin: true
                 })
@@ -109,7 +109,7 @@ module.dstd = {
         } catch (err) {
             log.record('error', err +":in:"+ __filename)
             return webContentsSend('errorNot', {
-                title: message.errDeleteStd,
+                title: message.title('delete', 'زبان آموز'),
                 message: err,
                 contactAdmin: true
             })
