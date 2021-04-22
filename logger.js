@@ -18,7 +18,7 @@ const options = {
   },
 };
 
-// log
+// log config
 const logConfiguration = {
   transports: [
 	  new transports.Console(options.console),
@@ -31,15 +31,11 @@ const logConfiguration = {
     format.align(),
     format.printf(info => `${info.level}:  ${info.label}: ${[info.timestamp]}: ${info.message}`),
   )
-  
+
 };
 
-/*
-* The createLogger method is one that takes a config object and returns a logger object 
-* with several methods bound to it which are your logging levels
-*/
+// create a logger object
 const logger = createLogger(logConfiguration);
-
 
 // ==================================================================================
 // LOG METHOD
