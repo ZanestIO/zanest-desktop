@@ -1,5 +1,3 @@
-const { studentData } = require("../models/Student/Student")
-
 module.exports = {
     empty: 'نمی تواند خالی باشد',
     notFound: "موردی جهت نمایش یافت نشد",
