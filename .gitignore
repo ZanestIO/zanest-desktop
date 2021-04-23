@@ -6,3 +6,4 @@ out/
 dist/
 /static/
 zanest.log
+zanest.sqlite 
