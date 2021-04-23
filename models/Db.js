@@ -1,5 +1,6 @@
 const {Sequelize} = require('sequelize')
 const { Student, studentData } = require('./Student/Student')
+const { Teacher, teacherData } = require('./Teacher/Teacher')
 const { Person, personData } = require('./Person/Person')
 const {User, userData} = require('./User/User')
 const {log} = require('./../logger')
@@ -56,10 +57,16 @@ class Db {
             User.init(userData.attributes, {sequelize: this.sequelize, modelName: userData.options.modelName})
             Person.init(personData.attributes, {sequelize: this.sequelize, modelName: personData.options.modelName})
             Student.init(studentData.attributes, {sequelize: this.sequelize, modelName: studentData.options.modelName})
+            Teacher.init(teacherData.attributes, {sequelize: this.sequelize, modelName: teacherData.options.modelName})
 
             Student.belongsTo(Person, {
                 foreignKey: 'PersonId'
             })
+
+            Teacher.belongsTo(Person, {
+                foreignKey: 'PersonId'
+            })
+            
             // syncing db
             await this.sequelize.sync()
 
