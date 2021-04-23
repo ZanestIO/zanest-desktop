@@ -13,7 +13,7 @@ module.exports = {
             // add new user to db
             check = await db().sequelize.models.User.add(args)
             if (check[0]) {
-                log.record('info', message.successUserCretion(args.username))
+                log.record('info', message.request('create', username, true))
                 if (args.login === true) {
                     // SET COOKIES for login to Dashboard
                     setCookies(args)
@@ -23,7 +23,7 @@ module.exports = {
             } else {
                 verify = false
                 return webContentsSend('error', {
-                    errorTitle: message.errUser,
+                    errorTitle: message.request('create', 'User', false),
                     errorMessage: check[1],
                     contactAdmin: true
                 })

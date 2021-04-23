@@ -2,69 +2,101 @@ module.exports = {
     empty: 'نمی تواند خالی باشد',
     notFound: "موردی جهت نمایش یافت نشد",
     error: "خطا رخداده است",
-
-    incUsername: "نام کاربری در سیستم موجود نیست", 
     incPassowrd: "رمز عبور واردشده اشتباه است",
     reqLogin: "درخواست ورود به سیستم",
+
     successLogin(username) {
         return  `کاربر با شناسه ${username} وارد حساب کاربری خود شد.`
     },
-    // User
-    reqUserCreationRequest: "درخواست ایجاد حساب کاربری جدید",
-    reqCreateDefaultAdmin: "درخواست ایجاد حساب کاربری پیشرفض",
-    reqUserTypeExists: "درخواست بررسی نام کاربری ",
-    errUser: "خطا در ایجاد حساب کاربری",
-    successUserAuth(username) {
-        return `به حساب کاربری با شناسه ${username} مجوز ورود داده شد`
-    },
-    failUserAuth(username) {
-        return `به حساب کاربری با شناسه ${username} مجوز ورود داده نشد`
+
+    /**
+    * type can be Persian or English Name such as 'student' or 'teacher' or 'user' that determine request type is for who?
+    * status is boolean argument that tell us that message kind is error or success and
+    * cruds string argument that can be 'create', 'read' , 'update' , 'delete', 'search' 
+    * also sid equal of Social id defualt of sid is null
+     */
+    request(cruds, type, status, sid=null) {
+        switch(cruds) {
+            case 'create':
+                if(type !== null) {
+                    if(status) {
+                        return `درخواست ایجاد ${type}:${sid} با موفقیت انجام شد.`
+                    } else if(status === false) {
+                        return `درخواست ایجاد ${type}:${sid} با خطا مواجه شد.`
+                    }
+                }
+            case 'read':
+                if(type !== null) {
+                    if(status) {
+                        return `درخواست نمایش اطلاعات ${type}:${sid} با موفقیت انجام شد.`
+                    } else if(status === false) {
+                        return `درخواست نمایش اطلاعات ${type}:${sid} با خطا مواجه شد.`
+                    }
+                }
+            case 'update':
+                if(type !== null) {
+                    if(status) {
+                        return `درخواست به روزرسانی اطلاعات ${type}:${sid} با موفقیت انجام شد.`
+                    } else if(status === false) {
+                        return `درخواست به روزرسانی اطلاعات ${type}:${sid} با خطا مواجه شد.`
+                    }
+                }
+            case 'delete':
+                if(type !== null) {
+                    if(status) {
+                        return `درخواست حذف کردن اطلاعات ${type}:${sid} با موفقیت انجام شد.`
+                    } else if(status === false) {
+                        return `درخواست حذف کردن اطلاعات ${type}:${sid} با خطا مواجه شد.`
+                    }
+                }
+            case 'search':
+                if(type !== null) {
+                        return `درخواست جستجوی اطلاعات ${type}:${sid}.`
+                } else {
+                    break
+                }
+        }
     },
 
-    // Student
-    incStudent: "زبان آموز در سیستم موجود نیست",
+    // check that type is founded or not.
+    check(type, status, sid=null) {
+        if(status) {
+            if(type !== null) {
+                return `${type}:${sid} مورد نظر در سیستم موجود است. `
+            }
+        } else if (status == false) {
+            if(type !== null) {
+                return `${type}:${sid} مورد نظر در سیستم موجود نیست. `
+            }
+        }
 
-    reqAddStudent: "درخواست ایجاد زبان اموز جدید",
-    reqGetStudent: " درخواست نمایش جدول زبان اموزان",
-    reqShowStudent: "درخواست نمایش اطلاعات دانشجویان",
-    updateStudentInfo: "برای اطلاعات زبان اموزی به روزرسانی وجود نداشت",
-    updatePersonInfo: "برای اطلاعات شخصی به روزرسانی وجود نداشت",
-    errCreatestd: "خطا در ایجاد زبان اموز جدید",
-    errUpdateStd: "خطا در به روزرسانی اطلاعات زبان اموز",
-    errDeleteStd: "خطا در به حذف اطلاعات زبان اموز",
-
-    availableStudent(sid) {
-        return `زبان اموزی با شماره دانشجوی ${sid} موجود است`
-    },
-    reqUpdateStudent(sid) {
-        return "("+sid +") درخواست به روزرسانی اطلاعات زبان اموز با شماره ملی"
-    },
-    reqDeleteStudent(sid) {
-        return "("+sid +") درخواست حذف اطلاعات زبان اموز با شماره ملی"
     },
 
-    reqSearchStudent(value) {
-        return "("+value +") درخواست چستچوی اطلاعات زبان اموز "
+    reqUserTypeExists: "درخواست بررسی  وضعیت نام کاربری ",
+
+    // auth message
+    auth(type, status) {
+        if(type !== null) {
+            if(status) {
+                return `${type} تایید هویت با موفقیت انجام شد`
+            } else if(status === false) {
+                return `${type} تایید هویت با خطا مواجه شد`
+            }
+        }
     },
 
-    searchStudent(value) {
-        return "("+value +") چستچوی اطلاعات زبان اموز "
-    },
+    // title message
+    title(type, value) {
+        switch(type) {
+            case 'create':
+                return `ایجاد ${value}`
+            case 'delete':
+                return `حذف ${value}`
+            case 'update':
+                return `به روزرسانی ${value}`
+            case 'read':
+                return `نمایش ${value}`
+        }
+    } 
 
-    successUserCretion(username) {
-        return  " ایجاد شد "+ username + " نام کاربری"
-    },
-
-    failSearch(value) {
-        return `نتیجه جستجو : ${value}`
-    },
-    updateinfo(number, sid) {
-        return `${number} رکورد از اطلاعات ${sid} به روز رسانی گردید`
-    },
-    successDeleteStudent(sid) {
-        return `زبان اموز با شماره ملی ${sid} با موفقیت حذف گردید.`
-    },
-    successCreateStudent(sid) {
-        return `زبان اموز با کد ملی ${sid} ایجاد گردید.`
-    }
 }

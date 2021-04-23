@@ -2,23 +2,31 @@ const db = require('./../../../models/Db')
 const {webContentsSend, setLoadFile} = require('./../../../main')
 const {log} = require('./../../../logger')
 const message = require('./../../massege')
+
 // ===================================================================================================
 // load channel response
 // ===================================================================================================
 module.exports = {
 
+    /* load channel args:
+    *   currentPage: page that user currently in.
+    *   page: page that requested to load
+    *   id: if of user that requestd for load
+    *   type: check type of user that request
+    */
     load: global.share.ipcMain.on('load', (e, args) => {
+
         // ==================================================================================
         // holds the last page for a reference
         let lastPage = {url: 'https://zanest.io', name: 'lastPage', value: "./renderer/" + args.currentPage + ".html"}
 
         global.share.session.defaultSession.cookies.set(lastPage)
 
-        // TODO: why args.current page is undefined ? fix issue
-        if (args.currentPage == args.lastPage) {
+        // TODO: fix issue
+        if (args.page == args.currentpage) {
 
             // return 
-            console.log(lastPage.value+ " -------------- " + args.page)
+            console.log(lastPage.value+ " ------[issue]-------- " + args.page+":"+ __filename)
         } 
 
         let path = "./renderer/" + args.page + ".html"
@@ -36,7 +44,7 @@ module.exports = {
                             value = node.value
                         }
                     })
-                    log.record('info', value + " request for " + path)
+                    log.record('verbose', value + " request for " + path)
 
                     if (value === 'staff') {
                         switch (args.page) {
@@ -48,13 +56,14 @@ module.exports = {
                                 break
                         }
                     }
+
                 } else {
                     path = "./renderer/404.html"
                 }
 
                 await setLoadFile(path)
 
-                accessAuth(path, args.id)
+                accessAuth(path, args.id, args.type)
 
             }).catch((err) => {
                 log.record('error', err +":in:"+ __filename)
@@ -62,27 +71,30 @@ module.exports = {
     })
 }
 
-async function accessAuth(path, id) {
+async function accessAuth(path, id, type) {
     if (path !== "./renderer/404.html" ) {
+        // id most be available
         if (id) {
-            //TODO: Type checking
-            try {
-                const student = await db().sequelize.models.Student.show(id)
-    
-                if (student[0]) {
-                    log.record('info', message.reqGetInfo(id))
-                    webContentsSend('getInfo', student[1])
-                } else {
-                    log.record('error', message.incStudent)
-                    webContentsSend('errorNot', {
-                        title: message.error,
-                        message: message.incStudent,
-                        contactAdmin: true,
-                    })
+            // request from who
+            if (type === 'student') {
+                try {
+                    const student = await db().sequelize.models.Student.show(id)
+                
+                    if (student[0]) {
+                        webContentsSend('getInfo', student[1])
+                    } else {
+                        log.record('info', message.check('Student', false, id))
+                        webContentsSend('errorNot', {
+                            title: message.error,
+                            message: message.incStudent,
+                            contactAdmin: true,
+                        })
+                    }
+                } catch (err) {
+                    log.record('error', err +":in:"+ __filename)
                 }
-            } catch (err) {
-                log.record('error', err +":in:"+ __filename)
             }
+
         }
     }
 }

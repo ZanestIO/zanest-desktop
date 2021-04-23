@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const Model = require('sequelize');
 const db = require('../Db.js');
 const {log} = require('./../../logger')
-const message = require('./../../controler/massege')
+const message = require('./../../controler/massege');
 
 // ================================================================================
 // creates the New User
@@ -31,23 +31,22 @@ module.exports = async (fullname=null, username, password, usertype='staff', bir
         if (newUser === null) {
             bcrypt.hash(password, 10, async (err, hash) => {
                 await db().sequelize.models.User.create({fullName: fullname , userName: username , password: hash, userType: usertype,
-                    birthDate: birthdate, phoneNumber: phonenumber });
+                    birthDate: birthdate, phoneNumber: phonenumber })
+                    .then(result => setId(result.id));
             })
-
-            const msg = message.successUserCretion(username)
+            const msg = message.request('create', username, true)
             log.record('info', msg)
-
             return [true, msg]
 
         } else {
-            const msg = message.userNameExist(username)
+            msg = message.check(username, true)
             log.record('error', msg)
             return [false, msg]
-
         }
 
     } catch (err) {
-        log.record('error', exception +":"+ __filename + ":" + err)
+        log.record('error:' + err + ":" + __filename)
         return [false, err]
     }
+
 }

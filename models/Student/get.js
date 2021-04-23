@@ -9,12 +9,13 @@ module.exports = async (limit, offset) => {
 
         const db = require('./../Db');
         const {Person} = require('../Person/Person');
+
         // select * from student, person where socialID == sid
         info = await db().sequelize.models.Student.findAll({
             include: {
               model: Person
             },
-            limit: 10,
+            limit: limit,
             nest: false
         })
 

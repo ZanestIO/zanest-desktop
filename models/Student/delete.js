@@ -29,12 +29,12 @@ module.exports = async (sid) => {
                 }
             });
             // 
-            const msg = message.successDeleteStudent(sid)
+            const msg = message.request('delete', 'student', true, sid)
             log.record('info',msg )
             return [true, msg]
 
         } else {
-            const msg = message.incStudent
+            const msg = message.check('student', false, sid)
             log.record('info', msg)
             return [false, msg]
         }

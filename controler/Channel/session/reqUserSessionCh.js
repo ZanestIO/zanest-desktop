@@ -5,7 +5,7 @@ const {log} = require('./../../../logger')
 // ===================================================================================================
 module.exports = {
     reqUserSession: global.share.ipcMain.on('requestUserSession', async (e, args) => {
-        let ses = session.defaultSession.cookies
+        let ses = global.share.session.defaultSession.cookies
 
         arguments = {}
         ses.get({url: 'https://zanest.io', name: 'userId'}).then(cookie => {

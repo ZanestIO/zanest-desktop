@@ -22,7 +22,7 @@ module.exports = async (sid) => {
         })
 
         if (info !== null) {
-            log.record('info', message.searchStudent(sid))
+            log.record('info', message.request('read', 'student', true, sid))
             info = info[0]
 
             let result =
@@ -39,12 +39,13 @@ module.exports = async (sid) => {
             return [true, result]
 
         } else {
-            log.record('info', message.incStudent)
-            return [false, message.incStudent]
+            const msg = message.check('Student', false, sid)
+            log.record('info', msg)
+            return [false, msg]
         }
         // =======================================
     } catch (err) {
-        log.record('error', err)
+        log.record('error', err +":in:"+ __filename)
         return [false, err]
     }
 }
