@@ -18,11 +18,11 @@ module.getBulk = {
 
         } else if ( args.type === 'Teacher') { 
             let teachers = await db().sequelize.models.Teacher.getTeachers(args.number, args.offset);
-            webContentsSend('responseStudentGetBulk', {teachers: teachers})
+            webContentsSend('responseTeacherGetBulk', {teachers: teachers})
 
         } else if ( args.type === 'User') {
             let users = await db().sequelize.models.User.getUsers(args.number, args.offset);
-            webContentsSend('responseStudentGetBulk', {users: users})
+            webContentsSend('responseUserGetBulk', {users: users})
 
         } else {
             log.record('warn', `${args.type} is not found. check sender channel`)
