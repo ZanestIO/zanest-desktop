@@ -8,7 +8,7 @@ module.exports = {
     },
     created() {
       // get users information
-        ipcRenderer.send('studentGetBulk', {number: 10, offset: 1})
+        ipcRenderer.send('getBulk', {number: 10, offset: 1, type: 'Student'})
         ipcRenderer.on('responseStudentGetBulk',(e, args) => {
             // console.log(args.students)
             this.students = args.students
