@@ -139,34 +139,8 @@ module.rstd = {
     })
 }
 
-// ==================================================================================
-// GETTING STUDENTS IN BULK FOR STUDENTS TABLE
-// ==================================================================================
-module.getBulk = {
-    getBulk: global.share.ipcMain.on("studentGetBulk", async (e, args) => {
-        await sendStudentBulk(args.number, args.offset, e)
-    })
-}
-
 async function sendStudentBulk(number = 10, offset = 1) {
-    let studentsHolder = await db().sequelize.models.Student.getStudents(number, offset);
-    let students = [];
-
-    // Todo: Move this to Student > get
-    studentsHolder = JSON.parse(studentsHolder);
-    studentsHolder.forEach(node => {
-        let student = {
-            fullName: node.Person.fullName,
-            phoneNumber: node.Person.phoneNumber,
-            sex: node.Person.sex,
-            socialID: node.socialID,
-            birthDate: node.Person.birthDate,
-            parentNumber: node.parentNumber,
-            address: node.Person.address,
-            parentsName: node.parentName,
-        }
-        students.push(student)
-    })
-
+    let students = await db().sequelize.models.Student.getStudents(number, offset);
     webContentsSend('responseStudentGetBulk', {students: students})
+
 }
