@@ -14,20 +14,15 @@
   "homepage": "https://zanest.ir",
   "license": "ISC",
   "devDependencies": {
-    "chai": "^4.3.4",
     "electron": "^11.3.0",
     "electron-builder": "^22.9.1",
     "electron-rebuild": "^2.3.5",
     "mocha": "^8.3.2",
     "nodemon": "^2.0.7",
-    "sequelize-mock": "^0.10.2",
-    "sequelize-test-helpers": "^1.3.2",
-    "sinon": "^10.0.0"
+    "sequelize-mock": "^0.10.2"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
-    "chai": "^4.3.4",
-    "mocha": "^8.3.2",
     "sequelize": "^6.5.0",
     "sqlite3": "^5.0.2",
     "vue": "^3.0.7",
