@@ -1,4 +1,4 @@
-
+// const {ctch,utch,dtch,rtch,getBulk} = require('./Channel/teacher/teacherCh')
 const {cstd,ustd,dstd,rstd,getBulk} = require('./Channel/student/studentCh')
 const {searchEvent} = require('./Channel/search/searchCh')
 const {userChannel} = require('./Channel/user/userCh')
@@ -10,6 +10,10 @@ const {pageCount} = require('./Channel/pagination/Counter')
 
 module.exports = {
     userAuth,
+  /*  ctch,
+    utch,
+    dtch,
+    rtch,*/
     cstd,
     ustd,
     dstd,

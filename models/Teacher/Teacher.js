@@ -11,8 +11,22 @@ exports.Teacher = class Teacher extends Model {
     * @returns {Promise<*>}
     */
     static async add(args) {
+
        const addTeacher= require('./add')
        return await addTeacher(args.socialID, args.credit, args.degree, args.fullName,
+            args.sex, args.phoneNumber, args.birthDate, args.address)
+    }
+
+    // update teacher info
+    /**
+     * updates some attributes for teacher
+     * @param args (attributes)
+     * @returns {Promise<*>}
+     */
+    static async updateTch(args) {
+
+        const updateTeacher = require('./update')
+        return await updateTeacher(args.oldSid, args.socialID, args.credit, args.degree, args.fullName,
             args.sex, args.phoneNumber, args.birthDate, args.address)
     }
 
@@ -20,7 +34,7 @@ exports.Teacher = class Teacher extends Model {
     /**
      * delete teacher object from DB and archive
      * his/her personal info
-     * @param args (attributes)
+     * @param sid (attributes)
      * @returns {Promise<*>}
      */
     static async deleteTch(sid) {
