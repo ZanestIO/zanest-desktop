@@ -32,7 +32,7 @@ module.ctch = {
             }
 
         } catch (err) {
-            log.record('error', err +":in:"+ __filename)
+            log.record('error', err + ":in:" + __filename)
             return webContentsSend('errorNot', {
                 title: message.title('create', 'استاد'),
                 message: err,
@@ -47,7 +47,7 @@ module.ctch = {
 // ===================================================================================================
 
 module.utch = {
-    utch: global.share.ipcMain.on('teacherUpdate', async(e, args) => {
+    utch: global.share.ipcMain.on('teacherUpdate', async (e, args) => {
         try {
             const check = await db().sequelize.models.Teacher.updateTch(args)
 
@@ -68,7 +68,7 @@ module.utch = {
             }
 
         } catch (err) {
-            log.record('error', err +":in:"+ __filename)
+            log.record('error', err + ":in:" + __filename)
             return webContentsSend('errorNot', {
                 title: message.title('update', 'استاد'),
                 message: err,
@@ -84,7 +84,7 @@ module.utch = {
 // ===================================================================================================
 
 module.dtch = {
-    dtch: global.share.ipcMain.on('teacherDeletion', async(e,args) => {
+    dtch: global.share.ipcMain.on('teacherDeletion', async (e, args) => {
         try {
 
             let check = await db().sequelize.models.Teacher.deleteTch(args)
@@ -107,7 +107,7 @@ module.dtch = {
                 })
             }
         } catch (err) {
-            log.record('error', err +":in:"+ __filename)
+            log.record('error', err + ":in:" + __filename)
             return webContentsSend('errorNot', {
                 title: message.title('delete', 'استاد'),
                 message: err,
@@ -134,7 +134,7 @@ module.rtch = {
                 })
 
         } catch (err) {
-            log.record('error', err +":in:"+ __filename)
+            log.record('error', err + ":in:" + __filename)
         }
     })
 }
@@ -142,30 +142,9 @@ module.rtch = {
 // ==================================================================================
 // GETTING TEACHERS IN BULK FOR TEACHERS TABLE
 // ==================================================================================
-module.getBulk = {
-    getBulk: global.share.ipcMain.on("teacherGetBulk", async (e, args) => {
-        await sendteacherBulk(args.number, args.offset, e)
-    })
-}
 
 async function sendTeacherBulk(number = 5, offset = 1) {
-    let teachersHolder = await db().sequelize.models.Teacher.getTeachers(number, offset);
-    let teachers = [];
-
-    teachersHolder = JSON.parse(teachersHolder);
-    teachersHolder.forEach(node => {
-        let teacher = {
-            socialID: node.socialID,
-            credit: node.credit,
-            degree: node.degree,
-            fullName: node.Person.fullName,
-            sex: node.Person.sex,
-            phoneNumber: node.Person.phoneNumber,
-            birthDate: node.Person.birthDate,
-            address: node.Person.address,
-        }
-        teachers.push(teacher)
-    })
-
+    let teachers = await db().sequelize.models.Teacher.getTeacher(number, offset);
     webContentsSend('responseTeacherGetBulk', {teachers: teachers})
+
 }

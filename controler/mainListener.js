@@ -1,5 +1,5 @@
-
-const {cstd,ustd,dstd,rstd} = require('./Channel/student/studentCh')
+const {ctch, utch, dtch, rtch} = require('./Channel/teacher/teacherCh')
+const {cstd, ustd, dstd, rstd} = require('./Channel/student/studentCh')
 const {searchEvent} = require('./Channel/search/searchCh')
 const {userChannel} = require('./Channel/user/userCh')
 const {load} = require('./Channel/session/loadCh')
@@ -11,6 +11,10 @@ const {getBulk} = require('./Channel/getBulk/getBulk')
 
 module.exports = {
     userAuth,
+    ctch,
+    utch,
+    dtch,
+    rtch,
     cstd,
     ustd,
     dstd,

@@ -6,4 +6,6 @@ out/
 dist/
 /static/
 *.log
-*.sqlite 
+*.sqlite
+/test/
+package.json
