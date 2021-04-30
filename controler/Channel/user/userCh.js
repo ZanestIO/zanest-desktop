@@ -6,7 +6,8 @@ const message = require('./../../massege')
 // Create User
 // ===================================================================================================
 module.exports = {
-    userChannel: global.share.ipcMain.on('userCreation', async (E, args) => {
+
+    cusr: global.share.ipcMain.on('userCreation', async (E, args) => {
         let verify
         let check
         try {
@@ -35,5 +36,36 @@ module.exports = {
         }
         // send Response
         webContentsSend('responseUserCreation', verify)
-    })
+    }),
+
+    dusr: global.share.ipcMain.on('userDeletion', async(e, args) => {
+        try {
+            let check = await db().sequelize.models.User.deleteUser(args)
+            if (check[0]) {
+                await setLoadFile('./renderer/user.html');
+
+                return webContentsSend('successNot', {
+                    title: '',
+                    message: check[1],
+                    contactAdmin: false
+                })
+
+            } else {
+                // process failed
+                return webContentsSend('errorNot', {
+                    title: message.title('delete', 'کاربر'),
+                    message: check[1],
+                    contactAdmin: true
+                })
+            }
+        } catch (err) {
+            log.record('error', err +":in:"+ __filename)
+            return webContentsSend('errorNot', {
+                title: message.title('delete', 'کاربر'),
+                message: err,
+                contactAdmin: true
+            })
+        }
+    }),
+
 }

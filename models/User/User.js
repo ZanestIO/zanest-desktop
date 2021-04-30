@@ -53,10 +53,21 @@ exports.User = class User extends Model {
      * @returns {Promise<*>}
      */
     static async add(args) {
-
         const createUser = require('./add')
         return await createUser(args.fullName, args.userName, args.password, args.userType, args.birthDate, args.phoneNumber)
     }
+
+    // delete User
+    /**
+     * delete User from DB 
+     * @param String (username)
+     * @returns {Array<2>} [boolean, message]
+     */
+    static async deleteUser(args) {
+        const deleteUsr = require('./delete')
+        return await deleteUsr(args.userName)
+    }
+
 }
 
 
