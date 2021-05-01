@@ -23,11 +23,11 @@ module.exports = {
         global.share.session.defaultSession.cookies.set(lastPage)
 
         // TODO: fix issue
-        if (args.page == args.currentpage) {
-
-            // return 
+        if (args.page == args.currentPage) {
             console.log(lastPage.value+ " ------[issue]-------- " + args.page+":"+ __filename)
-        } 
+
+            return
+        }
 
         let path = "./renderer/" + args.page + ".html"
 

@@ -26,7 +26,7 @@ let students = {
 
         // sends request to go to student edit page
         openEditPage(sid) {
-          ipcRenderer.send('load', {page: 'students_edit', id: sid, type: 'student'})
+          ipcRenderer.send('load', {page: 'students_edit', id: sid, type: 'student', currentPage: 'students'})
         },
         addStudent() {
             this.addBox.seen = true

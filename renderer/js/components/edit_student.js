@@ -118,8 +118,10 @@ module.exports = {
                 this.valid = false
             } else if (isLetter(input)) {
                 this.valid = false
-            } else
+            } else {
                 input.success = true
+                this.valid = true
+            }
         },
         processPhone() {
             let input = this.phone
@@ -132,8 +134,10 @@ module.exports = {
                 this.valid = false
             } else if (exact(input, 11)) {
                 this.valid = false
-            } else
+            } else {
                 input.success = true
+                this.valid = true
+            }
         },
         processSex() {
             let input = this.sex
@@ -142,8 +146,10 @@ module.exports = {
 
             if (isEmpty(input)) {
                 this.valid = false
-            } else
+            } else {
                 input.success = true
+                this.valid = true
+            }
         },
 
         processSid() {
@@ -155,8 +161,10 @@ module.exports = {
                 this.valid = false
             } else if (exact(input, 10)) {
                 this.valid = false
-            } else
+            } else {
                 input.success = true
+                this.valid = true
+            }
         },
 
 
@@ -172,6 +180,7 @@ module.exports = {
                 this.valid = false
             } else {
                 input.success = true
+                    this.valid = true
             }
         },
 
@@ -187,6 +196,7 @@ module.exports = {
                 this.valid = false
             } else {
                 input.success = true
+                    this.valid = true
             }
         },
         processBirthYear() {
@@ -201,6 +211,7 @@ module.exports = {
                 this.valid = false
             } else {
                 input.success = true
+                    this.valid = true
             }
         },
         processParentName() {
@@ -213,6 +224,7 @@ module.exports = {
                 this.valid = false
             } else {
                 input.success = true
+                    this.valid = true
             }
         },
         processParentPhone() {
@@ -226,8 +238,10 @@ module.exports = {
                 this.valid = false
             } else if (exact(input, 11)) {
                 this.valid = false
-            } else
+            } else {
                 input.success = true
+                this.valid = true
+            }
         },
         processAddress() {
             let input = this.address
@@ -236,8 +250,10 @@ module.exports = {
 
             if (isEmpty(input)) {
                 this.valid = false
-            } else
+            } else {
                 input.success = true
+                this.valid = true
+            }
         },
 
         processAll() {
@@ -259,6 +275,7 @@ module.exports = {
         // ==================================================================================
         edit() {
             if (this.valid && this.changed) {
+
                 ipcRenderer.send('studentUpdate', {
                     oldSid: this.oldSid,
                     fullName: this.name.value,
@@ -270,6 +287,8 @@ module.exports = {
                     birthDate: `${this.birthDate.year.value}/${this.birthDate.month.value}/${this.birthDate.day.value}`,
                     address: this.address.value
                 })
+
+                this.changed = false
             }
         },
 
