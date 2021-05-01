@@ -5,6 +5,7 @@ const {log} = require('./../../logger')
 // ================================================================================
 module.exports = async (limit, offset) => {
     let info
+    let students = []
     try {
 
         const db = require('./../Db');
@@ -18,8 +19,25 @@ module.exports = async (limit, offset) => {
             limit: limit,
             nest: false
         })
+        // converts a info to a JSON string
+        const strInfo = JSON.stringify(info)
+        const holder = JSON.parse(strInfo)
+        
+        holder.forEach(node => {
+            let student = {
+            fullName: node.Person.fullName,
+            phoneNumber: node.Person.phoneNumber,
+            sex: node.Person.sex,
+            socialID: node.socialID,
+            birthDate: node.Person.birthDate,
+            parentNumber: node.parentNumber,
+            address: node.Person.address,
+            parentsName: node.parentName,
+            }
+            students.push(student)
+        })
 
-        return JSON.stringify(info);
+        return students
 
     } catch(err) {
         log.record('error', err +":in:"+ __filename)
