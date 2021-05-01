@@ -1,10 +1,9 @@
-
 const {expect} = require('chai');
 const db = require('./../models/Db')
 const {Student} = require('./../models/Student/Student');
 const message = require('./../controler/massege');
 
-describe('Users', function() {
+describe('Users', function () {
     let testdb
     // Use your database here...
     // ISSUE: we don't have check value in models
@@ -19,18 +18,19 @@ describe('Users', function() {
         address: "saqqez"
     }
 
-    before(function(done) {
+    before(function (done) {
         db().init().then(function () {
             testdb = db()
         }).then(() => done())
     })
 
-    after(function(done) {
-        testdb.sequelize.drop().then(function() {}).then(done, done);
+    after(function (done) {
+        testdb.sequelize.drop().then(function () {
+        }).then(done, done);
     });
 
-    describe('#addStd()', function() {
-        it('should save Student data to database', async function() { 
+    describe('#addStd()', function () {
+        it('should save Student data to database', async function () {
             // create massage that expect have
             // const msg = message.request('create', data.fullName, true, data.socialID)
 
@@ -39,8 +39,8 @@ describe('Users', function() {
         });
     });
 
-    describe('#deleteStd()', function() {
-        it('should delete Student data from database', async function() {
+    describe('#deleteStd()', function () {
+        it('should delete Student data from database', async function () {
             // const msg = message.request('delete', 'student', true, data.sid)
 
             result = await Student.deleteStd(data.socialID)
@@ -49,9 +49,9 @@ describe('Users', function() {
         });
     });
 
-    describe('#search()', function() {
-        it('should search Student data from database', async function(){
+    describe('#search()', function () {
+        it('should search Student data from database', async function () {
             // Use your database here
         })
-    }) 
+    })
 });
