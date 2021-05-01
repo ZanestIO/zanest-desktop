@@ -12,15 +12,15 @@ module.getBulk = {
      *  type: model name  
      */
     getBulk: global.share.ipcMain.on("getBulk", async (e, args) => {
-        if(args.type === 'Student') {
+        if(args.type === 'student') {
             let students = await db().sequelize.models.Student.getStudents(args.number, args.offset);
             webContentsSend('responseStudentGetBulk', {students: students})
 
-        } else if ( args.type === 'Teacher') { 
+        } else if ( args.type === 'teacher') {
             let teachers = await db().sequelize.models.Teacher.getTeachers(args.number, args.offset);
             webContentsSend('responseTeacherGetBulk', {teachers: teachers})
 
-        } else if ( args.type === 'User') {
+        } else if ( args.type === 'user') {
             let users = await db().sequelize.models.User.getUsers(args.number, args.offset);
             webContentsSend('responseUserGetBulk', {users: users})
 

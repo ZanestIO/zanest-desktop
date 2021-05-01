@@ -1,5 +1,6 @@
 const {studentMock} = require('./../utils/mocks')
 const {ipcRenderer} = require('electron')
+const pagination = require('./pagination')
 module.exports = {
     data() {
         return {
@@ -7,16 +8,24 @@ module.exports = {
         }
     },
     created() {
-      // get users information
-        ipcRenderer.send('getBulk', {number: 10, offset: 1, type: 'Student'})
-        ipcRenderer.on('responseStudentGetBulk',(e, args) => {
-            // console.log(args.students)
-            this.students = args.students
-        })
+      this.requestData(10, 1)
+    },
+    components: {
+        pagination,
     },
     inject: '',
     emits: ['open-search-result'],
-    methods: {},
+    methods: {
+        requestData(number, offset, type='student') {
+
+            // alert('request user data'+ number +'----'+ offset + "----" + type)
+            // get users information
+            ipcRenderer.send('getBulk', {number: number, offset: offset, type: type})
+            ipcRenderer.on('responseStudentGetBulk',(e, args) => {
+                this.students = args.students
+            })
+        }
+    },
 
     // ==================================================================================
     // TEMPLATE
@@ -47,6 +56,7 @@ module.exports = {
           <td>{{student.address}}</td>
         </tr>
       </table>
+      <pagination model-type="student" @refresh-table="requestData"></pagination>
       </div>
     `
 } // end of component
