@@ -3,17 +3,24 @@ const sinon = require("sinon");
 const db = require('../../models/Db');
 const {Student} = require('../../models/Student/Student');
 
+let testdb;
+
+// initialize database before tests start
+before(function (done) {
+    db().init().then(function () {
+        testdb = db()
+    }).then(() => done())
+});
+
+/* after(function (done) {
+      testdb.sequelize.drop().then(function () {
+      }).then(done, done);
+  });*/
+
+
 describe("#Models", function () {
 
-    let testdb;
-
-    before(function (done) {
-        db().init().then(function () {
-            testdb = db()
-        }).then(() => done())
-    });
-
-
+    // testing student model
     describe("#StudentModel", function () {
 
         // initialize student data
@@ -28,7 +35,8 @@ describe("#Models", function () {
             address: "sena"
         }
 
-        describe("#addStd", function () {
+        // testing add student
+        describe("#addStd()", function () {
 
             it('should add new student to database', async function () {
 
@@ -49,5 +57,42 @@ describe("#Models", function () {
                 expect(result.updatedAt).to.equal(studentData.updatedAt);
             });
         });
+
+        // testing show student
+        describe("#showStd()", function () {
+            it('should show the information of a student with given social id', async function () {
+                const stub = sinon.stub(Student, "show").returns(studentData);
+                const result = await db().sequelize.models.Student.show(studentData.socialID);
+
+                expect(stub.calledOnce).to.be.true;
+
+                expect(result.socialID).to.equal(studentData.socialID);
+                expect(result.parentName).to.equal(studentData.parentName);
+                expect(result.parentNumber).to.equal(studentData.parentNumber);
+                expect(result.fullName).to.equal(studentData.fullName);
+                expect(result.sex).to.equal(studentData.sex);
+                expect(result.phoneNumber).to.equal(studentData.phoneNumber);
+                expect(result.birthDate).to.equal(studentData.birthDate);
+                expect(result.address).to.equal(studentData.address);
+            });
+        });
+
+        // testing delete student
+        describe("#deleteStd()", function () {
+            it('should delete the information of a student with given social id, but archive personal information', async function () {
+                const stub = sinon.stub(Student, "deleteStd").returns(null);
+                const result = await db().sequelize.models.Student.deleteStd(studentData.socialID);
+
+                expect(stub.calledOnce).to.be.true;
+
+                expect(result).equal(null);
+                // expect(result).equal(undefined);
+
+            });
+        });
+
+
+
+
     });
 });
