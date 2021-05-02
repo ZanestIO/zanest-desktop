@@ -82,7 +82,6 @@ exports.teacherData = {
 
         credit: {
             type: DataTypes.INTEGER,
-            allowNull: false,
             unique: true,
         },
 
