@@ -7,5 +7,4 @@ dist/
 /static/
 *.log
 *.sqlite
-/test/
-package.json
+/sample/
