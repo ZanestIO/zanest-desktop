@@ -63,11 +63,43 @@ exports.User = class User extends Model {
      * @param String (username)
      * @returns {Array<2>} [boolean, message]
      */
-    static async deleteUser(args) {
+    static async delete(args) {
         const deleteUsr = require('./delete')
         return await deleteUsr(args.userName)
     }
 
+    // show User
+    /**
+     * show User info
+     * @param String (username)
+     * @returns {Array<2>} [boolean, message]
+     */
+    static async show(args) {
+        const showUsr = require('./show')
+        return await showUsr(args.userName)
+    }
+
+    // update User
+    /**
+     * updae User from DB 
+     * @param args (fullname, username, password, usertype, birthdate, phonenumber)
+     * @returns {Array<2>} [boolean, message]
+     */
+    static async update(args) {
+        const updateUsr = require('./update')
+        return await updateUsr(args.userName, args.password, args.userType, args.birthDate, args.phoneNumber)
+    }
+    // get user info
+    /**
+     * 
+     * @param {integer} limit 
+     * @param {integer} offset 
+     * @returns 
+     */
+    static async get(limit, offset) {
+        const searchTeacher = require('./get')
+        return await searchTeacher(limit, offset)
+    }
 }
 
 
