@@ -1,5 +1,5 @@
 const Vue = require('vue')
-const edit_student = require('./components/edit_student')
+const edit_student = require('./components/students/edit_student')
 
 let students = {
     data() {

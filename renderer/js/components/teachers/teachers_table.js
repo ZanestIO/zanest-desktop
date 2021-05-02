@@ -1,9 +1,16 @@
+const {studentMock} = require('../../utils/mocks')
 const {ipcRenderer} = require('electron')
 const pagination = require('../pagination')
 module.exports = {
     data() {
         return {
-            students: [],
+            teachers: [],
+            degrees: {
+                'kardani': 'کاردانی',
+                'karshenasi': 'کارشناسی',
+                'karshenasi-arshad': 'کارشناسی ارشد',
+                'doctora': 'دکتری و بالاتر'
+            }
         }
     },
     created() {
@@ -17,12 +24,11 @@ module.exports = {
     methods: {
         requestData(number, offset, type='student') {
 
-            alert('request user data'+ number +'----'+ offset + "----" + type)
+            // alert('request user data'+ number +'----'+ offset + "----" + type)
             // get users information
             ipcRenderer.send('getBulk', {number: number, offset: offset, type: type})
-            ipcRenderer.on('responseStudentGetBulk',(e, args) => {
-                this.students = args.students
-                console.log("this is me --- " + this.students)
+            ipcRenderer.on('responseTeacherGetBulk',(e, args) => {
+                this.teachers = args.teachers
             })
         }
     },
@@ -31,7 +37,7 @@ module.exports = {
     // TEMPLATE
     // ==================================================================================
     template: `
-      <div class="table-holder">
+      <div class="table-holder" v-if="teachers">
       <table class="table-norm">
         <tr class="header">
           <th>نام</th>
@@ -39,24 +45,22 @@ module.exports = {
           <th>جنسیت</th>
           <th>کدملی</th>
           <th>تاریخ تولد</th>
-          <th>نام والد</th>
-          <th>شماره تماس والدین</th>
+          <th>مدرک</th>
           <th>
             آدرس
           </th>
         </tr>
-        <tr v-for="student in students" v-on:dblclick="$emit('open-search-result', student.socialID)">
-          <td>{{student.fullName}}</td>
-          <td>{{student.phoneNumber}}</td>
-          <td>{{student.sex}}</td>
-          <td>{{student.socialID}}</td>
-          <td>{{student.birthDate}}</td>
-          <td>{{student.parentsName}}</td>
-          <td>{{student.parentNumber}}</td>
-          <td>{{student.address}}</td>
+        <tr v-for="teacher in teachers" v-on:dblclick="$emit('open-search-result', teacher.socialID)">
+          <td>{{teacher.fullName}}</td>
+          <td>{{teacher.phoneNumber}}</td>
+          <td>{{teacher.sex}}</td>
+          <td>{{teacher.socialID}}</td>
+          <td>{{teacher.birthDate}}</td>
+          <td>{{degrees[teacher.degree]}}</td>
+          <td>{{teacher.address}}</td>
         </tr>
       </table>
-      <pagination model-type="student" @refresh-table="requestData"></pagination>
+      <pagination model-type="teacher" @refresh-table="requestData"></pagination>
       </div>
     `
 } // end of component
