@@ -1,7 +1,7 @@
 const {ipcRenderer} = require('electron')
-const confirm_alert = require('./confirmAlert')
+const confirm_alert = require('./../confirmAlert')
 const Vue = require('vue')
-const {resetError, isEmpty, exact, smallerThan, biggerThan, isNumber, isLetter} = require('./../utils/validation')
+const {resetError, isEmpty, exact, smallerThan, biggerThan, isNumber, isLetter} = require('../../utils/validation')
 
 module.exports = {
     data() {
@@ -11,7 +11,7 @@ module.exports = {
             deleteBox: {
                 seen: false,
                 title: 'آیا مطمئن هستید؟',
-                desc: 'با تایید عملیات زبان آموز فعلی از سیستم حذف خواهد شد'
+                desc: 'با تایید عملیات استاد فعلی از سیستم حذف خواهد شد'
             },
             name: {
                 err: false,
@@ -57,21 +57,15 @@ module.exports = {
                     success: false
                 },
             },
-            parentName: {
-                err: false,
-                value: '',
-                errMsg: '',
-                success: false
-            },
-            parentPhone: {
-                err: false,
-                value: '',
-                errMsg: '',
-                success: false
-            },
             address: {
                 err: false,
                 value: '',
+                errMsg: '',
+                success: false
+            },
+            degree: {
+                err: false,
+                value: 'karshenasi',
                 errMsg: '',
                 success: false
             },
@@ -94,12 +88,8 @@ module.exports = {
             this.phone.value = args.phoneNumber
             this.sex.value = args.sex
             this.sid.value = args.socialID
-            this.parentName.value = args.parentsName
-            this.parentPhone.value = args.parentNumber
+            this.degree.value = args.degree
             this.address.value = args.address
-
-            // setting the oldSid
-            this.oldSid = args.socialID
 
             // handling the date
             let date = args.birthDate.split('/')
@@ -214,35 +204,6 @@ module.exports = {
                     this.valid = true
             }
         },
-        processParentName() {
-            let input = this.parentName
-            resetError(input)
-            this.changed = true
-            if (isEmpty(input)) {
-                this.valid = false
-            } else if (isLetter(input)) {
-                this.valid = false
-            } else {
-                input.success = true
-                    this.valid = true
-            }
-        },
-        processParentPhone() {
-            let input = this.parentPhone
-            resetError(input)
-            this.changed = true
-
-            if (isEmpty(input)) {
-                this.valid = false
-            } else if (isNumber(input)) {
-                this.valid = false
-            } else if (exact(input, 11)) {
-                this.valid = false
-            } else {
-                input.success = true
-                this.valid = true
-            }
-        },
         processAddress() {
             let input = this.address
             resetError(input)
@@ -255,6 +216,17 @@ module.exports = {
                 this.valid = true
             }
         },
+        processDegree() {
+            let input = this.degree
+            resetError(input)
+            this.changed = true
+
+            if (isEmpty(input)) {
+                this.valid = false
+            } else
+                input.success = true
+                this.valid = true
+        },
 
         processAll() {
             this.valid = true
@@ -265,9 +237,8 @@ module.exports = {
             this.processBirthDay()
             this.processBirthMonth()
             this.processBirthYear()
-            this.processParentName()
-            this.processParentPhone()
             this.processAddress()
+            this.processDegree()
         },
 
         // ==================================================================================
@@ -276,16 +247,15 @@ module.exports = {
         edit() {
             if (this.valid && this.changed) {
 
-                ipcRenderer.send('studentUpdate', {
+                ipcRenderer.send('teacherUpdate', {
                     oldSid: this.oldSid,
                     fullName: this.name.value,
                     socialID: this.sid.value,
-                    parentsName: this.parentName.value,
-                    parentNumber: this.parentPhone.value,
                     sex: this.sex.value,
                     phoneNumber: this.phone.value,
                     birthDate: `${this.birthDate.year.value}/${this.birthDate.month.value}/${this.birthDate.day.value}`,
-                    address: this.address.value
+                    address: this.address.value,
+                    degree : this.degree.value
                 })
 
                 this.changed = false
@@ -300,7 +270,7 @@ module.exports = {
         },
         confirm_delete() {
             this.deleteBox.seen = false
-            ipcRenderer.send('studentDeletion',  this.sid.value)
+            ipcRenderer.send('teacherDeletion',  this.sid.value)
         },
         cancelDelete() {
             this.deleteBox.seen = false
@@ -385,26 +355,6 @@ module.exports = {
           </div>
         </div>
 
-        <div>
-          <span>
-            نام والد
-          </span>
-          <input type="text" placeholder="(پدر یا مادر)" :class="{fail: parentName.err, success: parentName.success}"
-                 v-model="parentName.value"
-                 @change="processParentName">
-          <p class="input-error" v-if="parentName.err">{{ parentName.errMsg }}</p>
-        </div>
-
-        <div>
-          <span>
-            شماره تماس والد
-          </span>
-          <input type="number" placeholder="(پدر یا مادر)"
-                 :class="{fail: parentPhone.err , success: parentPhone.success}" v-model="parentPhone.value"
-                 @change="processParentPhone">
-          <p class="input-error" v-if="parentPhone.err">{{ parentPhone.errMsg }}</p>
-        </div>
-
         <div class="flex-1/3">
           <span>
             آدرس
@@ -413,6 +363,19 @@ module.exports = {
                  v-model="address.value"
                  @change="processAddress">
           <p class="input-error" v-if="address.err">{{ address.errMsg }}</p>
+        </div>
+
+        <div>
+          <span>
+            مدرک تحصیلی
+          </span>
+          <select :class="{fail: degree.err, success: degree.success}" v-model="degree.value" @change="processDegree">
+            <option value="kardani">کاردانی</option>
+            <option value="karshenasi">کارشناسی</option>
+            <option value="karshenasi-arshad">کارشناسی ارشد</option>
+            <option value="doctora">دکتری و بالاتر</option>
+          </select>
+          <p class="input-error" v-if="degree.err">{{ degree.errMsg }}</p>
         </div>
       </div>
 

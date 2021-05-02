@@ -1,8 +1,8 @@
 const {ipcRenderer} = require('electron')
 const Vue = require('vue')
-const search_add = require('./components/search_add')
-const add_student = require('./components/add_student')
-const students_table = require('./components/students_table')
+const search_add = require('./components/students/search_add')
+const add_student = require('./components/students/add_student')
+const students_table = require('./components/students/students_table')
 
 let students = {
     data() {

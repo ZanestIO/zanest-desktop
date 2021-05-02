@@ -1,5 +1,5 @@
 const {ipcRenderer} = require('electron')
-const {resetError, isEmpty, exact, smallerThan, biggerThan, isNumber, isLetter} = require('./../utils/validation')
+const {resetError, isEmpty, exact, smallerThan, biggerThan, isNumber, isLetter} = require('../../utils/validation')
 
 module.exports = {
     data() {

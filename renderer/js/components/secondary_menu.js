@@ -45,7 +45,7 @@ module.exports = {
         <i class="text-lg fas fa-users"></i>
       </li>
 
-      <li class="side-nav-li border-b-0" :class="{closed: !expanded}">
+      <li class="side-nav-li border-b-0" :class="{closed: !expanded}" @click="$emit('request-page', 'teachers', currentPage)">
         <span class="second-nav-text">اساتید</span>
         <i class="text-lg fas fas fas fa-user-tie"></i>
       </li>

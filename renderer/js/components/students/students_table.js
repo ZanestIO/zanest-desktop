@@ -1,6 +1,5 @@
-const {studentMock} = require('./../utils/mocks')
 const {ipcRenderer} = require('electron')
-const pagination = require('./pagination')
+const pagination = require('../pagination')
 module.exports = {
     data() {
         return {
@@ -18,11 +17,12 @@ module.exports = {
     methods: {
         requestData(number, offset, type='student') {
 
-            // alert('request user data'+ number +'----'+ offset + "----" + type)
+            alert('request user data'+ number +'----'+ offset + "----" + type)
             // get users information
             ipcRenderer.send('getBulk', {number: number, offset: offset, type: type})
             ipcRenderer.on('responseStudentGetBulk',(e, args) => {
                 this.students = args.students
+                console.log("this is me --- " + this.students)
             })
         }
     },

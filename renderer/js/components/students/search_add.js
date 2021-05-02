@@ -1,5 +1,5 @@
 const {ipcRenderer} = require('electron')
-const overlay = require('./overlay')
+const overlay = require('../overlay')
 module.exports = {
     data() {
         return {

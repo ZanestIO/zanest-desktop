@@ -51,7 +51,7 @@ module.exports = {
       <div class="mt-5 flex flex-row flex-nowrap justify-between items-center" v-if="pageCount > 1">
       <div class="pagination flex-1 text-right">
         <ul >
-          <li @click="previousPage">
+          <li @click="previousPage" v-if="currentPage != 1">
             <i class="fas fa-chevron-right"></i>
           </li>
 
@@ -83,7 +83,7 @@ module.exports = {
             {{ pageCount }}
           </li>
 
-          <li @click="nextPage">
+          <li @click="nextPage" v-if="currentPage != pageCount">
             <i class="fas fa-chevron-left"></i>
           </li>
         </ul>
