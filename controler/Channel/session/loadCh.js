@@ -22,44 +22,49 @@ module.exports = {
 
         global.share.session.defaultSession.cookies.set(lastPage)
 
-        // TODO: fix issue
+        // TODO: fix issue 
         if (args.page == args.currentpage) {
-
-            // return 
-            console.log(lastPage.value+ " ------[issue]-------- " + args.page+":"+ __filename)
+            //return 
+            console.log("[lastpage value]: "+ lastPage.value + " ------[issue]-------- [requested apge] " + args.page+":"+ __filename)
         } 
 
-        let path = "./renderer/" + args.page + ".html"
+        let page = args.page
 
         // ==================================================================================
         // if user cookie is staff just allow to access the some limited page.
         global.share.session.defaultSession.cookies.get({url: 'http://zanest.io'})
             .then( async(cookies) => {
-
+                // if cookies exist
                 if (cookies) {
-                    // get userType
-                    let value
+                    // get userType 
+                    let type
                     cookies.forEach(node => {
                         if (node.name === 'userType') {
-                            value = node.value
+                            type = node.value
                         }
                     })
-                    log.record('verbose', value + " request for " + path)
 
-                    if (value === 'staff') {
+                    log.record('verbose', type + " request for " + page)
+
+                    // limit accessibility of staff usertype
+                    if (type === 'staff') {
                         switch (args.page) {
                             case "firstLogin":
-                                path = "./renderer/404.html"
+                                page = "404"
                                 break
-                            case "createStudent":
-                                path = "./renderer/404.html"
+                            case "userCreation":
+                                page = "404"
+                                break
+                            case "user":
+                                page = "404"
                                 break
                         }
                     }
-
                 } else {
-                    path = "./renderer/404.html"
+                    page = "404"
                 }
+
+                let path = "./renderer/" + page + ".html"
 
                 await setLoadFile(path)
 
@@ -68,6 +73,7 @@ module.exports = {
             }).catch((err) => {
                 log.record('error', err +":in:"+ __filename)
         })
+
     })
 }
 
@@ -75,7 +81,7 @@ async function accessAuth(path, id, type) {
     if (path !== "./renderer/404.html" ) {
         // id most be available
         if (id) {
-            // request from who
+            // request for who
             if (type === 'student') {
                 try {
                     const student = await db().sequelize.models.Student.show(id)
@@ -94,7 +100,6 @@ async function accessAuth(path, id, type) {
                     log.record('error', err +":in:"+ __filename)
                 }
             }
-
         }
     }
 }
