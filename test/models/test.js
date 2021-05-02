@@ -35,12 +35,9 @@ describe("#Models", function () {
             address: "sena"
         }
 
-<<<<<<< HEAD
+
         // testing add student
         describe("#addStd()", function () {
-=======
-        describe("#addStd", function () {
->>>>>>> student
 
             it('should add new student to database', async function () {
 
@@ -59,7 +56,7 @@ describe("#Models", function () {
                 expect(result.address).to.equal(studentData.address);
                 expect(result.createdAt).to.equal(studentData.createdAt);
                 expect(result.updatedAt).to.equal(studentData.updatedAt);
-<<<<<<< HEAD
+
             });
         });
 
@@ -92,9 +89,7 @@ describe("#Models", function () {
 
                 expect(result).equal(null);
                 // expect(result).equal(undefined);
-
-=======
->>>>>>> student
+                
             });
         });
 
