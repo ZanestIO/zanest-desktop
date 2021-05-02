@@ -7,7 +7,6 @@ module.exports = async (limit, offset) => {
     let info
     let students = []
     try {
-
         const db = require('./../Db');
         const {Person} = require('../Person/Person');
 
@@ -16,6 +15,10 @@ module.exports = async (limit, offset) => {
             include: {
               model: Person
             },
+            order: [
+                ['createdAt', 'DESC']
+            ],
+            offset: (offset - 1),
             limit: limit,
             nest: false
         })
@@ -25,14 +28,14 @@ module.exports = async (limit, offset) => {
         
         holder.forEach(node => {
             let student = {
-            fullName: node.Person.fullName,
-            phoneNumber: node.Person.phoneNumber,
-            sex: node.Person.sex,
-            socialID: node.socialID,
-            birthDate: node.Person.birthDate,
-            parentNumber: node.parentNumber,
-            address: node.Person.address,
-            parentsName: node.parentName,
+                fullName: node.Person.fullName,
+                phoneNumber: node.Person.phoneNumber,
+                sex: node.Person.sex,
+                socialID: node.socialID,
+                birthDate: node.Person.birthDate,
+                parentNumber: node.parentNumber,
+                address: node.Person.address,
+                parentsName: node.parentName,
             }
             students.push(student)
         })

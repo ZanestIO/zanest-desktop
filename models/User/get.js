@@ -11,6 +11,9 @@ module.exports = async (limit, offset) => {
 
         // get info 
         info = await db().sequelize.models.User.findAll({
+            order: [
+                ['createdAt', 'DESC']
+            ],
             offset: offset,
             limit: limit,
             nest: false
