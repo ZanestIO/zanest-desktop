@@ -36,7 +36,7 @@ module.exports = async (sid, credit, degree, fullName, sex, phoneNumber, birthDa
             const PersonId = personHolder.dataValues.id
 
             await db().sequelize.models.Teacher.create({socialID: sid, credit: credit,
-                degree: degree, TeacherId: PersonId });
+                degree: degree, PersonId: PersonId });
 
             const msg = message.request('create', fullName, true, sid)
             log.record('info', msg)
