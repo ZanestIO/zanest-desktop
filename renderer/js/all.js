@@ -39,8 +39,8 @@ let menuComponent = {
         footer_el
     },
     methods: {
-        requestPage(pageName) {
-            ipcRenderer.send('load', {page: pageName})
+        requestPage(pageName, currentPage) {
+            ipcRenderer.send('load', {page: pageName, currentPage: currentPage})
         },
 
         // handles hiding the notification

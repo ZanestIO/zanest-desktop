@@ -74,7 +74,7 @@ exports.Teacher = class Teacher extends Model {
  */
 exports.teacherData = {
     attributes: {
-        socialIdt: {
+        socialID: {
             type: DataTypes.INTEGER,
             allowNull: false,
             unique: true,

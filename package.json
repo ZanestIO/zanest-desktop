@@ -7,7 +7,7 @@
     "start": "electron .",
     "watch": "nodemon --exec electron .",
     "build": "electron-builder build --win",
-    "test": "mocha"
+    "test": "mocha 'test/**/*.js' --recursive"
   },
   "author": "Sadeq Sheikhi",
   "repository": "https://github.com/sadeqsheikhi/zanest-electron",
@@ -20,6 +20,7 @@
     "electron-rebuild": "^2.3.5",
     "mocha": "8.3.2",
     "nodemon": "^2.0.7",
+    "sinon": "^10.0.0",
     "spectron": "14.0.0"
   },
   "dependencies": {

@@ -1,8 +1,8 @@
 const {ipcRenderer} = require('electron')
 const Vue = require('vue')
-const search_add = require('./components/search_add')
-const add_student = require('./components/add_student')
-const students_table = require('./components/students_table')
+const search_add = require('./components/students/search_add')
+const add_student = require('./components/students/add_student')
+const students_table = require('./components/students/students_table')
 
 let students = {
     data() {
@@ -26,7 +26,7 @@ let students = {
 
         // sends request to go to student edit page
         openEditPage(sid) {
-          ipcRenderer.send('load', {page: 'students_edit', id: sid, type: 'student'})
+          ipcRenderer.send('load', {page: 'students_edit', id: sid, type: 'student', currentPage: 'students'})
         },
         addStudent() {
             this.addBox.seen = true

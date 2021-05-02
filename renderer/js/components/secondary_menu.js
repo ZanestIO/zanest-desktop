@@ -24,12 +24,13 @@ module.exports = {
         })
     },
 
+    props: ['currentPage'],
     emits: ['request-page'],
     template: `
       <ul id="secondary-menu"
           class="fixed right-0 bottom-0 hidden z-20 md:flex flex-col justify-start h-92v items-center bg-gradient-to-tr text-white from-purple-900 to bg-black"
           :class="{'w-56': expanded, 'w-16': !expanded}">
-      <li class="side-nav-li" :class="{closed: !expanded}" @click="$emit('request-page', 'dashboard')">
+      <li class="side-nav-li" :class="{closed: !expanded}" @click="$emit('request-page', 'dashboard', currentPage)">
         <span class="second-nav-text">داشبورد</span>
         <i class="text-lg fas fa-tachometer-alt"></i>
       </li>
@@ -39,12 +40,12 @@ module.exports = {
         <i class="text-lg fas fa-chalkboard"></i>
       </li>
 
-      <li class="side-nav-li" :class="{closed: !expanded}"  @click="$emit('request-page', 'students')">
+      <li class="side-nav-li" :class="{closed: !expanded}"  @click="$emit('request-page', 'students', currentPage)">
         <span class="second-nav-text">زبان آموزان</span>
         <i class="text-lg fas fa-users"></i>
       </li>
 
-      <li class="side-nav-li border-b-0" :class="{closed: !expanded}">
+      <li class="side-nav-li border-b-0" :class="{closed: !expanded}" @click="$emit('request-page', 'teachers', currentPage)">
         <span class="second-nav-text">اساتید</span>
         <i class="text-lg fas fas fas fa-user-tie"></i>
       </li>

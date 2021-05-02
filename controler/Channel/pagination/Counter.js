@@ -30,7 +30,7 @@ module.exports = {
 
         console.log(result)
         // send result to Renderer
-        webContentsSend('responcePageCount', { result: result })
+        webContentsSend('responsePageCount', { result: result })
 
     })
 }

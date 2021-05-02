@@ -39,7 +39,7 @@ function createWindow() {
         if (!res) {
             mainWindow.loadFile('renderer/firstLogin.html')
         } else {
-            mainWindow.loadFile('renderer/login.html')
+            mainWindow.loadFile('renderer/students.html')
         }
 
         mainWindow.webContents.on('did-finish-load', () => {
