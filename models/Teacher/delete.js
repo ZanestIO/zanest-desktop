@@ -28,6 +28,11 @@ module.exports = async (sid) => {
                     socialID: sid
                 }
             });
+            await db().sequelize.models.Person.destroy({
+                where: {
+                    socialID: sid
+                }
+            })
             // 
             const msg = message.request('delete', 'teacher', true, sid)
             log.record('info',msg )
