@@ -7,7 +7,6 @@ const Op = sequelize.Op
 // RETURN INFO OF SOME STUDENT
 // ================================================================================
 module.exports = async (searchBy, value) => {
-
     try {
         // 
         let info
@@ -17,10 +16,15 @@ module.exports = async (searchBy, value) => {
                 where: {
                     fullName: {
                         [Op.substring]: value
-                    }
+                    },
+                    personType: "std"
                 },
+                order: [
+                    ['createdAt', 'DESC']
+                ],
                 attributes: ["fullName", "socialID", "phoneNumber"],
-
+                offset: 0,
+                limit: 7
             })
 
         } else if (searchBy === 'id') {
@@ -29,11 +33,15 @@ module.exports = async (searchBy, value) => {
                 where: {
                     socialID: {
                         [Op.substring]: value
-                    }
+                    },
+                    personType: "std"
                 },
+                order: [
+                    ['createdAt', 'DESC']
+                ],
                 attributes: ["fullName", "socialID", "phoneNumber"],
-                //offset: 1,
-                //limit: 5
+                offset: 0,
+                limit: 7
             })
         }
 

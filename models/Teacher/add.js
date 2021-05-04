@@ -31,7 +31,7 @@ module.exports = async (sid, credit, degree, fullName, sex, phoneNumber, birthDa
         if (newTch === null) {
             
             let personHolder = await db().sequelize.models.Person.create({fullName: fullName, socialID: sid, address: address,
-                 sex: sex, birthDate: birthDate, phoneNumber: phoneNumber })
+                 sex: sex, birthDate: birthDate, phoneNumber: phoneNumber, personType: "tch" })
 
             const PersonId = personHolder.dataValues.id
 

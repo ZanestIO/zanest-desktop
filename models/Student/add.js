@@ -32,7 +32,7 @@ module.exports = async (sid, parentName, parentNumber, fullName, sex, phoneNumbe
         if (newStd === null) {
             
             let personHolder = await db().sequelize.models.Person.create({fullName: fullName, socialID: sid, address: address,
-                 sex: sex, birthDate: birthDate, phoneNumber: phoneNumber })
+                 sex: sex, birthDate: birthDate, phoneNumber: phoneNumber, personType: "std" })
 
             const PersonId = personHolder.dataValues.id
             await db().sequelize.models.Student.create({socialID: sid, parentName: parentName, parentNumber: parentNumber, PersonId: PersonId});

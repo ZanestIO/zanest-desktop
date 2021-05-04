@@ -144,7 +144,7 @@ module.rtch = {
 // ==================================================================================
 
 async function sendTeacherBulk(number = 5, offset = 1) {
-    let teachers = await db().sequelize.models.Teacher.getTeacher(number, offset);
+    let teachers = await db().sequelize.models.Teacher.getTeachers(number, offset);
     webContentsSend('responseTeacherGetBulk', {teachers: teachers})
 
 }

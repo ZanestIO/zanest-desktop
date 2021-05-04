@@ -18,10 +18,15 @@ module.exports = async (searchBy, value) => {
                 where: {
                     fullName: {
                         [Op.substring]: value
-                    }
+                    },
+                    personType: "tch"
                 },
+                order: [
+                    ['createdAt', 'DESC']
+                ],
                 attributes: ["fullName", "socialID", "phoneNumber"],
-
+                offset: 0,
+                limit: 7
             })
 
         } else if (searchBy === 'id') {
@@ -30,11 +35,15 @@ module.exports = async (searchBy, value) => {
                 where: {
                     socialID: {
                         [Op.substring]: value
-                    }
+                    },
+                    personType: "tch"
                 },
+                order: [
+                    ['createdAt', 'DESC']
+                ],
                 attributes: ["fullName", "socialID", "phoneNumber"],
-                offset: 1,
-                limit: 5
+                offset: 0,
+                limit: 7
             })
         }
         let results = []
