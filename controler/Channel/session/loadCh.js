@@ -99,6 +99,23 @@ async function accessAuth(path, id, type) {
                 } catch (err) {
                     log.record('error', err +":in:"+ __filename)
                 }
+            } else if (type === 'teacher'){
+                try {
+                    const teacher = await db().sequelize.models.Teacher.show(id)
+                
+                    if (teacher[0]) {
+                        webContentsSend('getInfo', teacher[1])
+                    } else {
+                        log.record('info', message.check('Teacher', false, id))
+                        webContentsSend('errorNot', {
+                            title: message.error,
+                            message: message.incTeacher,
+                            contactAdmin: true,
+                        })
+                    }
+                } catch (err) {
+                    log.record('error', err +":in:"+ __filename)
+                }
             }
         }
     }
