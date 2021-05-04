@@ -1,6 +1,6 @@
 APP_NAME="zanest"
 
-#   By default (without ENVIRONMENT set) we run as "dev"
+#   By default (without ENVIRONMENT set) we run as "test"
 if [ -z "${ENVIRONMENT}" ]
 then
 	ENVIRONMENT="test"
