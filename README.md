@@ -16,7 +16,14 @@ To use Mocha, I'd suggest you install it globally with npm:
 ```bash
 $ npm install mocha -g
 ```
-In order to run all file in the test diractory, use the mocha command:
+We Use docker containers to create an independent and always clean environment for testing application.
+
+docker installition Guide:
+* [MacOs](https://docs.docker.com/docker-for-mac/install/)
+* [Windows](https://docs.docker.com/docker-for-windows/install/)
+* [Linux](https://docs.docker.com/engine/install/)
+
+Congratulations! You have set up Docker on your system and  now you can testing the application with the below command:
 ```bash
-$ mocha . 
+docker build -t tester . && docker run --rm -e ENVIRONMENT=test tester
 ```
