@@ -23,9 +23,9 @@ module.exports = {
         global.share.session.defaultSession.cookies.set(lastPage)
 
         // TODO: fix issue 
-        if (args.page == args.currentpage) {
-            //return 
+        if (args.page == args.currentPage) {
             console.log("[lastpage value]: "+ lastPage.value + " ------[issue]-------- [requested apge] " + args.page+":"+ __filename)
+            return
         } 
 
         let page = args.page

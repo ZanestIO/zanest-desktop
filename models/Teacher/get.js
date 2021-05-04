@@ -19,7 +19,7 @@ module.exports = async (limit, offset) => {
             order: [
                 ['createdAt', 'DESC']
             ],
-            offset: (offset - 1),
+            offset: (offset - 1) * limit,
             limit: limit,
             nest: false
         })

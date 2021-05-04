@@ -57,7 +57,7 @@ exports.Teacher = class Teacher extends Model {
         return await searchTeacher(searchBy, value)
     }
 
-    static async getTeacher(limit, offset) {
+    static async getTeachers(limit, offset) {
 
         const searchTeacher = require('./get')
         return await searchTeacher(limit, offset)

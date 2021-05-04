@@ -1,4 +1,3 @@
-const {studentMock} = require('../../utils/mocks')
 const {ipcRenderer} = require('electron')
 const pagination = require('../pagination')
 module.exports = {
@@ -22,12 +21,13 @@ module.exports = {
     inject: '',
     emits: ['open-search-result'],
     methods: {
-        requestData(number, offset, type='student') {
+        requestData(number, offset, type='teacher') {
 
             // alert('request user data'+ number +'----'+ offset + "----" + type)
             // get users information
             ipcRenderer.send('getBulk', {number: number, offset: offset, type: type})
             ipcRenderer.on('responseTeacherGetBulk',(e, args) => {
+                console.log(args.teachers)
                 this.teachers = args.teachers
             })
         }
@@ -38,7 +38,8 @@ module.exports = {
     // ==================================================================================
     template: `
       <div class="table-holder" v-if="teachers">
-      <table class="table-norm">
+      <p v-if="!teachers[0]">هیچ استادی در سیستم ثبت نشده است</p>
+      <table class="table-norm" v-if="teachers[0]">
         <tr class="header">
           <th>نام</th>
           <th>شماره تماس</th>

@@ -17,7 +17,7 @@ module.exports = {
     methods: {
         requestData(number, offset, type='student') {
 
-            alert('request user data'+ number +'----'+ offset + "----" + type)
+            // alert('request user data'+ number +'----'+ offset + "----" + type)
             // get users information
             ipcRenderer.send('getBulk', {number: number, offset: offset, type: type})
             ipcRenderer.on('responseStudentGetBulk',(e, args) => {
@@ -32,7 +32,8 @@ module.exports = {
     // ==================================================================================
     template: `
       <div class="table-holder">
-      <table class="table-norm">
+      <p v-if="!students[0]">هیچ زبان آموزی در سیستم ثبت نشده است</p>
+      <table class="table-norm" v-if="students[0]">
         <tr class="header">
           <th>نام</th>
           <th>شماره تماس</th>

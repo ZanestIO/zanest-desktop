@@ -213,7 +213,7 @@ ipcRenderer.on('responseUserCreation', verify => {
         // _____________________________________________________
         // the timeout is for simulating
         setTimeout(() => {
-            ipcRenderer.send('load', {page: 'dashboard', currentPage: 'firstLogin'})
+            ipcRenderer.send('userAuth', {username: app.username.value, password: app.password.value})
         }, 500)
 
     } else {
