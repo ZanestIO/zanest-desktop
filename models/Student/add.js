@@ -37,12 +37,12 @@ module.exports = async (sid, parentName, parentNumber, fullName, sex, phoneNumbe
             const PersonId = personHolder.dataValues.id
             await db().sequelize.models.Student.create({socialID: sid, parentName: parentName, parentNumber: parentNumber, PersonId: PersonId});
 
-            const msg = message.request('create', fullName, true, sid)
+            const msg = message.request('create', true, sid)
             log.record('info', msg)
-            return [true, msg]
+            return [true, message.show(true)]
 
         } else {
-            const msg = message.check(fullName, true, sid)
+            const msg = message.check(true, sid)
             log.record('error', msg)
             return [false, msg]
         }

@@ -11,7 +11,7 @@ module.exports = async (searchBy, value) => {
 
     try {
         // 
-        let info
+        let info 
         // select * from TEACHER, person where socialID == sid 
         if (searchBy === 'name') {
             info = await db().sequelize.models.Person.findAll({
@@ -26,11 +26,11 @@ module.exports = async (searchBy, value) => {
                 ],
                 attributes: ["fullName", "socialID", "phoneNumber"],
                 offset: 0,
-                limit: 7
+                limit: 5
             })
 
         } else if (searchBy === 'id') {
-            // TODO: fix search Issue
+
             info = await db().sequelize.models.Person.findAll({
                 where: {
                     socialID: {
@@ -43,12 +43,12 @@ module.exports = async (searchBy, value) => {
                 ],
                 attributes: ["fullName", "socialID", "phoneNumber"],
                 offset: 0,
-                limit: 7
+                limit: 5
             })
         }
         let results = []
         if (info[0]) {
-            log.record('info', message.request('search', 'teacher', true, value))
+            log.record('info', message.request('search', true, value))
             info.forEach(node => {
                 holder = {
                     fullName: node.dataValues.fullName,
@@ -60,7 +60,7 @@ module.exports = async (searchBy, value) => {
             return results
 
         } else {
-            log.record('info', message.request('search', 'teacher', false, value))
+            log.record('info', message.request('search', false, value))
             return false
         }
 

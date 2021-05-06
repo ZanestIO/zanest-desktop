@@ -22,11 +22,9 @@ module.exports = {
 
         global.share.session.defaultSession.cookies.set(lastPage)
 
-        // TODO: fix issue 
         if (args.page == args.currentPage) {
-            console.log("[lastpage value]: "+ lastPage.value + " ------[issue]-------- [requested apge] " + args.page+":"+ __filename)
             return
-        } 
+        }
 
         let page = args.page
 
@@ -89,10 +87,10 @@ async function accessAuth(path, id, type) {
                     if (student[0]) {
                         webContentsSend('getInfo', student[1])
                     } else {
-                        log.record('info', message.check('Student', false, id))
+                        log.record('info', message.check(false, id))
                         webContentsSend('errorNot', {
-                            title: message.error,
-                            message: message.incStudent,
+                            title: message.title('read', 'زبان آموز'),
+                            message: student[1],
                             contactAdmin: true,
                         })
                     }
@@ -106,10 +104,10 @@ async function accessAuth(path, id, type) {
                     if (teacher[0]) {
                         webContentsSend('getInfo', teacher[1])
                     } else {
-                        log.record('info', message.check('Teacher', false, id))
+                        log.record('info', message.check(false, id))
                         webContentsSend('errorNot', {
-                            title: message.error,
-                            message: message.incTeacher,
+                            title: message.title('read', 'استاد'),
+                            message: teacher[1],
                             contactAdmin: true,
                         })
                     }

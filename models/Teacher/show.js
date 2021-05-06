@@ -22,11 +22,12 @@ module.exports = async (sid) => {
         })
 
         if (info !== null) {
-            log.record('info', message.request('read', 'teacher', true, sid))
+            log.record('info', message.request('read', true, sid))
             info = info[0]
 
             let result =
                 {
+                    id: info.id,
                     fullName: info['Person.fullName'],
                     phoneNumber: info['Person.phoneNumber'],
                     sex: info['Person.sex'],
@@ -39,7 +40,7 @@ module.exports = async (sid) => {
             return [true, result]
 
         } else {
-            const msg = message.check('Teacher', false, sid)
+            const msg = message.check(false, sid)
             log.record('info', msg)
             return [false, msg]
         }

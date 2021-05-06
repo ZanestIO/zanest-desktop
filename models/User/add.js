@@ -34,12 +34,12 @@ module.exports = async (fullname=null, username, password, usertype='staff', bir
                     birthDate: birthdate, phoneNumber: phonenumber })
                     .then(result => setId(result.id));
             })
-            const msg = message.request('create', username, true)
+            const msg = message.request('create', true, username)
             log.record('info', msg)
-            return [true, msg]
+            return [true, message.show(true)]
 
         } else {
-            msg = message.check(username, true)
+            msg = message.check(true, username)
             log.record('error', msg)
             return [false, msg]
         }
