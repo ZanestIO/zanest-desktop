@@ -44,6 +44,24 @@ module.exports = {
         return false
     },
 
+    longerThan(input, num) {
+        if (input.value.length < num) {
+            input.err = true
+            input.errMsg = errors.longer(num)
+            return true
+        }
+        return false
+    },
+
+    shorterThan(input, num) {
+        if (input.value.length > num) {
+            input.err = true
+            input.errMsg = errors.shorter(num)
+            return true
+        }
+        return false
+    },
+
     isNumber(input) {
         let numbers = new RegExp(/^\d+$/)
         if (!numbers.test(input.value)) {
