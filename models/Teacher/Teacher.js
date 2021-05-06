@@ -23,10 +23,10 @@ exports.Teacher = class Teacher extends Model {
      * @param args (attributes)
      * @returns {Promise<*>}
      */
-    static async updateTch(args) {
+    static async update(args) {
 
         const updateTeacher = require('./update')
-        return await updateTeacher(args.oldSid, args.socialID, args.credit, args.degree, args.fullName,
+        return await updateTeacher(args.id, args.socialID, args.credit, args.degree, args.fullName,
             args.sex, args.phoneNumber, args.birthDate, args.address)
     }
 
@@ -37,7 +37,7 @@ exports.Teacher = class Teacher extends Model {
      * @param sid (attributes)
      * @returns {Promise<*>}
      */
-    static async deleteTch(sid) {
+    static async delete(sid) {
 
         const deleteTeacher = require('./delete')
         return await deleteTeacher(sid)

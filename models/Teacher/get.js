@@ -26,7 +26,7 @@ module.exports = async (limit, offset) => {
         // converts a info to a JSON string
         const strInfo = JSON.stringify(info)
         const holder = JSON.parse(strInfo)
-        console.log(holder)
+        
         holder.forEach(node => {
             let teacher = {
                 fullName: node.Person.fullName,
