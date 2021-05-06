@@ -1,7 +1,10 @@
+const {ipcRenderer} = require('electron')
+
 module.exports = {
     data() {
         return {
             expanded: true,
+            userType: '',
         }
     },
     created() {
@@ -9,7 +12,7 @@ module.exports = {
         const main = document.querySelector('#main')
 
         // handles toggle button for secondary menu
-        menuToggle.addEventListener('click', e=> {
+        menuToggle.addEventListener('click', e => {
 
             // when it becomes smaller
             if (this.expanded) {
@@ -22,11 +25,18 @@ module.exports = {
                 main.style.paddingRight = '14rem'
             }
         })
+        ipcRenderer.send('requestUserSession')
+        // _____________________________________________________
+        // processing logged in user info
+        ipcRenderer.on('responseUserSession', (event, args) => {
+            if (args.userType !== 'staff')
+                this.userType = true
+        })
     },
-
     props: ['currentPage'],
     emits: ['request-page'],
-    template: `
+    template:
+`
       <ul id="secondary-menu"
           class="fixed right-0 bottom-0 hidden z-20 md:flex flex-col justify-start h-92v items-center bg-gradient-to-tr text-white from-purple-900 to bg-black"
           :class="{'w-56': expanded, 'w-16': !expanded}">
@@ -52,12 +62,12 @@ module.exports = {
 
       <div class="flex-1"></div>
 
-      <li class=" side-nav-li" :class="{closed: !expanded}">
+      <li class=" side-nav-li" :class="{closed: !expanded}" v-if="userType">
         <span class="second-nav-text">تنظیمات</span>
         <i class="text-lg fas fa-cogs"></i>
       </li>
 
-      <li class="side-nav-li" :class="{closed: !expanded}">
+      <li class="side-nav-li" :class="{closed: !expanded}" v-if="userType" @click="$emit('request-page', 'users', currentPage)">
         <span class="second-nav-text">کاربرها</span>
         <i class="text-lg fas fa-user-friends"></i>
       </li>

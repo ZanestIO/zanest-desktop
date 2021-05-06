@@ -237,7 +237,6 @@ module.exports = {
             this.processPhone()
             this.processSid()
             this.processBirthDay()
-            this.processBirthDay()
             this.processBirthMonth()
             this.processBirthYear()
             this.processAddress()
