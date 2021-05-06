@@ -21,7 +21,7 @@ module.getBulk = {
             webContentsSend('responseTeacherGetBulk', {teachers: teachers})
 
         } else if ( args.type === 'user') {
-            let users = await db().sequelize.models.User.getUsers(args.number, args.offset);
+            let users = await db().sequelize.models.User.getUsers(currentUser());
             webContentsSend('responseUserGetBulk', {users: users})
 
         } else {
@@ -32,3 +32,19 @@ module.getBulk = {
 }
 
 
+function currentUser() {
+    global.share.session.defaultSession.cookies.get({url: 'http://zanest.io'})
+        .then( async(cookies) => {
+            // if cookies exist
+            let name
+            if (cookies !== null) {
+                // get userName 
+                cookies.forEach(node => {
+                    if (node.name === 'userName') {
+                        name = node.value
+                    }
+                })
+            }
+        return name
+    })
+}
