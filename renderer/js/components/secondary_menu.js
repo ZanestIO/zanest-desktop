@@ -38,7 +38,7 @@ module.exports = {
     template:
 `
       <ul id="secondary-menu"
-          class="fixed right-0 bottom-0 hidden z-20 md:flex flex-col justify-start h-92v items-center bg-gradient-to-tr text-white from-purple-900 to bg-black"
+          class="fixed right-0 bottom-0 hidden z-20 md:flex flex-col justify-start h-92v items-center bg-gradient-to-tr text-white from-pink-500 to bg-purple-900"
           :class="{'w-56': expanded, 'w-16': !expanded}">
       <li class="side-nav-li" :class="{closed: !expanded}" @click="$emit('request-page', 'dashboard', currentPage)">
         <span class="second-nav-text">داشبورد</span>
@@ -62,7 +62,7 @@ module.exports = {
 
       <div class="flex-1"></div>
 
-      <li class=" side-nav-li" :class="{closed: !expanded}" v-if="userType">
+      <li class=" side-nav-li" :class="{closed: !expanded}" v-if="userType" @click="$emit('request-page', 'settings_levels', currentPage)">
         <span class="second-nav-text">تنظیمات</span>
         <i class="text-lg fas fa-cogs"></i>
       </li>

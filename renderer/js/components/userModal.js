@@ -75,7 +75,6 @@ module.exports = {
         }
     },
     created() {
-        alert(this.loggedInUser.value)
         ipcRenderer.send('getUserInfo', {username: this.loggedInUser.value})
 
         ipcRenderer.on('responseGetUserInfo', (e, args) => {

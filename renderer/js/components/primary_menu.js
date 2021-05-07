@@ -68,7 +68,7 @@ module.exports = {
     template: `
       <user-modal v-if="editUser" @cancel-user-edit="closeEditUser"></user-modal>
 
-      <nav class="top-nav fixed top-0 right-0">
+      <nav class="top-nav fixed top-0 right-0 bg-gradient-to-r from-pink-500 to bg-purple-900">
       <ul class="main-nav h-8v shadow-lg w-screen">
         <li id="menu-toggle" class="border-l-2 h-inherit flex flex-row items-center border-white px-5 w-16">
           <i class="fas fa-bars cursor-pointer text-2xl"></i>
@@ -95,13 +95,13 @@ module.exports = {
             <li class="main-dropdown-li">
               سبز تیره
               <div
-                  class="w-20 bg-gradient-to-r border-white border mr-4 from-green-600 to-green-900 rounded-3xl h-8 m-2">
+                  class="w-20 bg-gradient-to-r border-white border mr-4 from-green-600 to-teal-900 rounded-3xl h-8 m-2">
               </div>
             </li>
             <li class="main-dropdown-li">
               صورتی
               <div
-                  class="w-20 bg-gradient-to-r border-white border mr-4 from-pink-400 to-purple-700 rounded-3xl h-8 m-2">
+                  class="w-20 bg-gradient-to-r border-white border mr-4 from-pink-500 to-purple-900 rounded-3xl h-8 m-2">
               </div>
             </li>
           </ul>

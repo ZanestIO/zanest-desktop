@@ -255,7 +255,7 @@ module.exports = {
     // Template
     // ==================================================================================
     template: `
-      <section class="big-section" v-if="addSeen.value">
+      <section class="big-section rounded-tr-none" v-if="addSeen.value">
       <div class="full-edit-box">
         <div>
           <span>
