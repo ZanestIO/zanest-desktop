@@ -8,6 +8,7 @@ module.exports = {
             usertype: '',
             fullName: '',
             username: '',
+            userID: '',
             themesMenu: false,
             userMenu: false,
             notifyMenu: false,
@@ -34,12 +35,13 @@ module.exports = {
             }
             this.username = args.userName
             this.fullName = args.fullName
-            this.userId = args.userId
+            this.userID = args.userId
         })
     },
     provide() {
         return {
-            loggedInUser: Vue.computed(() => this.username)
+            loggedInUser: Vue.computed(() => this.username),
+            loggedInID: Vue.computed(() => this.userID)
         }
     },
     emits: [],

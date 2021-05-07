@@ -16,6 +16,7 @@ const {
 module.exports = {
     data() {
         return {
+            changed: false,
             valid: false,
             fullname: {
                 err: false,
@@ -75,23 +76,28 @@ module.exports = {
         }
     },
     created() {
-        ipcRenderer.send('getUserInfo', {username: this.loggedInUser.value})
+        ipcRenderer.send('getUserInfo', {userName: this.loggedInUser.value})
 
         ipcRenderer.on('responseGetUserInfo', (e, args) => {
-            this.username.value = args.username
+            console.log(args)
+            this.username.value = args.userName
             this.fullname.value = args.fullName
-            this.password.value = args.password
-            this.passwordRepeat.value = args.password
-            this.phone = args.phone
+
+            if (args.phone) {
+                this.phone = args.phone
+            }
 
             // handling the date
-            let date = args.birthDate.split('/')
-            this.birthDate.year.value = date[0]
-            this.birthDate.month.value = date[1]
-            this.birthDate.day.value = date[2]
+            if (args.birthDate) {
+                let date = args.birthDate.split('/')
+                this.birthDate.year.value = date[0]
+                this.birthDate.month.value = date[1]
+                this.birthDate.day.value = date[2]
+            }
+
         })
     },
-    inject: ['loggedInUser'],
+    inject: ['loggedInUser', 'loggedInID'],
     emit: ['cancel-user-edit'],
     components: {
         overlay,
@@ -110,6 +116,7 @@ module.exports = {
                 this.valid = false
             } else {
                 input.success = true
+                this.changed = true
             }
         },
         // ==================================================================================
@@ -130,6 +137,7 @@ module.exports = {
                 // resetting the styles to no error
                 this.username.err = false
                 this.username.success = true
+                this.changed = true
             }
         }, // process username
 
@@ -137,53 +145,58 @@ module.exports = {
         processBirthDay() {
             let input = this.birthDate.day
             resetError(input)
-            if (isEmpty(input)) {
-                this.valid = false
+            if (input.value === '') {
+
             } else if (smallerThan(input, 1)) {
                 this.valid = false
             } else if (biggerThan(input, 31)) {
                 this.valid = false
             } else {
                 input.success = true
+                this.changed = true
             }
         },
 
         processPhone() {
             let input = this.phone
             resetError(input)
+            if (input.value === '') {
 
-            if (isNumber(input)) {
+            } else if (isNumber(input)) {
                 this.valid = false
             } else if (exact(input, 11)) {
                 this.valid = false
             } else
                 input.success = true
+                this.changed = true
         },
 
         processBirthMonth() {
             let input = this.birthDate.month
             resetError(input)
-            if (isEmpty(input)) {
-                this.valid = false
+            if (input.value === '') {
+
             } else if (smallerThan(input, 1)) {
                 this.valid = false
             } else if (biggerThan(input, 12)) {
                 this.valid = false
             } else {
                 input.success = true
+                this.changed = true
             }
         },
         processBirthYear() {
             let input = this.birthDate.year
             resetError(input)
-            if (isEmpty(input)) {
-                this.valid = false
+            if (input.value === '') {
+
             } else if (smallerThan(input, 1300)) {
                 this.valid = false
             } else if (biggerThan(input, 1450)) {
                 this.valid = false
             } else {
                 input.success = true
+                this.changed = true
             }
         },
 
@@ -191,6 +204,12 @@ module.exports = {
         // process the password strength and updating the strength process bar
         // ==================================================================================
         processPassword() {
+            if(this.password.value === "")
+            {
+                this.progress.seen = false
+                return
+            }
+            this.changed = false
             // counts the strength of password from 1 to 4
             let strengthPoints = 1
             let input = this.password
@@ -201,7 +220,7 @@ module.exports = {
                 let smallLetters = new RegExp('[a-z]')
                 let capitalLetters = new RegExp('[A-Z]')
                 let numbers = new RegExp('[0-9]')
-                let symbols = new RegExp('[-!#$%^&*()_+|~=`{}\\[\\]:";\'<>?,.\\/]')
+                let symbols = new RegExp('[-!@#$%^&*()_+|~=`{}\\[\\]:";\'<>?,.\\/]')
 
                 if (capitalLetters.test(this.password.value) || symbols.test(this.password.value)) {
                     strengthPoints++
@@ -223,17 +242,21 @@ module.exports = {
                 case 2:
                     this.progress.width = 'w-1/2'
                     this.progress.text = 'قابل قبول اما ضعیف'
+                    this.changed = true
                     break
                 case 3:
                     this.progress.width = 'w-3/4'
                     this.progress.text = 'امن'
+                    this.changed = true
                     break
                 case 4:
                     this.progress.width = 'w-full'
                     this.progress.text = 'بسیار امن'
+                    this.changed = true
             }
-            this.processPassRep()
         }, // process password
+
+
 
         // ==================================================================================
         // check if the password and passwordRepeat are equal
@@ -259,28 +282,44 @@ module.exports = {
             this.processBirthDay()
             this.processBirthMonth()
             this.processBirthYear()
+
+            if (this.birthDate.day.value || this.birthDate.month.value || this.birthDate.year.value) {
+                if (!this.birthDate.day.value) {
+                    this.birthDate.day.err = true
+                    this.birthDate.day.errMsg = "نباید خالی باشد"
+                    this.valid = false
+                }
+                if (!this.birthDate.month.value) {
+                    this.birthDate.month.err = true
+                    this.birthDate.month.errMsg = "نباید خالی باشد"
+                    this.valid = false
+                }
+                if (!this.birthDate.year.value) {
+                    this.birthDate.year.err = true
+                    this.birthDate.year.errMsg = "نباید خالی باشد"
+                    this.valid = false
+                }
+            }
+
             this.processPassword()
             this.processPassRep()
-
-            if (this.password.value === '') {
-                this.passwordRepeatErr.seen = true
-                this.passwordRepeatErr.text = "رمز عبور نمی تواند خالی باشد"
-                this.valid = false
-            } else if (this.password.value.length < 8) {
-                this.valid = false
-                this.passwordRepeatErr.seen = true
-                this.passwordRepeatErr.text = "رمز عبور نباید کمتر از 8 کاراکتر باشد"
-            }
 
             // ==================================================================================
             // if there is no error send request
             if (this.valid) {
+                let bday
+                if(this.birthDate.day.value && this.birthDate.month.value && this.birthDate.year.value) {
+                    bday = `${this.birthDate.year.value}/${this.birthDate.month.value}/${this.birthDate.day.value}`
+                } else {
+                    bday = ''
+                }
+
                 ipcRenderer.send('userUpdate', {
+                    id: this.loggedInID.value,
                     fullName: this.fullname.value,
                     userName: this.username.value,
                     password: this.password.value,
-                    userType: 'manager',
-                    birthDate: `${this.birthDate.year.value}/${this.birthDate.month.value}/${this.birthDate.day.value}`,
+                    birthDate: bday,
                     phoneNumber: this.phone.value,
                 })
             }
@@ -292,13 +331,13 @@ module.exports = {
           <teleport to="#main">
           <div class="w-1/3 bg-white rounded-lg u-center-h top-20" style="z-index: 2003">
             <div
-                class="p-8 w-full border-t-8 border-purple-700 rounded-lg flex flex-row flex-wrap justify-center items-center">
+                class="p-8 pb-2 w-full border-t-8 border-purple-700 rounded-lg flex flex-row flex-wrap justify-center items-center">
               <h3 class="text-xl text-right mb-4 font-bold text-gray-800">
                 ویرایش کاربر
               </h3>
 
               <div class="mb-4 flex-fullrow">
-                <span class="text-sm text-gray-500 mb-2">نام کاربری</span>
+                <span class="text-sm text-gray-500 mb-2">نام کاربری*</span>
                 <input v-bind:class="{fail: username.err, success: username.success}" type="text" class="p-4 common"
                        placeholder="نام کاربری" @change="processUsername" v-model="username.value" max="50">
                 <p class="input-error" v-if="username.err">{{ username.errMsg }}</p>
@@ -307,7 +346,7 @@ module.exports = {
               
               <div class="mb-4 flex-fullrow flex flex-row flex-nowrap justify-start input-center">
               <div class="ml-2">
-                <span class="text-sm text-gray-500 mb-2">نام شما</span>
+                <span class="text-sm text-gray-500 mb-2">نام شما*</span>
                 <input type="text" class="p-4 common" :class="{fail: fullname.err, success: fullname.success}"
                        placeholder="نام شما"
                        v-model="fullname.value" max="50" @change="processFullname">
@@ -358,23 +397,20 @@ module.exports = {
 
 
               <div class="mb-2 flex-fullrow">
-                <span class="text-sm text-gray-500 mb-2">رمز عبور</span>
+                <span class="text-sm text-gray-500 mb-2">رمزعبور(رمزعبور زیر جایگزین رمز قبلی می شود)</span>
                 <input type="password" class="p-4 common"
-                       placeholder="رمز عبور" v-on:input="processPassword" v-model="password.value">
+                       placeholder="رمز عبور جدید را وارد کنید" v-on:input="processPassword" v-model="password.value">
               </div>
 
               <div class="flex-fullrow">
-                <span class="text-sm text-gray-500 mb-2">
-                  تکرار رمز عبور
-                </span>
                 <input :class="{fail: passwordRepeat.err}" type="password" class="p-4 common"
-                       placeholder="تکرار رمز عبور" v-model="passwordRepeat.value" v-on:change="processPassRep">
+                       placeholder="تکرار رمز عبور جدید" v-model="passwordRepeat.value" v-on:change="processPassRep">
                 <p class="input-error" v-if="passwordRepeatErr.seen" id="pass-err">{{ passwordRepeatErr.text }}</p>
                 <p class="input-guide">رمز عبور شما باید حداقل 8 کاراکتر باشد</p>
               </div>
             </div>
 
-            <div class="p-4 flex">
+            <div class="p-4 pt-2 flex">
               <a href="#"
                  class="w-1/2 px-4 py-3 ml-2 text-center bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-black font-bold rounded-lg text-sm"
                  v-on:click="$emit('cancel-user-edit')">انصراف</a>

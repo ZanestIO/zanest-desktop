@@ -12,7 +12,7 @@ module.exports = async (curentUser) => {
         // get info 
         info = await db().sequelize.models.User.findAll({
             order: [
-                ['createdAt', 'DESC']
+                ['createdAt', 'ASC']
             ],
             nest: false
         })
@@ -22,16 +22,22 @@ module.exports = async (curentUser) => {
         const holder = JSON.parse(strInfo)
         
         holder.forEach(node => {
+            // we have just one manager that access to user managment module
+            console.log(curentUser)
+            let isCurrent = node.userName === curentUser
             let user = {
+                id: node.id,
                 fullName: node.fullName,
                 userType: node.userType,
-                userName: node.username,
-                // we have just one manager that access to user managment module
-                currentUser: function() {
-                    return node.username === curentUser ? true : false
-                }
+                userName: node.userName,
+                curentUser: isCurrent
             }
-            users.push(user)
+
+            // don't send the default admin user
+            if (isCurrent) {
+                users.unshift(user)
+            } else if (user.userType !== 'admin')
+                users.push(user)
         })
 
         return users

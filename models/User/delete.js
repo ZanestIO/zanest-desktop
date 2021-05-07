@@ -19,7 +19,7 @@ module.exports = async (username) => {
                 userName: username
             }
         })
-
+        console.log(username)
         if (user !== null) {
             await db().sequelize.models.User.destroy({
                 where: {

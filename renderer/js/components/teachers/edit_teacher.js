@@ -1,6 +1,5 @@
 const {ipcRenderer} = require('electron')
 const confirm_alert = require('./../confirmAlert')
-const Vue = require('vue')
 const {resetError, isEmpty, exact, smallerThan, biggerThan, isNumber, isLetter} = require('../../utils/validation')
 
 module.exports = {

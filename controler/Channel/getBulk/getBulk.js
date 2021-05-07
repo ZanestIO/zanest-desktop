@@ -23,7 +23,7 @@ module.getBulk = {
         } else if ( args.type === 'user') {
             let users = await db().sequelize.models.User.getUsers(currentUser());
             webContentsSend('responseUserGetBulk', {users: users})
-
+            console.log(users)
         } else {
             log.record('warn', `${args.type} is not found. check sender channel`)
             return 

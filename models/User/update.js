@@ -30,21 +30,21 @@ module.exports = async (id, fullname, username, password, usertype, birthdate, p
         })
 
         // Don't update if user with new username exist
-        if (user.username != username){
+        if (user.userName != username){
             check = await db().sequelize.models.User.findOne({
                 where: {
                     userName: username
                 }
             })
         }
-        
+        console.log(check)
         // if username doesn't already exist updated with new value
         if (check === null){
-            const pass = bcrypt.hash(password, 10)
+            pass = bcrypt.hash(password, 10)
             user.update({fullName: fullname, userName: username, password: pass, userType: usertype,
                  birthdate: birthdate, phoneNumber: phonenumber})
             
-            const msg = message.request('update',true ,socialID)
+            const msg = message.request('update',true ,username)
             log.record('info', msg)
             return [true, message.show(true)]
         } else {

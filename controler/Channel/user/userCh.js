@@ -44,7 +44,6 @@ module.duser = {
         try {
             let check = await db().sequelize.models.User.delete(args)
             if (check[0]) {
-                await setLoadFile('./renderer/user.html');
 
                 return webContentsSend('successNot', {
                     title: '',
@@ -111,17 +110,18 @@ module.uuser = {
 // READ STUDENT INFO
 // ===================================================================================================
 module.ruser = {
-    ruser: global.share.ipcMain.on('getUserInfo', (e, args) => {
+    ruser: global.share.ipcMain.on('getUserInfo', async (e, args) => {
         try {
-            const check = db().sequelize.models.User.show(args)
-            if (check[0])
-                webContentsSend('responseUserGetUserInfo', check[1])
-            else
+            const check = await db().sequelize.models.User.show(args)
+            if (check[0]) {
+                return webContentsSend('responseGetUserInfo', check[1])
+            } else {
                 return webContentsSend('normalNot', {
                     title: '',
                     message: message.notFound,
                     contactAdmin: false,
                 })
+            }
 
         } catch (err) {
             log.record('error', err +":in:"+ __filename)

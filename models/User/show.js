@@ -25,10 +25,11 @@ module.exports = async (username) => {
                     userName: info.userName,
                     fullName: info.fullName,
                     password:  null,
-                    userType: info.uesrType,
+                    userType: info.userType,
                     birthDate: info.birthDate,
                     phoneNumber: info.phoneNumber,
                 }
+                console.log(result)
             return [true, result]
 
         } else {
