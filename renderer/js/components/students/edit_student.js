@@ -99,7 +99,7 @@ module.exports = {
             this.address.value = args.address
 
             // setting the oldSid
-            this.oldSid = args.socialID
+            this.id = args.id
 
             // handling the date
             let date = args.birthDate.split('/')
@@ -277,7 +277,7 @@ module.exports = {
             if (this.valid && this.changed) {
 
                 ipcRenderer.send('studentUpdate', {
-                    oldSid: this.oldSid,
+                    id: this.id,
                     fullName: this.name.value,
                     socialID: this.sid.value,
                     parentsName: this.parentName.value,

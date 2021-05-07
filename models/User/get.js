@@ -4,7 +4,7 @@ const db = require('./../Db');
 // ================================================================================
 // RETURN INFO OF SOME USER
 // ================================================================================
-module.exports = async (limit, offset) => {
+module.exports = async (curentUser) => {
     let info
     let users = []
     try {
@@ -14,8 +14,6 @@ module.exports = async (limit, offset) => {
             order: [
                 ['createdAt', 'DESC']
             ],
-            offset: offset,
-            limit: limit,
             nest: false
         })
 
@@ -25,8 +23,13 @@ module.exports = async (limit, offset) => {
         
         holder.forEach(node => {
             let user = {
-                fullName: info.fullName,
-                userType: info.userType,
+                fullName: node.fullName,
+                userType: node.userType,
+                userName: node.username,
+                // we have just one manager that access to user managment module
+                currentUser: function() {
+                    return node.username === curentUser ? true : false
+                }
             }
             users.push(user)
         })

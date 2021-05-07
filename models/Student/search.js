@@ -7,7 +7,6 @@ const Op = sequelize.Op
 // RETURN INFO OF SOME STUDENT
 // ================================================================================
 module.exports = async (searchBy, value) => {
-
     try {
         // 
         let info
@@ -17,29 +16,38 @@ module.exports = async (searchBy, value) => {
                 where: {
                     fullName: {
                         [Op.substring]: value
-                    }
+                    },
+                    personType: "std"
                 },
+                order: [
+                    ['createdAt', 'DESC']
+                ],
                 attributes: ["fullName", "socialID", "phoneNumber"],
-
+                offset: 0,
+                limit: 5
             })
 
         } else if (searchBy === 'id') {
-            // TODO: fix search Issue
+
             info = await db().sequelize.models.Person.findAll({
                 where: {
                     socialID: {
                         [Op.substring]: value
-                    }
+                    },
+                    personType: "std"
                 },
+                order: [
+                    ['createdAt', 'DESC']
+                ],
                 attributes: ["fullName", "socialID", "phoneNumber"],
-                //offset: 1,
-                //limit: 5
+                offset: 0,
+                limit: 5
             })
         }
 
         let results = []
         if (info[0]) {
-            log.record('error', message.request('search', 'student', true, value))
+            log.record('error', message.request('search', true, value))
             info.forEach(node => {
                 holder = {
                     fullName: node.dataValues.fullName,
@@ -51,7 +59,7 @@ module.exports = async (searchBy, value) => {
             return results
 
         } else {
-            log.record('error', message.request('search', 'student', false, value))
+            log.record('error', message.request('search',false, value))
             return false
         }
 

@@ -28,7 +28,7 @@ exports.Student = class Student extends Model {
     static async updateStd(args) {
 
         const updateStudent = require('./update')
-        return await updateStudent(args.oldSid, args.socialID, args.parentsName, args.parentNumber, args.fullName,
+        return await updateStudent(args.id, args.socialID, args.parentsName, args.parentNumber, args.fullName,
             args.sex, args.phoneNumber, args.birthDate, args.address )
     }
     

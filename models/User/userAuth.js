@@ -46,7 +46,7 @@ module.exports = {
             }
             // if there is no user with given username
         } else {
-            const msg = message.check('User', false)
+            const msg = message.check(false,username)
             log.record('info', msg)
             return [false, {
                 userName: msg

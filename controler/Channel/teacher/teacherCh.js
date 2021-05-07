@@ -49,7 +49,7 @@ module.ctch = {
 module.utch = {
     utch: global.share.ipcMain.on('teacherUpdate', async (e, args) => {
         try {
-            const check = await db().sequelize.models.Teacher.updateTch(args)
+            const check = await db().sequelize.models.Teacher.update(args)
 
             if (check[0]) {
                 // process successfully done
@@ -63,7 +63,7 @@ module.utch = {
                 return webContentsSend('errorNot', {
                     title: message.title('update', 'استاد'),
                     message: check[1],
-                    contactAdmin: true
+                    contactAdmin: false
                 })
             }
 
@@ -87,7 +87,7 @@ module.dtch = {
     dtch: global.share.ipcMain.on('teacherDeletion', async (e, args) => {
         try {
 
-            let check = await db().sequelize.models.Teacher.deleteTch(args)
+            let check = await db().sequelize.models.Teacher.delete(args)
             if (check[0]) {
 
                 await setLoadFile('./renderer/teachers.html');
@@ -144,7 +144,7 @@ module.rtch = {
 // ==================================================================================
 
 async function sendTeacherBulk(number = 5, offset = 1) {
-    let teachers = await db().sequelize.models.Teacher.getTeacher(number, offset);
+    let teachers = await db().sequelize.models.Teacher.getTeachers(number, offset);
     webContentsSend('responseTeacherGetBulk', {teachers: teachers})
 
 }

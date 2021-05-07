@@ -82,12 +82,12 @@ exports.User = class User extends Model {
     // update User
     /**
      * updae User from DB 
-     * @param args (fullname, username, password, usertype, birthdate, phonenumber)
+     * @param args (id, fullname, username, password, usertype, birthdate, phonenumber)
      * @returns {Array<2>} [boolean, message]
      */
     static async update(args) {
         const updateUsr = require('./update')
-        return await updateUsr(args.userName, args.password, args.userType, args.birthDate, args.phoneNumber)
+        return await updateUsr(args.id ,args.fullName, args.userName, args.password, args.userType, args.birthDate, args.phoneNumber)
     }
     // get user info
     /**
@@ -96,9 +96,9 @@ exports.User = class User extends Model {
      * @param {integer} offset 
      * @returns 
      */
-    static async get(limit, offset) {
-        const searchTeacher = require('./get')
-        return await searchTeacher(limit, offset)
+    static async getUsers(username) {
+        const getter = require('./get')
+        return await getter(username)
     }
 }
 
