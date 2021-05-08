@@ -5,19 +5,19 @@ const message = require('./../../controler/massege')
 // ================================================================================
 // RETURN INFO OF SOME USER
 // ================================================================================
-module.exports = async (username) => {
+module.exports = async (id) => {
     try {
         // select * from User where userName == username
         let info = await db().sequelize.models.User.findAll({
             where: {
-                userName: username
+                id: id
             },
             nest: false,
             raw: true
         })
 
         if (info !== null) {
-            log.record('info', message.request('read', true, username))
+            log.record('info', message.request('read', true, id))
             info = info[0]
             let result =
                 {
@@ -29,7 +29,6 @@ module.exports = async (username) => {
                     birthDate: info.birthDate,
                     phoneNumber: info.phoneNumber,
                 }
-                console.log(result)
             return [true, result]
 
         } else {

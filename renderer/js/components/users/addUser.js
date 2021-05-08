@@ -336,22 +336,36 @@ module.exports = {
                     birthDate: bday,
                     phoneNumber: this.phone.value,
                 }
-                console.log(args)
-
                 ipcRenderer.send('userCreation', args)
 
                 ipcRenderer.on('responseUserCreation', (e, args) => {
-                    alert('verify' + args)
-                    this.fullname.value = ''
-                    this.username.value = ''
-                    this.password.value = ''
-                    this.userType.value = 'staff'
-                    this.birthDate.day.value = ''
-                    this.birthDate.month.value = ''
-                    this.birthDate.year.value = ''
-                    this.phone.value = ''
+                    if (args) {
+                        this.fullname.value = ''
+                        this.fullname.success = false
+                        this.username.value = ''
+                        this.username.success = false
+                        this.password.value = ''
+                        this.progress.seen = false
+                        this.passwordRepeat.value = ''
+                        this.userType.value = 'staff'
+                        this.userType.success = false
 
-                    this.$emit('refresh')
+                        this.birthDate.day.value = ''
+                        this.birthDate.day.success = false
+
+                        this.birthDate.month.value = ''
+                        this.birthDate.month.success = false
+
+                        this.birthDate.year.value = ''
+                        this.birthDate.year.success = false
+
+                        this.phone.value = ''
+                        this.phone.success = false
+
+
+                        this.$emit('refresh')
+                    }
+
                 })
             }
         }

@@ -18,7 +18,7 @@ let users = {
         return {
             allUsers: Vue.computed(() => this.users),
             curentUser: Vue.computed(() => this.currentUser),
-            editingID: Vue.computed(() => this.editingID),
+            currentlyEditing: Vue.computed(() => this.editingID),
         }
     },
     components: {
@@ -34,7 +34,7 @@ let users = {
         this.updateUsers()
     },
     methods: {
-        updateUsers() {
+         updateUsers() {
             ipcRenderer.send('getBulk', {type: 'user'})
             ipcRenderer.on('responseUserGetBulk', (e, args) => {
                 this.users = args.users
@@ -43,14 +43,35 @@ let users = {
         showAddUser() {
             this.editing = false
             this.adding = true
+            this.editingID = false
         },
         hideAdd() {
             this.adding = false
         },
-        refreshUsers() {
-            alert('refreshing')
-            this.updateUsers()
+        hideEdit() {
+            this.editing = false
+            this.editingID = ''
         },
+        refreshUsers() {
+            setTimeout(() => {
+                this.updateUsers()
+            }, 400)
+        },
+        userEdit(id) {
+            this.editing = false
+            this.editingID = ''
+            setTimeout(() => {
+                this.adding = false
+                this.editing = true
+                this.editingID = id
+            }, 100)
+        },
+        userDelete(id) {
+             if (this.editingID == id) {
+                 this.editing = false
+                 this.editingID = ''
+             }
+        }
     }
 }
 
