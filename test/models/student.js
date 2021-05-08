@@ -38,7 +38,7 @@ describe("#StudentModel", function () {
     // ----------------------
     // testing add student
     // ----------------------
-    describe("#addStd()", function () {
+    describe("#add()", function () {
 
         it('should add new student to database', async function () {
 
@@ -64,7 +64,7 @@ describe("#StudentModel", function () {
     // ----------------------
     // testing show student
     // ----------------------
-    describe("#showStd()", function () {
+    describe("#show()", function () {
 
         it('should show the information of a student with given social id', async function () {
             const stub = sinon.stub(Student, "show").returns(studentData);
@@ -87,7 +87,7 @@ describe("#StudentModel", function () {
     // ----------------------
     // testing search student
     // ----------------------
-    describe("#searchStd()", function () {
+    describe("#search()", function () {
 
         const stub = sinon.stub(Student, "search").returns(studentData);
 
@@ -126,7 +126,7 @@ describe("#StudentModel", function () {
     // ----------------------
     // testing update student
     // ----------------------
-    describe("#updateStd()", function () {
+    describe("#update()", function () {
 
         const newData = {
             oldSid: 3721584975,
@@ -163,7 +163,7 @@ describe("#StudentModel", function () {
     // ------------------------
     // testing delete student
     // ------------------------
-    describe("#deleteStd()", function () {
+    describe("#delete()", function () {
 
         it('should delete the information of a student with given social id, but archive personal information', async function () {
             const stub = sinon.stub(Student, "deleteStd").returns(null);

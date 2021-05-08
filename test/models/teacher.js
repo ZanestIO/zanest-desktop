@@ -38,7 +38,7 @@ describe("#TeacherModel", function () {
     // ----------------------
     // testing add teacher
     // ----------------------
-    describe("#addTch()", function () {
+    describe("#add()", function () {
 
         it('should add new teacher to database', async function () {
 
@@ -64,7 +64,7 @@ describe("#TeacherModel", function () {
     // ----------------------
     // testing show teacher
     // ----------------------
-    describe("#showTch()", function () {
+    describe("#show()", function () {
 
         it('should show the information of a teacher with given social id', async function () {
             const stub = sinon.stub(Teacher, "show").returns(teacherData);
@@ -87,7 +87,7 @@ describe("#TeacherModel", function () {
     // ----------------------
     // testing search teacher
     // ----------------------
-    describe("#searchTch()", function () {
+    describe("#search()", function () {
 
         const stub = sinon.stub(Teacher, "search").returns(teacherData);
 
@@ -126,7 +126,7 @@ describe("#TeacherModel", function () {
     // ----------------------
     // testing update teacher
     // ----------------------
-    describe("#updateTch()", function () {
+    describe("#update()", function () {
 
         const newData = {
             oldSid: 3721584975,
@@ -141,8 +141,8 @@ describe("#TeacherModel", function () {
         }
 
         it('should update some properties of teacher', async function () {
-            const stub = sinon.stub(Teacher, "updateTch").returns(newData);
-            const result = await db().sequelize.models.Teacher.updateTch(newData);
+            const stub = sinon.stub(Teacher, "update").returns(newData);
+            const result = await db().sequelize.models.Teacher.update(newData);
 
             expect(stub.calledOnce).to.be.true;
 
@@ -163,11 +163,11 @@ describe("#TeacherModel", function () {
     // ------------------------
     // testing delete teacher
     // ------------------------
-    describe("#deleteTch()", function () {
+    describe("#delete()", function () {
 
         it('should delete the information of a teacher with given social id, but archive personal information', async function () {
-            const stub = sinon.stub(Teacher, "deleteTch").returns(null);
-            const result = await db().sequelize.models.Teacher.deleteTch(teacherData.socialID);
+            const stub = sinon.stub(Teacher, "delete").returns(null);
+            const result = await db().sequelize.models.Teacher.delete(teacherData.socialID);
 
             expect(stub.calledOnce).to.be.true;
 
