@@ -76,7 +76,7 @@ exports.User = class User extends Model {
      */
     static async show(args) {
         const showUsr = require('./show')
-        return await showUsr(args.userName)
+        return await showUsr(args.id)
     }
 
     // update User
@@ -134,12 +134,12 @@ exports.userData = {
         },
 
         birthDate: {
-            type: DataTypes.DATEONLY
+            type: DataTypes.STRING(12),
             // allowNull is true by defualt
         },
 
         phoneNumber: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
         }
     },
     options: {
