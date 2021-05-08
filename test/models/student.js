@@ -87,7 +87,7 @@ describe("#StudentModel", function () {
     // ----------------------
     // testing search student
     // ----------------------
-    describe("#search()", function () {
+    describe("#searchStd()", function () {
 
         const stub = sinon.stub(Student, "search").returns(studentData);
 
