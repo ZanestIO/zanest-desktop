@@ -34,12 +34,12 @@ module.exports = async (sid) => {
                 }
             })
             // 
-            const msg = message.request('delete', 'student', true, sid)
+            const msg = message.request('delete', true, sid)
             log.record('info',msg )
-            return [true, msg]
+            return [true, message.show(true)]
 
         } else {
-            const msg = message.check('student', false, sid)
+            const msg = message.check(false, sid)
             log.record('info', msg)
             return [false, msg]
         }

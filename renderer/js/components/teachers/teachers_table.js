@@ -27,7 +27,6 @@ module.exports = {
             // get users information
             ipcRenderer.send('getBulk', {number: number, offset: offset, type: type})
             ipcRenderer.on('responseTeacherGetBulk',(e, args) => {
-                console.log(args.teachers)
                 this.teachers = args.teachers
             })
         }

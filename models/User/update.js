@@ -1,69 +1,75 @@
 const db = require('../Db.js');
 const {log} = require('./../../logger')
 const message = require('./../../controler/massege')
+const bcrypt = require('bcrypt')
 
 // ================================================================================
 //  UPDATE User INFO 
 // ================================================================================
 /**
  * update attributes that user has changed in DB
- * @param fullName
+ * @param id
+ * @param fullname
  * @param username
  * @param password
- * @param userType
- * @param birthDate
+ * @param usertype
+ * @param birthdate
+ * @param phonenumber
  * @parm phonenumber
  * @returns {Promise<(boolean)[]|(String|*)[]>}
  */
-module.exports = async (fullname, username, password, usertype, birthdate, phonenumber) => {
+module.exports = async (id, fullname, username, password, usertype, birthdate, phonenumber) => {
     
     try {
         // count number of element that changed 
-        let changed = 0
-        const oldUserName = username
-        // find user with social ID 
+        let check = null
+        // find user with id
         const user = await db().sequelize.models.User.findOne({
             where: {
-                userName: username
+                id: id
             }
         })
 
-        // check update for User
-        if (user !== null) {
-            if(user.fullName !== fullname) {
-                user.fullName = fullname
-                changed += 1
-            }
-            if(user.username !== username){
-                user.username = username
-                changed += 1
-            }
-            if(user.password !== password) {
-                user.password = password
-                changed += 1
-            }
-            if(user.userType !== usertype) {
-                user.userType = usertype
-                changed += 1
-            }
-            if(user.birthDate !== birthdate) {
-                user.birthDate = birthdate
-                changed += 1
-            }
-            if(user.phoneNumber !== phonenumber) {
-                user.phoneNumber = phonenumber
-                changed += 1
-            }
-            await user.save()
+        // Don't update if user with new username exist
+        if (user.userName != username){
+            check = await db().sequelize.models.User.findOne({
+                where: {
+                    userName: username
+                }
+            })
         }
 
-        const msg = message.request('update', fullName, true ,oldUserName) + `(تغییرات:${changed})`
-        log.record('info', msg)
-        return [true, msg ]
+        // if username doesn't already exist updated with new value
+        if (check === null){
+
+            let pass
+            if (password) {
+                bcrypt.hash(password, 10,  async (err, hash) => {
+                    pass = hash
+                    console.log("1===========================================================" + hash)
+                    await user.update({fullName: fullname, userName: username, password: pass, userType: usertype,
+                        birthDate: birthdate, phoneNumber: phonenumber})
+                })
+            } else {
+                pass = user.password
+                await user.update({fullName: fullname, userName: username, password: pass, userType: usertype,
+                    birthDate: birthdate, phoneNumber: phonenumber})
+            }
+
+
+            
+            const msg = message.request('update',true ,username)
+            await log.record('info', msg)
+            return [true, message.show(true)]
+        } else {
+            // else show already exist message
+            const msg = message.check(true, username)
+            await log.record('info', msg)
+            return [false, msg]
+        }
         
     } catch (err) {
-        log.record('error', err)
+        await log.record('error', err)
         return [false, err]
     }
 }
-

@@ -5,6 +5,6 @@ renderer/js/app.js.LICENSE.txt
 out/
 dist/
 /static/
-*.log
-*.sqlite
+zanest.log
+zanest.sqlite
 /sample/

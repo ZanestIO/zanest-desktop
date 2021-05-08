@@ -1,6 +1,5 @@
 const {ipcRenderer} = require('electron')
 const confirm_alert = require('./../confirmAlert')
-const Vue = require('vue')
 const {resetError, isEmpty, exact, smallerThan, biggerThan, isNumber, isLetter} = require('../../utils/validation')
 
 module.exports = {
@@ -91,6 +90,9 @@ module.exports = {
             this.degree.value = args.degree
             this.address.value = args.address
 
+            // setting the oldSid
+            this.id = args.id
+            
             // handling the date
             let date = args.birthDate.split('/')
             this.birthDate.year.value = date[0]
@@ -234,7 +236,6 @@ module.exports = {
             this.processPhone()
             this.processSid()
             this.processBirthDay()
-            this.processBirthDay()
             this.processBirthMonth()
             this.processBirthYear()
             this.processAddress()
@@ -248,7 +249,7 @@ module.exports = {
             if (this.valid && this.changed) {
 
                 ipcRenderer.send('teacherUpdate', {
-                    oldSid: this.oldSid,
+                    id: this.id,
                     fullName: this.name.value,
                     socialID: this.sid.value,
                     sex: this.sex.value,

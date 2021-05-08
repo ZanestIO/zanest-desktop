@@ -1,6 +1,6 @@
 const {log} = require('./../../logger')
 const message = require('./../../controler/massege')
-
+const db = require('../Db.js');
 // ================================================================================
 // DELETE USER
 // ================================================================================
@@ -14,13 +14,12 @@ module.exports = async (username) => {
     let user
     try {
         // check User exist
-        const db = require('../Db.js');
         user = await db().sequelize.models.User.findOne({
             where: {
                 userName: username
             }
         })
-
+        console.log(username)
         if (user !== null) {
             await db().sequelize.models.User.destroy({
                 where: {
@@ -28,12 +27,12 @@ module.exports = async (username) => {
                 }
             });
             // check message 
-            const msg = message.request('delete', 'User', true, username )
+            const msg = message.request('delete', true, username)
             log.record('info',msg )
-            return [true, msg]
+            return [true, message.show(true)]
 
         } else {
-            const msg = message.check('User', false, username)
+            const msg = message.check(false, username)
             log.record('info', msg)
             return [false, msg]
         }

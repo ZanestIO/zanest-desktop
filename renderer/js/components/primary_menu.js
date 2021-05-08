@@ -1,13 +1,18 @@
 const {ipcRenderer} = require('electron')
+const userModal = require('./userModal')
+const Vue = require('vue')
 
 module.exports = {
     data() {
         return {
             usertype: '',
             fullName: '',
+            username: '',
+            userID: '',
             themesMenu: false,
             userMenu: false,
             notifyMenu: false,
+            editUser: false,
         }
     },
     created() {
@@ -17,23 +22,34 @@ module.exports = {
         // _____________________________________________________
         // processing logged in user info
         ipcRenderer.on('responseUserSession', (event, args) => {
-        switch (args.userType) {
-        case "admin":
-            this.userType = 'ادمین'
-            break
-        case "manager":
-            this.userType = 'مدیر'
-            break
-        case "staff":
-            this.userType = 'کارمند'
-            break
-        }
-        this.fullName = args.fullName
+            switch (args.userType) {
+                case "admin":
+                    this.userType = 'ادمین'
+                    break
+                case "manager":
+                    this.userType = 'مدیر'
+                    break
+                case "staff":
+                    this.userType = 'کارمند'
+                    break
+            }
+            this.username = args.userName
+            this.fullName = args.fullName
+            this.userID = args.userId
         })
+    },
+    provide() {
+        return {
+            loggedInUser: Vue.computed(() => this.username),
+            loggedInID: Vue.computed(() => this.userID)
+        }
     },
     emits: [],
     inject: [],
-    components: {},
+    components: {
+        userModal,
+    }
+    ,
     methods: {
         logout() {
             ipcRenderer.send('logout');
@@ -43,17 +59,25 @@ module.exports = {
         },
         hideMenu(menu) {
             this[menu] = false
-        }
+        },
+        openEditUser() {
+            this.editUser = true
+        },
+        closeEditUser() {
+            this.editUser = false
+        },
     },
     template: `
-      <nav class="top-nav fixed top-0 right-0">
+      <user-modal v-if="editUser" @cancel-user-edit="closeEditUser"></user-modal>
+
+      <nav class="top-nav fixed top-0 right-0 bg-gradient-to-r from-pink-500 to bg-purple-900">
       <ul class="main-nav h-8v shadow-lg w-screen">
         <li id="menu-toggle" class="border-l-2 h-inherit flex flex-row items-center border-white px-5 w-16">
           <i class="fas fa-bars cursor-pointer text-2xl"></i>
         </li>
         <li class="flex-1 text-center">آموزشگاه جهان</li>
         <li class="dropdown-holder flex flex-row items-center border-white h-inherit border-r-2 px-5 hover:bg-gray-700"
-        @mouseover="showMenu('themesMenu')" @mouseleave="hideMenu('themesMenu')">
+            @mouseover="showMenu('themesMenu')" @mouseleave="hideMenu('themesMenu')">
           <i class="fas fa-paint-roller text-2xl"></i>
 
           <ul class="main-dropdown" v-if="themesMenu">
@@ -73,20 +97,20 @@ module.exports = {
             <li class="main-dropdown-li">
               سبز تیره
               <div
-                  class="w-20 bg-gradient-to-r border-white border mr-4 from-green-600 to-green-900 rounded-3xl h-8 m-2">
+                  class="w-20 bg-gradient-to-r border-white border mr-4 from-green-600 to-teal-900 rounded-3xl h-8 m-2">
               </div>
             </li>
             <li class="main-dropdown-li">
               صورتی
               <div
-                  class="w-20 bg-gradient-to-r border-white border mr-4 from-pink-400 to-purple-700 rounded-3xl h-8 m-2">
+                  class="w-20 bg-gradient-to-r border-white border mr-4 from-pink-500 to-purple-900 rounded-3xl h-8 m-2">
               </div>
             </li>
           </ul>
         </li>
 
         <li class="border-white h-inherit flex flex-row items-center border-r-2 px-5 hover:bg-gray-700 dropdown-holder"
-        @mouseover="showMenu('notifyMenu')" @mouseleave="hideMenu('notifyMenu')">
+            @mouseover="showMenu('notifyMenu')" @mouseleave="hideMenu('notifyMenu')">
           <i class="fas fa-bullhorn text-xl"></i>
 
           <ul class="main-dropdown p-2" v-if="notifyMenu">
@@ -111,7 +135,7 @@ module.exports = {
           </ul>
         </li>
         <li class="border-white border-r-2 flex flex-row items-center pl-10 pr-5 h-inherit hover:bg-gray-700 dropdown-holder"
-        @mouseover="showMenu('userMenu')" @mouseleave="hideMenu('userMenu')">
+            @mouseover="showMenu('userMenu')" @mouseleave="hideMenu('userMenu')">
           <i class="fas fa-user-circle text-xl"></i>
 
 
@@ -125,8 +149,8 @@ module.exports = {
                                 {{ userType }}
                             </span>
             </li>
-            <li class="main-dropdown-li justify-end border-b-2 border-gray-500 py-5">
-              <a href="#">
+            <li class="main-dropdown-li justify-end border-b-2 border-gray-500 py-5" @click="openEditUser">
+              <a>
                 ویرایش پروفایل
               </a>
             </li>

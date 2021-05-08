@@ -4,7 +4,7 @@ const db = require('./../Db');
 // ================================================================================
 // RETURN INFO OF SOME USER
 // ================================================================================
-module.exports = async (limit, offset) => {
+module.exports = async (curentUser) => {
     let info
     let users = []
     try {
@@ -12,10 +12,8 @@ module.exports = async (limit, offset) => {
         // get info 
         info = await db().sequelize.models.User.findAll({
             order: [
-                ['createdAt', 'DESC']
+                ['createdAt', 'ASC']
             ],
-            offset: offset,
-            limit: limit,
             nest: false
         })
 
@@ -24,11 +22,21 @@ module.exports = async (limit, offset) => {
         const holder = JSON.parse(strInfo)
         
         holder.forEach(node => {
+            // we have just one manager that access to user management module
+            let isCurrent = node.userName === curentUser
             let user = {
-                fullName: info.fullName,
-                userType: info.userType,
+                id: node.id,
+                fullName: node.fullName,
+                userType: node.userType,
+                userName: node.userName,
+                curentUser: isCurrent
             }
-            users.push(user)
+
+            // don't send the default admin user
+            if (isCurrent) {
+                users.unshift(user)
+            } else if (user.userType !== 'admin')
+                users.push(user)
         })
 
         return users

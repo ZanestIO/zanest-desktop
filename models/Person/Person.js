@@ -83,7 +83,9 @@ exports.personData = {
             type: DataTypes.STRING(11),
             // allow null
         }, 
-
+        personType: {
+            type: DataTypes.STRING(10)
+        }
     },
     options: {
         "modelName": 'Person'

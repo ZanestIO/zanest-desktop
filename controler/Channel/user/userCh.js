@@ -13,9 +13,8 @@ module.cuser = {
             // add new user to db
             check = await db().sequelize.models.User.add(args)
             if (check[0]) {
-                log.record('info', message.request('create', username, true))
                 if (args.login === true) {
-                    // SET COOKIES for login to Dashboard
+                    // SET COOKIES for login to Dashboard after first login
                     setCookies(args)
                 }
                 verify = true
@@ -23,11 +22,10 @@ module.cuser = {
             } else {
                 verify = false
                 return webContentsSend('error', {
-                    errorTitle: message.request('create', 'User', false),
+                    errorTitle: message.title('create','کاربر'),
                     errorMessage: check[1],
                     contactAdmin: true
                 })
-                
             }
         } catch (err) {
             log.record('error', err +":in:"+ __filename)
@@ -44,9 +42,8 @@ module.cuser = {
 module.duser = {
     duser: global.share.ipcMain.on('userDeletion', async(e, args) => {
         try {
-            let check = await db().sequelize.models.User.deleteUser(args)
+            let check = await db().sequelize.models.User.delete(args)
             if (check[0]) {
-                await setLoadFile('./renderer/user.html');
 
                 return webContentsSend('successNot', {
                     title: '',
@@ -83,6 +80,7 @@ module.uuser = {
 
             if (check[0]) {
                 // process successfully done
+                webContentsSend('responseUserUpdate', true)
                 return webContentsSend('successNot', {
                     title: '',
                     message: check[1],
@@ -113,18 +111,19 @@ module.uuser = {
 // READ STUDENT INFO
 // ===================================================================================================
 module.ruser = {
-    ruser: global.share.ipcMain.on('readUser', (e, args) => {
+    ruser: global.share.ipcMain.on('getUserInfo', async (e, args) => {
         try {
-            const check = db().sequelize.models.User.show(args)
-            if (check[0])
-                webContentsSend('responseUserGetBulk', check[1])
-            else
+            const check = await db().sequelize.models.User.show(args)
+            if (check[0]) {
+                return webContentsSend('responseGetUserInfo', check[1])
+            } else {
                 return webContentsSend('normalNot', {
                     title: '',
                     message: message.notFound,
                     contactAdmin: false,
                 })
-    
+            }
+
         } catch (err) {
             log.record('error', err +":in:"+ __filename)
         }
