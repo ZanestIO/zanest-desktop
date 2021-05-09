@@ -80,6 +80,7 @@ module.uuser = {
 
             if (check[0]) {
                 // process successfully done
+                webContentsSend('responseUserUpdate', true)
                 return webContentsSend('successNot', {
                     title: '',
                     message: check[1],

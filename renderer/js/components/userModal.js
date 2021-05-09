@@ -16,6 +16,8 @@ const {
 module.exports = {
     data() {
         return {
+            id: '',
+            userType:'',
             changed: false,
             valid: false,
             fullname: {
@@ -76,20 +78,23 @@ module.exports = {
         }
     },
     created() {
-        ipcRenderer.send('getUserInfo', {userName: this.loggedInUser.value})
+        ipcRenderer.send('getUserInfo', {id: this.loggedInID.value})
 
         ipcRenderer.on('responseGetUserInfo', (e, args) => {
             console.log(args)
             this.username.value = args.userName
             this.fullname.value = args.fullName
+            this.userType = args.userType
+            this.id = args.userID
 
-            if (args.phone) {
-                this.phone = args.phone
+            if (args.phoneNumber) {
+                this.phone.value = args.phoneNumber
             }
 
             // handling the date
             if (args.birthDate) {
                 let date = args.birthDate.split('/')
+                console.log(date)
                 this.birthDate.year.value = date[0]
                 this.birthDate.month.value = date[1]
                 this.birthDate.day.value = date[2]
@@ -314,14 +319,16 @@ module.exports = {
                     bday = ''
                 }
 
-                ipcRenderer.send('userUpdate', {
-                    id: this.loggedInID.value,
+                let args = {
+                    id: this.id,
                     fullName: this.fullname.value,
                     userName: this.username.value,
-                    password: this.password.value,
+                    password: this.password.value ? this.password.value : null,
+                    userType: this.userType.value,
                     birthDate: bday,
-                    phoneNumber: this.phone.value,
-                })
+                    phoneNumber: this.phone.value ? this.phone.value : null,
+                }
+                ipcRenderer.send('userUpdate', args)
             }
         }
     },

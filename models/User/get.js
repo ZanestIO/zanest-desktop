@@ -22,8 +22,7 @@ module.exports = async (curentUser) => {
         const holder = JSON.parse(strInfo)
         
         holder.forEach(node => {
-            // we have just one manager that access to user managment module
-            console.log(curentUser)
+            // we have just one manager that access to user management module
             let isCurrent = node.userName === curentUser
             let user = {
                 id: node.id,
