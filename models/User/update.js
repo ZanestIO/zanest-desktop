@@ -23,6 +23,7 @@ module.exports = async (id, fullname, username, password, usertype, birthdate, p
     try {
         // count number of element that changed 
         let check = null
+
         // find user with id
         const user = await db().sequelize.models.User.findOne({
             where: {
@@ -41,7 +42,6 @@ module.exports = async (id, fullname, username, password, usertype, birthdate, p
 
         // if username doesn't already exist updated with new value
         if (check === null){
-
             let pass
             if (password) {
                 bcrypt.hash(password, 10,  async (err, hash) => {
@@ -56,11 +56,10 @@ module.exports = async (id, fullname, username, password, usertype, birthdate, p
                     birthDate: birthdate, phoneNumber: phonenumber})
             }
 
-
-            
-            const msg = message.request('update',true ,username)
+            const msg = message.request('update',true ,username, 'user')
             await log.record('info', msg)
-            return [true, message.show(true)]
+            return [true, message.show(true, 'update', 'کاربر')]
+
         } else {
             // else show already exist message
             const msg = message.check(true, username)

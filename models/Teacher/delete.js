@@ -34,9 +34,9 @@ module.exports = async (sid) => {
                 }
             })
             // 
-            const msg = message.request('delete', true, sid)
+            const msg = message.request('delete', true, sid, 'teacher')
             log.record('info',msg )
-            return [true, message.show(true)]
+            return [true, message.show(true, 'delete', 'استاد')]
 
         } else {
             const msg = message.check(false, sid)

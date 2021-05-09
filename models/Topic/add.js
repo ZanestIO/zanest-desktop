@@ -28,9 +28,9 @@ module.exports = async (name, level, length, desc) => {
         if (newTop === null) {
             const holder = await db().sequelize.models.Level.create({name: name, level: level, length: length, description: desc});
             
-            const msg = message.request('create', true, holder.id)
+            const msg = message.request('create', true, holder.id, 'topic')
             log.record('info', msg)
-            return [true, message.show(true, 'create')]
+            return [true, message.show(true, 'create', 'سرفصل')]
 
         } else {
             const msg = message.check(true, name)

@@ -27,9 +27,9 @@ module.exports = async (id) => {
                 }
             });
             // 
-            const msg = message.request('delete', true, id)
+            const msg = message.request('delete', true, id, 'topic')
             log.record('info', msg )
-            return [true, message.show(true, 'delete')]
+            return [true, message.show(true, 'delete', 'سرفصل')]
 
         } else {
             const msg = message.check(false, id)

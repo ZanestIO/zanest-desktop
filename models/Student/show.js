@@ -22,7 +22,7 @@ module.exports = async (sid) => {
         })
 
         if (info !== null) {
-            log.record('info', message.request('read', true, sid))
+            log.record('info', message.request('read', true, sid,'student'))
             info = info[0]
             let result =
                 {

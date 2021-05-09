@@ -39,9 +39,9 @@ module.exports = async (id, name, level, length, desc) => {
         // if topic name doesn't already exist updated with new value
         if (check === null){
             topic.update({name: name, level: level, length: length, description: desc})
-            const msg = message.request('update',true ,name)
+            const msg = message.request('update',true ,name, 'topic')
             log.record('info', msg)
-            return [true, message.show(true, 'update')]
+            return [true, message.show(true, 'update', 'سرفصل')]
             
         } else {
             // else show already exist message

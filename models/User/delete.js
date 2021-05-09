@@ -27,9 +27,9 @@ module.exports = async (username) => {
                 }
             });
             // check message 
-            const msg = message.request('delete', true, username)
+            const msg = message.request('delete', true, username, 'user')
             log.record('info',msg )
-            return [true, message.show(true)]
+            return [true, message.show(true, 'delete', 'کاربر')]
 
         } else {
             const msg = message.check(false, username)
