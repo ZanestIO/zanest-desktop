@@ -1,4 +1,4 @@
-const {session} = require("electron")
+
 const {log} = require('./../../../logger')
 // ===================================================================================================
 // requesting the user information

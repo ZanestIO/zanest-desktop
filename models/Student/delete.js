@@ -6,7 +6,6 @@ const message = require('./../../controler/massege')
 // ================================================================================
 /**
  * delete student object from DB,
- * but keep his/her personal info
  * @param sid
  * @returns {Promise<(boolean|string)[]|(boolean|*)[]>}
  */
