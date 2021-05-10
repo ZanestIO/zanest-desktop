@@ -17,6 +17,13 @@ module.cuser = {
                     // SET COOKIES for login to Dashboard after first login
                     setCookies(args)
                 }
+                
+                webContentsSend('successNot', {
+                    title: '',
+                    message: check[1],
+                    contactAdmin: false
+                })
+
                 verify = true
 
             } else {
