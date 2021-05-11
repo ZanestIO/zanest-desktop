@@ -59,7 +59,7 @@ let loginBox = {
                 formValid = false
             } else if (this.password.value.length < 8) {
                 this.password.err = true
-                this.passwordErr.text = "رمزعبور شما کمتر از 8 کاراکتر نیست"
+                this.passwordErr.text = "رمزعبور نمی تواند کمتر از 8 کاراکتر باشد"
                 this.passwordErr.seen = true
                 formValid = false
             }
