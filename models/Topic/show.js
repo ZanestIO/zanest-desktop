@@ -3,12 +3,12 @@ const {log} = require('./../../logger')
 const message = require('./../../controler/massege')
 
 // ================================================================================
-// RETURN INFO OF SOME USER
+// RETURN INFO OF SOME TOPIC
 // ================================================================================
 module.exports = async (id) => {
     try {
-        // select * from User where userName == username
-        let info = await db().sequelize.models.User.findAll({
+        // select * from Topic where id == id 
+        let info = await db().sequelize.models.Topic.findAll({
             where: {
                 id: id
             },
@@ -17,22 +17,21 @@ module.exports = async (id) => {
         })
 
         if (info !== null) {
-            log.record('info', message.request('read', true, id, 'user'))
+            log.record('info', message.request('read', true, info.name, 'topic'))
             info = info[0]
             let result =
                 {
-                    userID: info.id,
-                    userName: info.userName,
-                    fullName: info.fullName,
-                    password:  null,
-                    userType: info.userType,
-                    birthDate: info.birthDate,
-                    phoneNumber: info.phoneNumber,
+                    topID: info.id,
+                    name: info.name,
+                    level: info.level,
+                    length: info.length,
+                    desc: info.description,
                 }
+
             return [true, result]
 
         } else {
-            const msg = message.check(false, sid)
+            const msg = message.check(false, id)
             log.record('info', msg)
             return [false, msg]
         }

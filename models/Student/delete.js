@@ -6,7 +6,6 @@ const message = require('./../../controler/massege')
 // ================================================================================
 /**
  * delete student object from DB,
- * but keep his/her personal info
  * @param sid
  * @returns {Promise<(boolean|string)[]|(boolean|*)[]>}
  */
@@ -34,9 +33,9 @@ module.exports = async (sid) => {
                 }
             })
             // 
-            const msg = message.request('delete', true, sid)
+            const msg = message.request('delete', true, sid, 'student')
             log.record('info',msg )
-            return [true, message.show(true)]
+            return [true, message.show(true, 'delete', 'زبان آموز')]
 
         } else {
             const msg = message.check(false, sid)

@@ -13,7 +13,6 @@ exports.Student = class Student extends Model {
      * @returns {Promise<*>}
      */
     static async add(args) {
-
         const addStudent = require('./add')
         return await addStudent(args.socialID, args.parentsName, args.parentNumber, args.fullName,
              args.sex, args.phoneNumber, args.birthDate, args.address)
@@ -26,7 +25,6 @@ exports.Student = class Student extends Model {
      * @returns {Promise<*>}
      */
     static async updateStd(args) {
-
         const updateStudent = require('./update')
         return await updateStudent(args.id, args.socialID, args.parentsName, args.parentNumber, args.fullName,
             args.sex, args.phoneNumber, args.birthDate, args.address )
@@ -40,30 +38,25 @@ exports.Student = class Student extends Model {
      * @returns {Promise<*>}
      */
     static async deleteStd(sid) {
-
         const deleteStudent = require('./delete')
         return await deleteStudent(sid)
     }
 
     // read student info
     static async show(args) {
-        
         const readStudent = require('./show')
-        // TODO: review this function
         return await readStudent(args)
     }
 
     // search student info
     static async search(searchBy, value) {
-        
         const searchStudent = require('./search')
         return await searchStudent(searchBy, value)
     }
 
     static async getStudents(limit, offset) {
-
-        const searchStudent = require('./get')
-        return await searchStudent(limit, offset)
+        const getStudent = require('./get')
+        return await getStudent(limit, offset)
     }
 
 }

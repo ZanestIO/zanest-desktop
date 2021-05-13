@@ -14,40 +14,50 @@ module.exports = {
     * cruds can be 'create', 'read' , 'update' , 'delete', 'search' determines kind of operation
     * sid Specify what the requested ID isr
      */
-    request(cruds, status, sid=null) {
+    request(cruds, status, sid=null, name) {
         switch(cruds) {
             case 'create':
                 if(status) {
-                    return `درخواست ایجاد ${sid} با موفقیت انجام شد.`
+                    return `درخواست ایجاد ${sid}:${name} با موفقیت انجام شد.`
                 } else if(status === false) {
-                    return `درخواست ایجاد ${sid} با خطا مواجه شد.`
+                    return `درخواست ایجاد ${sid}:${name} با خطا مواجه شد.`
                 }
             case 'read':
                 if(status) {
-                    return `درخواست نمایش اطلاعات ${sid} با موفقیت انجام شد.`
+                    return `درخواست نمایش اطلاعات ${sid}:${name} با موفقیت انجام شد.`
                 } else if(status === false) {
-                    return `درخواست نمایش اطلاعات ${sid} با خطا مواجه شد.`
+                    return `درخواست نمایش اطلاعات ${sid}:${name} با خطا مواجه شد.`
                 }
             case 'update':
                 if(status) {
-                    return `درخواست به روزرسانی اطلاعات ${sid} با موفقیت انجام شد.`
+                    return `درخواست به روزرسانی اطلاعات ${sid}:${name} با موفقیت انجام شد.`
                 } else if(status === false) {
-                    return `درخواست به روزرسانی اطلاعات ${sid} با خطا مواجه شد.`
+                    return `درخواست به روزرسانی اطلاعات ${sid}:${name} با خطا مواجه شد.`
                 }
             case 'delete':
                 if(status) {
-                    return `درخواست حذف اطلاعات ${sid} با موفقیت انجام شد.`
+                    return `درخواست حذف اطلاعات ${sid}:${name} با موفقیت انجام شد.`
                 } else if(status === false) {
-                    return `درخواست حذف کردن اطلاعات ${sid} با خطا مواجه شد.`
+                    return `درخواست حذف کردن اطلاعات ${sid}:${name} با خطا مواجه شد.`
                 }
             case 'search':
-                return `درخواست جستجوی اطلاعات ${sid}.`
+                return `درخواست جستجوی اطلاعات ${sid}:${name}.`
         }
     },
-    // show success and failed message
-    show(status) {
+
+    // show message to client
+    show(status, crud, name) {
         if(status) {
-            return `درخواست با موفقیت انجام شد`
+            switch(crud){
+                case 'create':
+                    return `${name} اضافه شد`
+                case 'read':
+                    return `${name} نمایش داده شد`
+                case 'update':
+                    return ` به روزرسانی ${name} انجام شد`
+                case 'delete':
+                    return `${name} حذف گردید`
+            }
         } else {
             return `درخواست با خطا مواجه شد`
         }

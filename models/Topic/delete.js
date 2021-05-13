@@ -1,38 +1,38 @@
 const {log} = require('./../../logger')
 const message = require('./../../controler/massege')
 const db = require('../Db.js');
+
 // ================================================================================
-// DELETE USER
+// DELETE TOPIC
 // ================================================================================
 /**
- * delete User object from DB,
- * but keep his/her personal info
- * @param sid
+ * delete Topic object from DB,
+ * @param id
  * @returns {Promise<(boolean|string)[]|(boolean|*)[]>}
  */
-module.exports = async (username) => {
-    let user
+module.exports = async (id) => {
+    let topic
     try {
-        // check User exist
-        user = await db().sequelize.models.User.findOne({
+        // check Topic exist
+        topic = await db().sequelize.models.Topic.findOne({
             where: {
-                userName: username
+                id: id
             }
         })
-        console.log(username)
-        if (user !== null) {
-            await db().sequelize.models.User.destroy({
+
+        if (topic !== null) {
+            await db().sequelize.models.Topic.destroy({
                 where: {
-                    userName: username
+                    id: id
                 }
             });
-            // check message 
-            const msg = message.request('delete', true, username, 'user')
-            log.record('info',msg )
-            return [true, message.show(true, 'delete', 'کاربر')]
+            // 
+            const msg = message.request('delete', true, id, 'topic')
+            log.record('info', msg )
+            return [true, message.show(true, 'delete', 'سرفصل')]
 
         } else {
-            const msg = message.check(false, username)
+            const msg = message.check(false, id)
             log.record('info', msg)
             return [false, msg]
         }

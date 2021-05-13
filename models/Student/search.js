@@ -47,7 +47,7 @@ module.exports = async (searchBy, value) => {
 
         let results = []
         if (info[0]) {
-            log.record('error', message.request('search', true, value))
+            log.record('error', message.request('search', true, value,'student'))
             info.forEach(node => {
                 holder = {
                     fullName: node.dataValues.fullName,
@@ -59,7 +59,7 @@ module.exports = async (searchBy, value) => {
             return results
 
         } else {
-            log.record('error', message.request('search',false, value))
+            log.record('error', message.request('search',false, value, 'student'))
             return false
         }
 

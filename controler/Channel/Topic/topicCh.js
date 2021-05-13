@@ -1,35 +1,30 @@
 const db = require('../../../models/Db')
-const {webContentsSend, setCookies} = require('../../../main')
+const {webContentsSend} = require('../../../main')
 const {log} = require('./../../../logger')
 const message = require('./../../massege')
+
 // ===================================================================================================
-// Create User
+// CREATE Topic
 // ===================================================================================================
-module.cuser = {
-    cuser: global.share.ipcMain.on('userCreation', async (E, args) => {
+module.ctopic = {
+    ctop: global.share.ipcMain.on('topicCreation', async (E, args) => {
         let verify
         let check
         try {
-            // add new user to db
-            check = await db().sequelize.models.User.add(args)
+            // add new topic to db
+            check = await db().sequelize.models.Topic.add(args)
             if (check[0]) {
-                if (args.login === true) {
-                    // SET COOKIES for login to Dashboard after first login
-                    setCookies(args)
-                }
-                
+                verify = true
                 webContentsSend('successNot', {
                     title: '',
                     message: check[1],
                     contactAdmin: false
                 })
 
-                verify = true
-
             } else {
                 verify = false
                 return webContentsSend('error', {
-                    errorTitle: message.title('create','کاربر'),
+                    errorTitle: message.title('create','سرفصل'),
                     errorMessage: check[1],
                     contactAdmin: true
                 })
@@ -39,19 +34,18 @@ module.cuser = {
             verify = false
         }
         // send Response
-        webContentsSend('responseUserCreation', verify)
+        webContentsSend('responseTopicCreation', verify)
     }),
 }
 
 // ===================================================================================================
-// DELETE USER
+// DELETE TOPIC 
 // ===================================================================================================
-module.duser = {
-    duser: global.share.ipcMain.on('userDeletion', async(e, args) => {
+module.dtopic = {
+    dtop: global.share.ipcMain.on('topicDeletion', async(e, args) => {
         try {
-            let check = await db().sequelize.models.User.delete(args)
+            let check = await db().sequelize.models.Topic.delete(args)
             if (check[0]) {
-
                 return webContentsSend('successNot', {
                     title: '',
                     message: check[1],
@@ -61,7 +55,7 @@ module.duser = {
             } else {
                 // process failed
                 return webContentsSend('errorNot', {
-                    title: message.title('delete', 'کاربر'),
+                    title: message.title('delete', 'سرفصل'),
                     message: check[1],
                     contactAdmin: true
                 })
@@ -69,7 +63,7 @@ module.duser = {
         } catch (err) {
             log.record('error', err +":in:"+ __filename)
             return webContentsSend('errorNot', {
-                title: message.title('delete', 'کاربر'),
+                title: message.title('delete', 'سرفصل'),
                 message: err,
                 contactAdmin: true
             })
@@ -78,16 +72,16 @@ module.duser = {
 }
 
 // ===================================================================================================
-// UPDATEING USER INFO
+// UPDATEING TOPIC INFO
 // ===================================================================================================
-module.uuser = {
-    uuser: global.share.ipcMain.on('userUpdate', async (e, args) => {
+module.utopic = {
+    utop: global.share.ipcMain.on('topicUpdate', async (e, args) => {
         try {
-            const check = await db().sequelize.models.User.update(args)
+            const check = await db().sequelize.models.Topic.update(args)
 
             if (check[0]) {
                 // process successfully done
-                webContentsSend('responseUserUpdate', true)
+                webContentsSend('responseTopicUpdate', true)
                 return webContentsSend('successNot', {
                     title: '',
                     message: check[1],
@@ -96,7 +90,7 @@ module.uuser = {
             } else {
                 // process failed
                 return webContentsSend('errorNot', {
-                    title: message.title('update', 'کاربر'),
+                    title: message.title('update', 'سرفصل'),
                     message: check[1],
                     contactAdmin: true
                 })
@@ -105,7 +99,7 @@ module.uuser = {
         } catch (err) {
             log.record('error', err + ":in:" + __filename)
             return webContentsSend('errorNot', {
-                title: message.title('update', 'کاربر'),
+                title: message.title('update', 'سرفصل'),
                 message: err,
                 contactAdmin: true
             })
@@ -115,14 +109,14 @@ module.uuser = {
 }
 
 // ===================================================================================================
-// READ USER INFO
+// READ TOPIC INFO
 // ===================================================================================================
-module.ruser = {
-    ruser: global.share.ipcMain.on('getUserInfo', async (e, args) => {
+module.rtopic = {
+    rtop: global.share.ipcMain.on('getTopicInfo', async (e, args) => {
         try {
-            const check = await db().sequelize.models.User.show(args)
+            const check = await db().sequelize.models.Topic.show(args)
             if (check[0]) {
-                return webContentsSend('responseGetUserInfo', check[1])
+                return webContentsSend('responseGetTopicInfo', check[1])
             } else {
                 return webContentsSend('normalNot', {
                     title: '',

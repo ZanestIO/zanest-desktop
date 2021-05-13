@@ -51,9 +51,9 @@ module.exports = async (id, socialID, parentsName, parentNumber, fullName, sex, 
             student.update({parentsName: parentsName, socialID: socialID, parentNumber: parentNumber})
             person.update({fullName: fullName, socialID: socialID, sex: sex, phoneNumber: phoneNumber, birthDate: birthDate, address: address})
 
-            const msg = message.request('update',true ,socialID)
+            const msg = message.request('update',true ,socialID, 'student')
             log.record('info', msg)
-            return [true, message.show(true)]
+            return [true, message.show(true, 'update', 'زبان آموز')]
     
         } else {
             const msg = message.check(true, socialID)
