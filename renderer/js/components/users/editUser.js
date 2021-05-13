@@ -80,6 +80,12 @@ module.exports = {
             },
         }
     },
+    computed: {
+        isDisabled() {
+            // evaluate whatever you need to determine disabled here...
+            return this.currentlyEditing.value == this.curentUser.value
+        }
+    },
     created() {
         ipcRenderer.send('getUserInfo', {id: this.currentlyEditing.value})
 
@@ -104,7 +110,7 @@ module.exports = {
 
         })
     },
-    inject: ['currentlyEditing'],
+    inject: ['currentlyEditing', 'curentUser'],
     emit: ['cancel-edit-user', 'refresh'],
     components: {
     },
@@ -370,7 +376,7 @@ module.exports = {
 
                 <div>
                   <span class="text-sm text-gray-500 mb-2">نقش*</span>
-                  <select v-bind:class="{fail: userType.err, success: userType.success}" class="p-4 common" v-model="userType.value" @focusout="userType.success=true">
+                  <select :disabled="isDisabled" v-bind:class="{fail: userType.err, success: userType.success}" class="p-4 common" v-model="userType.value" @focusout="userType.success=true">
                     <option value="manager">مدیر</option>
                     <option value="staff">منشی</option>
                   </select>
