@@ -20,7 +20,7 @@ module.exports = {
             this.name = args.name
             // TODO: double check these names
             this.level = args.level
-            this.expectedTime = args.expectedTime
+            this.expectedTime = args.length
             if (args.desc)
                 this.desc = args.desc
         })
@@ -28,7 +28,6 @@ module.exports = {
     methods: {},
     template:
         `
-          <section class="w-30p">
           <!-- seeing single item -->
           <div class="main-section">
             <h2 class="mb-2">

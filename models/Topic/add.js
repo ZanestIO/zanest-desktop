@@ -16,7 +16,6 @@ const message = require('./../../controler/massege');
 module.exports = async (name, level, length, desc) => {
     let newTop
     try {
-
         // check existing
         newTop = await db().sequelize.models.Topic.findOne({
             where: {
@@ -26,7 +25,7 @@ module.exports = async (name, level, length, desc) => {
 
         // if new Topic does not exist create it. 
         if (newTop === null) {
-            const holder = await db().sequelize.models.Level.create({name: name, level: level, length: length, description: desc});
+            let holder = await db().sequelize.models.Topic.create({name: name, level: level, length: length, description: desc});
             
             const msg = message.request('create', true, holder.id, 'topic')
             log.record('info', msg)

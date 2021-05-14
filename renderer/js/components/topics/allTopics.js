@@ -21,12 +21,10 @@ module.exports = {
             error_desc: Vue.computed(() => this.deleteBox.desc),
         }
     },
-    inject: ['allTopics', 'currentlyEditing'],
+    inject: ['allTopics', 'currentlyEditing', 'currentlyShowing'],
     emits: ['refresh', 'edit-topic', 'delete-topic', 'show-topic'],
     components: {
         confirm_alert,
-    },
-    created() {
     },
     methods: {
         // ==================================================================================
@@ -48,7 +46,7 @@ module.exports = {
             this.deleteBox.seen = false
         },
         isClassActive(id) {
-            return id === this.currentlyEditing.value;
+            return id === this.currentlyEditing.value || id === this.currentlyShowing.value;
         }
 
     },
@@ -63,12 +61,13 @@ module.exports = {
             </h2>
             <hr class="mb-4">
             <div class="section-content">
-              <div  v-for="topic in allTopics.value" class="setting-item w-full" @click="$emit('show-topic', topic.id)"  :class="{ 'setting-item-active'  : isClassActive( topic.id ) }">
-                            <span class="flex-1">
+              <p v-if="!allTopics.value[0]">تاکنون سرفصلی اضافه نشده است.</p>
+              <div  v-for="topic in allTopics.value" class="setting-item w-full cursor-pointer transition hover:bg-gray-400" :class="{ 'setting-item-active'  : isClassActive( topic.id ) }">
+                            <span class="flex-1" @click="$emit('show-topic', topic.id)">
                                 {{ topic.name }}
                             </span>
-                <i class="far fa-edit text-2xl text-black ml-3" @click="$emit('edit-topic', topic.id)"></i>
-                <i class="far fa-times-circle text-pink-700 text-2xl"  @click="deleteTopic(topic.name, topic.id)"></i>
+                <i class="far fa-edit text-2xl text-black ml-3 transform transition scale-100 hover:scale-125" @click="$emit('edit-topic', topic.id)"></i>
+                <i class="far fa-times-circle text-pink-700 text-2xl transform transition scale-100 hover:scale-125"  @click="deleteTopic(topic.name, topic.id)"></i>
               </div>
             </div>
           </div>
