@@ -41,8 +41,10 @@ module.exports = {
         },
         showAddTopic() {
             this.editing = false
+            this.showing = false
             this.adding = true
             this.editingID = false
+
         },
         hideAdd() {
             this.adding = false
@@ -61,6 +63,8 @@ module.exports = {
             this.editingID = ''
             setTimeout(() => {
                 this.adding = false
+                this.showing = false
+                this.showingID = false
                 this.editing = true
                 this.editingID = id
             }, 100)
@@ -69,21 +73,40 @@ module.exports = {
             if (this.editingID == id) {
                 this.editing = false
                 this.editingID = ''
+            } else if (this.showingID == id) {
+                this.showing = false
+                this.showingID = ''
             }
         },
         showTopic(id) {
+            this.showingID = ''
+            this.showing = false
 
-            alert("showing topic")
-            this.editing = false
-            this.editingID = ''
-            this.adding = false
-            this.showing = true
-            this.showingID = id
+            setTimeout(() => {
+                this.editing = false
+                this.editingID = ''
+                this.adding = false
+                this.showingID = id
+                this.showing = true
+            }, 100)
+
         }
     },
     template:
     `
+      <section class="flex-fullrow relative bottom-6 pr-12">
+      <button v-if="!adding" class="add-topic btn btn-secondary btn-small" @click="showAddTopic">
+        سرفصل جدید
+        <i class="fas fa-plus"></i>
+      </button>
+      </section>
     <all_topics @refresh="refreshTopics" @edit-topic="topicEdit" @delete-topic="topicDelete" @show-topic="showTopic"></all_topics>
-    <show-topic v-if="showing"></show-topic>
+    <section class="w-30p">
+    <show_topic v-if="showing"></show_topic>
+    <add_topic v-if="adding" @cancel-add-topic="hideAdd" @refresh="refreshTopics"></add_topic>
+    <edit_topic v-if="editing" @refresh="refreshTopics" @cancel-edit-topic="hideEdit"></edit_topic>
+    </section>
+      <section class="w-30p"></section>
+    
     `
 }

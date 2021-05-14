@@ -34,9 +34,9 @@ exports.Topic = class Topic extends Model {
      * @param args (attributes)
      * @returns {Promise<*>}
      */
-    static async delete(sid) {
+    static async delete(args) {
         const deleteTop = require('./delete')
-        return await deleteTop(sid)
+        return await deleteTop(args.id)
     }
 
     // read topic info
@@ -47,7 +47,7 @@ exports.Topic = class Topic extends Model {
      */
     static async show(args) {
         const readTop = require('./show')
-        return await readTop(args)
+        return await readTop(args.id)
     }
 
     // get all topic
@@ -74,14 +74,14 @@ exports.topicData = {
             unique: true,
         },
         level: {
-            type: DataTypes.STRING(30),
+            type: DataTypes.STRING(50),
             // allowNull is true by default
         },
         length: {
             type: DataTypes.INTEGER(2)
         },
         description: {
-            type: DataTypes.STRING(150),
+            type: DataTypes.STRING(255),
         },
 
     },

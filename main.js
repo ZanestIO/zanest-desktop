@@ -39,7 +39,7 @@ function createWindow() {
         if (!res) {
             mainWindow.loadFile('renderer/firstLogin.html')
         } else {
-            mainWindow.loadFile('renderer/login.html')
+            mainWindow.loadFile('renderer/settings.html')
         }
 
         mainWindow.webContents.on('did-finish-load', () => {
@@ -86,11 +86,13 @@ async function setCookie(loggedInStatus) {
     let cookie2 = {url: 'https://zanest.io', name: 'userName', value: loggedInStatus.userName}
     let cookie3 = {url: 'https://zanest.io', name: 'fullName', value: loggedInStatus.fullName}
     let cookie4 = {url: 'https://zanest.io', name: 'userType', value: loggedInStatus.userType}
+    let cookie5 = {url: 'https://zanest.io', name: 'menuDocked', value: false}
 
     await session.defaultSession.cookies.set(cookieid)
     await session.defaultSession.cookies.set(cookie2)
     await session.defaultSession.cookies.set(cookie3)
     await session.defaultSession.cookies.set(cookie4)
+    await session.defaultSession.cookies.set(cookie5)
 }
 
 

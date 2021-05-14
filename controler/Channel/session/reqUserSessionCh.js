@@ -32,11 +32,19 @@ module.exports = {
             log.record('error', err +":in:"+ __filename)
         })
 
+        // send menu type
+        ses.get({url: 'https://zanest.io', name: 'menuDocked'}).then(cookie => {
+            arguments.fullName = cookie[0].value
+        }).catch(err => {
+            log.record('error', err +":in:"+ __filename)
+        })
+
         ses.get({}).then((cookies) => {
             e.sender.send('responseUserSession', arguments)
         }).catch(err => {
             log.record('error', err +":in:"+ __filename)
         })
+
 
     })
 }
