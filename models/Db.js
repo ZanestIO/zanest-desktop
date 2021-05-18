@@ -5,6 +5,7 @@ const { Person, personData } = require('./Person/Person')
 const {Topic, topicData} = require('./Topic/Topic')
 const {User, userData} = require('./User/User')
 const {log} = require('./../logger')
+const { Semester, SemesterData } = require('./Semester/Semester')
 let database
 
 // ==================================================================================
@@ -60,7 +61,8 @@ class Db {
             Student.init(studentData.attributes, {sequelize: this.sequelize, modelName: studentData.options.modelName})
             Teacher.init(teacherData.attributes, {sequelize: this.sequelize, modelName: teacherData.options.modelName})
             Topic.init(topicData.attributes, {sequelize: this.sequelize, modelName: topicData.options.modelName})
-
+            Semester.init(SemesterData.attributes, {sequelize: this.sequelize, modelName: SemesterData.options.modelName})
+            
             Student.belongsTo(Person, {
                 foreignKey: 'PersonId'
             })
