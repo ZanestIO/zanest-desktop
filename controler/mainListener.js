@@ -8,6 +8,7 @@ const {userAuth} = require('./Channel/user/authCh')
 const {logout} = require('./Channel/user/logoutCh')
 const {pageCount} = require('./Channel/pagination/Counter')
 const {getBulk} = require('./Channel/getBulk/getBulk')
+//const {csem, usem, dsem, rsem} = require('./Channel/semester/semesterCh')
 
 module.exports = {
     // teacher
@@ -20,7 +21,12 @@ module.exports = {
     ustd,
     dstd,
     rstd,
-    // 
+    // semester
+/*    csem,
+    usem,
+    dsem,
+    rsem,
+    */
     getBulk,
     searchEvent,
     // user
