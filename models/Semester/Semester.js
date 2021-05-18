@@ -30,9 +30,9 @@ exports.Semester = class Semester extends Model {
      * @param args (attributes)
      * @returns {Promise<*>}
      */
-    static async delete(id) {
+    static async delete(args) {
         const deletes = require('./delete')
-        return await deletes(id)
+        return await deletes(args.id)
     }
 
     /**
@@ -42,7 +42,7 @@ exports.Semester = class Semester extends Model {
      */
     static async show(args) {
         const reads = require('./show')
-        return await reads(args)
+        return await reads(args.id)
     }
 
     // get data
