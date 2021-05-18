@@ -8,17 +8,13 @@ const message = require('./../../controler/massege')
 module.exports = async (id) => {
     try {
         // select * from Topic where id == id 
-        let info = await db().sequelize.models.Topic.findAll({
+        let info = await db().sequelize.models.Topic.findOne({
             where: {
                 id: id
             },
-            nest: false,
-            raw: true
         })
-
         if (info !== null) {
             log.record('info', message.request('read', true, info.name, 'topic'))
-            info = info[0]
             let result =
                 {
                     topID: info.id,

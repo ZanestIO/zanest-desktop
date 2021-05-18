@@ -80,6 +80,12 @@ module.exports = {
             },
         }
     },
+    computed: {
+        isDisabled() {
+            // evaluate whatever you need to determine disabled here...
+            return this.currentlyEditing.value == this.curentUser.value
+        }
+    },
     created() {
         ipcRenderer.send('getUserInfo', {id: this.currentlyEditing.value})
 
@@ -104,7 +110,7 @@ module.exports = {
 
         })
     },
-    inject: ['currentlyEditing'],
+    inject: ['currentlyEditing', 'curentUser'],
     emit: ['cancel-edit-user', 'refresh'],
     components: {
     },
@@ -370,7 +376,7 @@ module.exports = {
 
                 <div>
                   <span class="text-sm text-gray-500 mb-2">نقش*</span>
-                  <select v-bind:class="{fail: userType.err, success: userType.success}" class="p-4 common" v-model="userType.value" @focusout="userType.success=true">
+                  <select :disabled="isDisabled" v-bind:class="{fail: userType.err, success: userType.success}" class="p-4 common" v-model="userType.value" @focusout="userType.success=true">
                     <option value="manager">مدیر</option>
                     <option value="staff">منشی</option>
                   </select>
@@ -446,7 +452,7 @@ module.exports = {
             <div class="p-2 pt-2 flex">
               <a href="#"
                  class="w-1/2 px-4 py-3 text-center text-pink-100 bg-purple-600 rounded-lg hover:bg-pink-700 hover:text-white font-bold text-sm"
-                 v-on:click="updateUserInfo">ایجاد کاربر</a>
+                 v-on:click="updateUserInfo">ویرایش</a>
               <a href="#"
                  class="w-1/2 px-4 py-3 ml-2 text-center bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-black font-bold rounded-lg text-sm"
                  v-on:click="$emit('cancel-edit-user')">انصراف</a>

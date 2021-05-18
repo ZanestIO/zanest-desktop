@@ -62,7 +62,7 @@ module.exports = {
 
       <div class="flex-1"></div>
 
-      <li class=" side-nav-li" :class="{closed: !expanded}" v-if="userType" @click="$emit('request-page', 'settings_levels', currentPage)">
+      <li class=" side-nav-li" :class="{closed: !expanded}" v-if="userType" @click="$emit('request-page', 'settings', currentPage)">
         <span class="second-nav-text">تنظیمات</span>
         <i class="text-lg fas fa-cogs"></i>
       </li>

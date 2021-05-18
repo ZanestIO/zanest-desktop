@@ -70,14 +70,14 @@ module.exports = {
                                {{ user.fullName }}
                               <span v-if="user.id == curentUser.value">(شما)</span>
                             </span>
-                <span class="flex-1 mr-4 text-gray-500" v-if="user.userType === 'manager'">
+                <span class="flex-1 pr-4 text-gray-500" v-if="user.userType === 'manager'">
                   مدیر
                 </span>
-                <span class="flex-1 mr-4 text-gray-500" v-else>
+                <span class="flex-1 pr-4 text-gray-500" v-else>
                   منشی
                 </span>
-                <i class="far fa-edit text-2xl text-black ml-3" @click="$emit('edit-user', user.id)"></i>
-                <i class="far fa-times-circle text-pink-700 text-2xl" v-if="user.id != curentUser.value" @click="deleteUser(user.userName, user.id)"></i>
+                <i class="far fa-edit text-2xl text-black ml-3 transform transition scale-100 hover:scale-125" @click="$emit('edit-user', user.id)"></i>
+                <i class="far fa-times-circle text-pink-700 text-2xl transform transition scale-100 hover:scale-125" v-if="user.id != curentUser.value" @click="deleteUser(user.userName, user.id)"></i>
               </div>
               
             </div>
