@@ -43,6 +43,10 @@ module.getBulk = {
             let topics = await db().sequelize.models.Topic.get();
             webContentsSend('responseTopicGetBulk', {topics: topics})
 
+        } else if (args.type === 'semester') {
+            let semesters = await db().sequelize.models.Semester.get();
+            webContentsSend('responseSemesterGetBulk', {semesters: semesters})
+        
         } else {
             log.record('warn', `${args.type} is not found. check sender channel`)
             return
