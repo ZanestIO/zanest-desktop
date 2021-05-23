@@ -49,12 +49,11 @@ module.exports = {
 
               <p>
                 توضیحات :
-                <span>
+                <span class="break-words">
                                 {{ desc }}
                             </span>
               </p>
             </div>
           </div>
-          </section>
         `
 }
