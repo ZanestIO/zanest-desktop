@@ -72,11 +72,11 @@ exports.SemesterData = {
             allowNull: false
         },
         startDate: {
-            type: DataTypes.DATE,
+            type: DataTypes.DATEONLY,
             allowNull: false
         },
         finishDate: {
-            type: DataTypes.DATE,
+            type: DataTypes.DATEONLY,
             allowNull: false
         }
     },

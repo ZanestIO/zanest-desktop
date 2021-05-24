@@ -136,3 +136,18 @@ module.ruser = {
         }
     })
 }
+
+// ===================================================================================================
+// CHECK IF MANAGER EXISTS
+// ===================================================================================================
+module.muser = {
+    muser: global.share.ipcMain.on('managerExists', async (e, args) => {
+        try {
+            let hasManger = db().sequelize.models.User.userTypeExists('manager').then(res => {
+                return webContentsSend('responseManagerExists', res)
+                })
+        } catch (err) {
+            log.record('error', err +":in:"+ __filename)
+        }
+    })
+}

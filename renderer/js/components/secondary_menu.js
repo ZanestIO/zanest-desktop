@@ -7,6 +7,28 @@ module.exports = {
             userType: '',
         }
     },
+    beforeCreate() {
+        ipcRenderer.send('requestUserSession')
+        const main = document.querySelector('#main')
+        // _____________________________________________________
+        // processing logged in user info
+        ipcRenderer.on('responseUserSession', (event, args) => {
+            console.log(args)
+
+            if (args.userType !== 'staff')
+                this.userType = true
+
+            if (args.menuDocked === 'true') {
+                this.expanded = false
+                main.style.transition = 'none'
+                main.style.paddingRight = '4rem'
+                setTimeout(() => {
+                    main.style.transition = 'all ease .2s'
+                }, 300)
+
+            }
+        })
+    },
     created() {
         const menuToggle = document.querySelector('#menu-toggle')
         const main = document.querySelector('#main')
@@ -18,19 +40,14 @@ module.exports = {
             if (this.expanded) {
                 this.expanded = false
                 main.style.paddingRight = '4rem'
+                ipcRenderer.send('setMenuDocked', 'true')
 
                 // becoming Bigger
             } else {
                 this.expanded = true
                 main.style.paddingRight = '14rem'
+                ipcRenderer.send('setMenuDocked', 'false')
             }
-        })
-        ipcRenderer.send('requestUserSession')
-        // _____________________________________________________
-        // processing logged in user info
-        ipcRenderer.on('responseUserSession', (event, args) => {
-            if (args.userType !== 'staff')
-                this.userType = true
         })
     },
     props: ['currentPage'],

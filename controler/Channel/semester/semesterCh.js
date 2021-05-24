@@ -13,6 +13,7 @@ module.csem = {
             // add new Semester to db
             check = await db().sequelize.models.Semester.add(args)
             if (check[0]) {
+
                 webContentsSend('successNot', {
                     title: '',
                     message: check[1],
@@ -23,10 +24,10 @@ module.csem = {
 
             } else {
                 verify = false
-                return webContentsSend('error', {
-                    errorTitle: message.title('create','ترم تحصیلی'),
-                    errorMessage: check[1],
-                    contactAdmin: true
+                return webContentsSend('errorNot', {
+                    title: 'خطا در ' + message.title('create','ترم تحصیلی'),
+                    message: check[1],
+                    contactAdmin: false
                 })
             }
         } catch (err) {

@@ -1,16 +1,16 @@
 const {ctch, utch, dtch, rtch} = require('./Channel/teacher/teacherCh')
 const {csem, usem, dsem, rsem} = require('./Channel/semester/semesterCh')
+const {ctime, utime, dtime,rtime} = require('./Channel/timeSlice/timeSliceCh')
 const {cstd, ustd, dstd, rstd} = require('./Channel/student/studentCh')
 const {searchEvent} = require('./Channel/search/searchCh')
-const {cusr, dusr} = require('./Channel/user/userCh')
+const {cuser ,duser ,uuser, ruser, muser} = require('./Channel/user/userCh')
 const {ctopic, dtopic,utopic,rtopic} = require('./Channel/Topic/topicCh')
 const {load} = require('./Channel/session/loadCh')
-const {sesRequest} = require('./Channel/session/reqUserSessionCh')
+const {reqUserSession, setMenuDocked} = require('./Channel/session/reqUserSessionCh')
 const {userAuth} = require('./Channel/user/authCh')
 const {logout} = require('./Channel/user/logoutCh')
 const {pageCount} = require('./Channel/pagination/Counter')
 const {getBulk} = require('./Channel/getBulk/getBulk')
-
 
 module.exports = {
     // teacher
@@ -28,19 +28,23 @@ module.exports = {
     usem,
     dsem,
     rsem,
+    // timeSlice
+    ctime,
+    utime,
+    dtime,
+    rtime,
 
     getBulk,
     searchEvent,
     // user
     userAuth,
-    cusr,
-    dusr,
+    cuser ,duser ,uuser, ruser, muser,
     // topic
     ctopic,
     dtopic,utopic,rtopic,
     //
     load,
-    sesRequest,
+    reqUserSession, setMenuDocked,
     logout,
     pageCount
 }

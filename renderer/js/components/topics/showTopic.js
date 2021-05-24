@@ -30,7 +30,7 @@ module.exports = {
         `
           <!-- seeing single item -->
           <div class="main-section">
-            <h2 class="mb-2">
+            <h2 class="mb-2" lang="en">
               {{ name }}
             </h2>
             <hr class="mb-4">

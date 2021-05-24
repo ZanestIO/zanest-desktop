@@ -63,7 +63,7 @@ module.exports = {
             <div class="section-content">
               <p v-if="!allTopics.value[0]">تاکنون سرفصلی اضافه نشده است.</p>
               <div  v-for="topic in allTopics.value" class="setting-item w-full cursor-pointer transition hover:bg-gray-400" :class="{ 'setting-item-active'  : isClassActive( topic.id ) }">
-                            <span class="flex-1" @click="$emit('show-topic', topic.id)">
+                            <span lang="en" class="flex-1" @click="$emit('show-topic', topic.id)">
                                 {{ topic.name }}
                             </span>
                 <i class="far fa-edit text-2xl text-black ml-3 transform transition scale-100 hover:scale-125" @click="$emit('edit-topic', topic.id)"></i>

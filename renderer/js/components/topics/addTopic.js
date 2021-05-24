@@ -140,14 +140,14 @@ module.exports = {
 
           <div class="section-content">
             <div class="mb-4 flex-fullrow">
-              <p>*نام سرفصل</p>
-              <input v-bind:class="{fail: name.err, success: name.success}" type="text" class="p-4 common"
+              <p class="text-sm text-gray-500 mb-2">نام سرفصل *</p>
+              <input lang="en" v-bind:class="{fail: name.err, success: name.success}" type="text" class="p-4 common"
                       placeholder="نام شما" @change="processName" v-model="name.value" max="50">
               <p class="input-error" v-if="name.err">{{ name.errMsg }}</p>
             </div>
             
             <div class="mb-4 flex-fullrow">
-              سطح *
+              <p class="text-sm text-gray-500 mb-2">سطح *</p>
               <select v-bind:class="{fail: level.err, success: level.success}" class="p-4 common" 
                       @focusout="processLevel" v-model="level.value">
                 <option value="Pre-Elementary">Pre-Elementary</option>
@@ -160,7 +160,7 @@ module.exports = {
               <p class="input-error" v-if="level.err">{{ level.errMsg }}</p>
             </div>
             <div class="mb-4 flex-fullrow">
-              طول پیشنهادی (ترم) *
+              <p class="text-sm text-gray-500 mb-2">طول پیشنهادی (ترم) *</p>
               <select v-bind:class="{fail: length.err, success: length.success}" class="p-4 common"
                       @focusout="processLength" v-model="length.value">
                 <option value="1" selected>1</option>
@@ -174,7 +174,9 @@ module.exports = {
             </div>
 
             <div class="mb-4 flex-fullrow">
-              توضیحات :
+              <p class="text-sm text-gray-500 mb-2">
+                توضیحات :
+              </p>
               <br>
               <textarea v-bind:class="{fail: desc.err, success: desc.success}" class="p-4 common w-full"
                         @focusout="processDesc" v-model="desc.value" >

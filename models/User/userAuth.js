@@ -40,7 +40,7 @@ module.exports = {
                 log.record('warn', message.incPassowrd)
 
                 return [false, {
-                    password: message.incPassword
+                    password: message.incPassowrd
                 }]
 
             }
