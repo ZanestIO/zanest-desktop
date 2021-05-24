@@ -17,21 +17,21 @@ module.exports = async (year, startDate, finishDate) => {
     try {
         // check if netSem exist
         newSem = await db().sequelize.models.Semester.findAll({
-            where = {
+            where: {
                 [Op.or]: [{
                     startDate: {
-                        [Op.between]: [startDate, endDate]
+                        [Op.between]: [startDate, finishDate]
                     }
                 }, {
                     finishDate: {
-                        [Op.between]: [startDate, endDate]
+                        [Op.between]: [startDate, finishDate]
                     }
                 }]
             }
         })
 
         // if new semester have no conflict create it else return conflict message
-        if (newSem === null) {
+        if (newSem == false) {
             let semester = await db().sequelize.models.Semester.create({year: year, startDate: startDate, finishDate: finishDate})
 
             const msg = message.request('create', true, semester.id, 'semester')

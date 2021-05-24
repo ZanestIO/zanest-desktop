@@ -5,7 +5,7 @@ const {searchEvent} = require('./Channel/search/searchCh')
 const {cusr, dusr} = require('./Channel/user/userCh')
 const {ctopic, dtopic,utopic,rtopic} = require('./Channel/Topic/topicCh')
 const {load} = require('./Channel/session/loadCh')
-const {sesRequest} = require('./Channel/session/reqUserSessionCh')
+const {reqUserSession, setMenuDocked} = require('./Channel/session/reqUserSessionCh')
 const {userAuth} = require('./Channel/user/authCh')
 const {logout} = require('./Channel/user/logoutCh')
 const {pageCount} = require('./Channel/pagination/Counter')
@@ -40,7 +40,7 @@ module.exports = {
     dtopic,utopic,rtopic,
     //
     load,
-    sesRequest,
+    reqUserSession, setMenuDocked,
     logout,
     pageCount
 }

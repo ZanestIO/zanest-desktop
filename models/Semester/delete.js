@@ -29,7 +29,7 @@ module.exports = async (id) => {
             });
 
             // 
-            const msg = message.request('delete', true, sid, 'semester')
+            const msg = message.request('delete', true, id, 'semester')
             log.record('info',msg )
             return [true, message.show(true, 'delete', 'ترم تحصیلی')]
 

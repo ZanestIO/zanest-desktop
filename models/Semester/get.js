@@ -21,7 +21,8 @@ module.exports = async () => {
         
         holder.forEach(node => {
             let semester = {
-                fullName: node.year,
+                id: node.id,
+                year: node.year,
                 startDate: node.startDate,
                 finishDate: node.finishDate
             }

@@ -1,6 +1,7 @@
 const {ipcRenderer} = require('electron')
 const Vue = require('vue')
 const topics = require('./components/topics/topics')
+const semesters = require('./components/semesters/semesters')
 let settings = {
     data() {
         return {
@@ -14,6 +15,7 @@ let settings = {
     },
     components: {
         topics,
+        semesters,
     },
     created() {
 
