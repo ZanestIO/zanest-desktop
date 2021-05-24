@@ -35,8 +35,7 @@ module.exports = {
         // send menu type
         ses.get({url: 'https://zanest.io', name: 'menuDocked'}).then(cookie => {
             arguments.menuDocked = cookie[0].value
-            console.log('********************************************************************')
-            console.log(cookie[0].value)
+
         }).catch(err => {
             log.record('error', err +":in:"+ __filename)
         })

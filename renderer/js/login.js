@@ -57,11 +57,6 @@ let loginBox = {
                 this.passwordErr.seen = true
                 this.passwordErr.text = "رمز عبور نمی تواند خالی باشد"
                 formValid = false
-            } else if (this.password.value.length < 8) {
-                this.password.err = true
-                this.passwordErr.text = "رمزعبور شما کمتر از 8 کاراکتر نیست"
-                this.passwordErr.seen = true
-                formValid = false
             }
 
             // ==================================================================================

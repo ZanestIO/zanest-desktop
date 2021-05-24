@@ -141,7 +141,7 @@ module.exports = {
           <div class="section-content">
             <div class="mb-4 flex-fullrow">
               <p class="text-sm text-gray-500 mb-2">نام سرفصل *</p>
-              <input v-bind:class="{fail: name.err, success: name.success}" type="text" class="p-4 common"
+              <input lang="en" v-bind:class="{fail: name.err, success: name.success}" type="text" class="p-4 common"
                       placeholder="نام شما" @change="processName" v-model="name.value" max="50">
               <p class="input-error" v-if="name.err">{{ name.errMsg }}</p>
             </div>

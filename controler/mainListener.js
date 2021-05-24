@@ -2,7 +2,7 @@ const {ctch, utch, dtch, rtch} = require('./Channel/teacher/teacherCh')
 const {csem, usem, dsem, rsem} = require('./Channel/semester/semesterCh')
 const {cstd, ustd, dstd, rstd} = require('./Channel/student/studentCh')
 const {searchEvent} = require('./Channel/search/searchCh')
-const {cusr, dusr} = require('./Channel/user/userCh')
+const {cuser ,duser ,uuser, ruser, muser} = require('./Channel/user/userCh')
 const {ctopic, dtopic,utopic,rtopic} = require('./Channel/Topic/topicCh')
 const {load} = require('./Channel/session/loadCh')
 const {reqUserSession, setMenuDocked} = require('./Channel/session/reqUserSessionCh')
@@ -33,8 +33,7 @@ module.exports = {
     searchEvent,
     // user
     userAuth,
-    cusr,
-    dusr,
+    cuser ,duser ,uuser, ruser, muser,
     // topic
     ctopic,
     dtopic,utopic,rtopic,

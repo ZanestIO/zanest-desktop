@@ -252,7 +252,7 @@ module.exports = {
 
             <!-- start of the semester -->
             <div class="mb-4 flex-fullrow">
-              <span class="text-sm text-gray-500 mb-2">تاریخ شروع ترم</span>
+              <span class="text-sm text-gray-500 mb-2">تاریخ شروع ترم *</span>
               <div class="input-group">
                 <div>
                   <input type="number" class="common" placeholder="روز" min="1" max="31"
@@ -279,7 +279,7 @@ module.exports = {
 
             <!--          name of the semester -->
             <div class="mb-4 flex-fullrow">
-              <span class="text-sm text-gray-500 mb-2">تاریخ پایان ترم</span>
+              <span class="text-sm text-gray-500 mb-2">تاریخ پایان ترم *</span>
               <div class="input-group">
                 <div>
                   <input type="number" class="common" placeholder="روز" min="1" max="31"
