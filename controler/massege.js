@@ -4,6 +4,7 @@ module.exports = {
     error: "خطا رخداده است",
     incPassowrd: "رمز عبور وارد شده اشتباه است",
     reqLogin: "درخواست ورود به سیستم",
+
     successLogin(username) {
         return  `کاربر با شناسه ${username} وارد حساب کاربری خود شد.`
     },
@@ -70,6 +71,7 @@ module.exports = {
         }
 
     },
+    finishTimeError: 'تاریخ پایان باید از تاریخ شروع جلو تر باشد',
     conflictSemester: ' بازه زمانی انتخاب شده با ترم های دیگر تداخل دارد.',
     reqUserTypeExists: "درخواست بررسی  وضعیت نام کاربری ",
 
