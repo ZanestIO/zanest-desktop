@@ -4,7 +4,6 @@ module.exports = {
     error: "خطا رخداده است",
     incPassowrd: "رمز عبور وارد شده اشتباه است",
     reqLogin: "درخواست ورود به سیستم",
-    timeSliceOverFlow: "تعداد بازه های زمانی نمی تواند بیشتر ۱۰ عدد باشد",
     successLogin(username) {
         return  `کاربر با شناسه ${username} وارد حساب کاربری خود شد.`
     },
