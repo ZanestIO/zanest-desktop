@@ -34,7 +34,9 @@ module.exports = {
 
         // send menu type
         ses.get({url: 'https://zanest.io', name: 'menuDocked'}).then(cookie => {
-            arguments.fullName = cookie[0].value
+            arguments.menuDocked = cookie[0].value
+            console.log('********************************************************************')
+            console.log(cookie[0].value)
         }).catch(err => {
             log.record('error', err +":in:"+ __filename)
         })
@@ -44,7 +46,12 @@ module.exports = {
         }).catch(err => {
             log.record('error', err +":in:"+ __filename)
         })
+    }),
+    setMenuDocked: global.share.ipcMain.on('setMenuDocked', async (e, args) => {
+        let ses = global.share.session.defaultSession.cookies
 
-
+        // set menu type
+        let cookie = {url: 'https://zanest.io', name: 'menuDocked', value: args}
+        ses.set(cookie)
     })
 }
