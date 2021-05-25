@@ -13,8 +13,6 @@ module.exports = {
         // _____________________________________________________
         // processing logged in user info
         ipcRenderer.on('responseUserSession', (event, args) => {
-            console.log(args)
-
             if (args.userType !== 'staff')
                 this.userType = true
 

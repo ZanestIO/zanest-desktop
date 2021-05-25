@@ -1,7 +1,7 @@
-const all_semesters = require('./allSemesters')
-const add_semester = require('./addSemester')
-const edit_semester = require('./editSemester')
-const show_semester = require('./showSemester')
+const all_timeSlices = require('./allTimeSlices')
+const add_timeSlice = require('./addTimeSlice')
+const edit_timeSlice = require('./editTimeSlice')
+const show_timeSlice = require('./showTimeSlice')
 const {ipcRenderer} = require('electron')
 const Vue = require('vue')
 
@@ -11,35 +11,36 @@ module.exports = {
             editing: false,
             adding: false,
             showing: false,
-            semesters: [],
+            timeSlices: [],
             editingID: '',
             showingID: '',
         }
     },
     provide() {
         return {
-            allSemesters: Vue.computed(() => this.semesters),
+            allTimeSlices: Vue.computed(() => this.timeSlices),
             currentlyEditing: Vue.computed(() => this.editingID),
             currentlyShowing: Vue.computed(() => this.showingID)
         }
     },
     components: {
-        all_semesters,
-        add_semester,
-        edit_semester,
-        show_semester,
+        all_timeSlices,
+        add_timeSlice,
+        edit_timeSlice,
+        show_timeSlice,
     },
     created() {
-        this.updateSemesters()
+        this.updateTimeSlices()
     },
     methods: {
-        updateSemesters() {
-            ipcRenderer.send('getBulk', {type: 'semester'})
-            ipcRenderer.on('responseSemesterGetBulk', (e, args) => {
-                this.semesters = args.semesters
+        updateTimeSlices() {
+            ipcRenderer.send('getBulk', {type: 'timeSlice'})
+            ipcRenderer.on('responseTimeSliceGetBulk', (e, args) => {
+                this.timeSlices = args.timeSlices
+                console.log(this.timeSlices)
             })
         },
-        showAddSemester() {
+        showAddTimeSlice() {
             this.editing = false
             this.showing = false
             this.adding = true
@@ -53,12 +54,12 @@ module.exports = {
             this.editing = false
             this.editingID = ''
         },
-        refreshSemesters() {
+        refreshTimeSlices() {
             setTimeout(() => {
-                this.updateSemesters()
+                this.updateTimeSlices()
             }, 400)
         },
-        semesterEdit(id) {
+        timeSliceEdit(id) {
             this.editing = false
             this.editingID = ''
             setTimeout(() => {
@@ -69,7 +70,7 @@ module.exports = {
                 this.editingID = id
             }, 100)
         },
-        semesterDelete(id) {
+        timeSliceDelete(id) {
             if (this.editingID == id) {
                 this.editing = false
                 this.editingID = ''
@@ -78,7 +79,7 @@ module.exports = {
                 this.showingID = ''
             }
         },
-        showSemester(id) {
+        showTimeSlice(id) {
             this.showingID = ''
             this.showing = false
 
@@ -95,17 +96,17 @@ module.exports = {
     template:
         `
           <section class="flex-fullrow relative bottom-6 pr-12">
-          <button v-if="!adding" class="add-topic btn btn-secondary btn-small" @click="showAddSemester">
-            ترم جدید
+          <button v-if="!adding" class="add-topic btn btn-secondary btn-small" @click="showAddTimeSlice">
+            بازه زمانی جدید
             <i class="fas fa-plus"></i>
           </button>
           </section>
-          <all_semesters @refresh="refreshSemesters" @edit-semester="semesterEdit" @delete-semester="semesterDelete"
-                         @show-semester="showSemester"></all_semesters>
+          <all_timeSlices @refresh="refreshTimeSlices" @edit-timeSlice="timeSliceEdit" @delete-timeSlice="timeSliceDelete"
+                         @show-timeSlice="showTimeSlice"></all_timeSlices>
           <section class="w-30p">
-          <show_semester v-if="showing"></show_semester>
-          <add_semester v-if="adding" @cancel-add-semester="hideAdd" @refresh="refreshSemesters"></add_semester>
-          <edit_semester v-if="editing" @refresh="refreshSemesters" @cancel-edit-semester="hideEdit"></edit_semester>
+          <show_timeSlice v-if="showing"></show_timeSlice>
+          <add_timeSlice v-if="adding" @cancel-add-timeSlice="hideAdd" @refresh="refreshTimeSlices"></add_timeSlice>
+          <edit_timeSlice v-if="editing" @refresh="refreshTimeSlices" @cancel-edit-timeSlice="hideEdit"></edit_timeSlice>
           </section>
           <section class="w-30p"></section>
         `
