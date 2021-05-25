@@ -22,7 +22,7 @@ module.exports = async (id) => {
             info = info[0]
             let result =
                 {
-                    tsID: info.id,
+                    id: info.id,
                     startTime: info.startTime,
                     finishTime: info.finishTime,
                 }

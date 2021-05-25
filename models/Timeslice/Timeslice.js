@@ -66,7 +66,6 @@ exports.timeSliceData = {
             type: DataTypes.TIME,
             allowNull: false,
             unique: true
-            // allowNull is true by default
         },
         finishTime: {
             type: DataTypes.TIME,

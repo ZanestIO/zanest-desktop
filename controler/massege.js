@@ -71,8 +71,9 @@ module.exports = {
         }
 
     },
-    finishTimeError: 'تاریخ پایان باید از تاریخ شروع جلو تر باشد',
+    finishTimeError: 'تاریخ پایان نمی تواند قبل از تاریخ شروع باشد',
     conflictSemester: ' بازه زمانی انتخاب شده با ترم های دیگر تداخل دارد.',
+    conflictTimeSlice: 'زمان شروع یا پایان با بازه های دیگر تداخل دارد',
     reqUserTypeExists: "درخواست بررسی  وضعیت نام کاربری ",
 
     // auth message

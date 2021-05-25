@@ -5,8 +5,8 @@ module.exports = {
     data() {
         return {
             name: '',
-            startDate: '',
-            finishDate: '',
+            startTime: '',
+            finishTime: '',
         }
     },
     inject: ['currentlyShowing'],
@@ -17,28 +17,33 @@ module.exports = {
 
         ipcRenderer.on('responseGetTimeSliceInfo', (e, args) => {
             this.name = args.year
-            this.startDate = args.startDate.split("-").reverse().join("-")
-            this.finishDate = args.finishDate.split("-").reverse().join("-")
+            this.startTime = this.convert24To12(args.startTime)
+            this.finishTime = this.convert24To12(args.finishTime)
+
         })
     },
-    methods: {},
+    methods: {
+        convert24To12(time) {
+            let [hour, minute] = time.split(":")
+            hour = parseInt(hour)
+            minute = parseInt(minute)
+            let suffix = hour >= 12 ? "بعد از ظهر":"قبل از ظهر";
+            hour = ((( hour + 11) % 12) + 1)
+            return hour + ":" + minute + " " + suffix
+        }
+    },
     template:
         `
           <!-- seeing single item -->
           <div class="main-section">
-            <h2 class="mb-2">
-              {{ name }}
-            </h2>
-            <hr class="mb-4">
-
-            <div class="section-content">
+            <div class="section-content"> 
               <p>
-                تاریخ شروع :
-                <span >{{ startDate }}</span>
+                زمان شروع :
+                <span class="inline-block ltr">{{ startTime }}</span>
               </p>
               <p>
-                تاریخ پایان :
-                <span>{{ finishDate }}</span>
+                زمان پایان :
+                <span class="inline-block ltr">{{ finishTime }}</span>
               </p>
               
             </div>

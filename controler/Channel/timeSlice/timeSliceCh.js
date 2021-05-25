@@ -45,7 +45,7 @@ module.ctime = {
 module.dtime = {
     dtime: global.share.ipcMain.on('timeSliceDeletion', async(e, args) => {
         try {
-            let check = await db().sequelize.models.timeSlice.delete(args)
+            let check = await db().sequelize.models.TimeSlice.delete(args)
             if (check[0]) {
 
                 return webContentsSend('successNot', {
