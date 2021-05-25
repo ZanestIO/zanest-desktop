@@ -30,6 +30,13 @@ module.exports = async (year, startDate, finishDate) => {
             }
         })
 
+        // if start date greater then finish date return error message
+        if (startDate >= finishDate) {
+            const msg = message.request('create', false, newSem.id, 'semester')
+            log.record('info', msg)
+            return [false, message.finishTimeError]
+        }
+        
         // if new semester have no conflict create it else return conflict message
         if (newSem == false) {
             let semester = await db().sequelize.models.Semester.create({year: year, startDate: startDate, finishDate: finishDate})

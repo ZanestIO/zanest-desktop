@@ -46,7 +46,11 @@ module.getBulk = {
         } else if (args.type === 'semester') {
             let semesters = await db().sequelize.models.Semester.get();
             webContentsSend('responseSemesterGetBulk', {semesters: semesters})
-        
+
+        } else if (args.type === 'timeSlice') {
+            let timeSlices = await db().sequelize.models.TimeSlice.get();
+            webContentsSend('responseTimeSliceGetBulk', {timeSlices: timeSlices})
+            
         } else {
             log.record('warn', `${args.type} is not found. check sender channel`)
             return

@@ -123,4 +123,50 @@ describe("#UserModel", function () {
             // expect(result).equal(undefined);
         });
     });
+
+    // -----------------------------
+    // testing user type existence
+    // -----------------------------
+    describe("#userTypeExists()", function () {
+
+        const stub = sinon.stub(User, "userTypeExists");
+
+        it('should return the type "manager"', async function () {
+            stub.returns("manager");
+            const result = await db().sequelize.models.User.userTypeExists("manager");
+
+            expect(stub.calledOnce).to.be.true;
+
+            expect(result).equal("manager");
+        });
+
+        it('should return null, because "student" type does not exist', async function () {
+            stub.returns(null);
+            const result = await db().sequelize.models.User.userTypeExists("student");
+
+            expect(stub.calledTwice).to.be.true;
+
+            expect(result).equal(null);
+        });
+    });
+
+
+    // ------------------------
+    // testing user login
+    // ------------------------
+    describe("#login()", function () {
+
+        const stub = sinon.stub(User, "login");
+
+        it('should login to the system with given username and password', async function () {
+            stub.returns(true);
+            const result = await db().sequelize.models.User.login(userData.userName, userData.password);
+
+            expect(stub.calledOnce).to.be.true;
+
+            expect(result).equal(true);
+        });
+        
+    });
+
 });
