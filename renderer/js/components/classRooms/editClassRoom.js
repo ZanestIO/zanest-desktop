@@ -38,7 +38,7 @@ module.exports = {
     created() {
         ipcRenderer.send('getClassRoomInfo', {id: this.currentlyEditing.value})
 
-        ipcRenderer.on('responsegetClassRoomInfo', (e, args) => {
+        ipcRenderer.on('responseGetClassRoomInfo', (e, args) => {
             this.name.value = args.name
             this.id = args.id
             this.capacity.value = args.capacity

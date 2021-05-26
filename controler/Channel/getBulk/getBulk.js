@@ -50,9 +50,11 @@ module.getBulk = {
         } else if (args.type === 'timeSlice') {
             let timeSlices = await db().sequelize.models.TimeSlice.get();
             webContentsSend('responseTimeSliceGetBulk', {timeSlices: timeSlices})
-            
+        } else if(args.type === 'classRoom') {
+            let classRooms = await db().sequelize.models.ClassRoom.get();
+            webContentsSend('responseClassRoomGetBulk', {classRooms: classRooms})
         } else {
-            log.record('warn', `${args.type} is not found. check sender channel`)
+            log.record('warn', `${args.type} is not found. check getBulk channel`)
             return
         }
     })

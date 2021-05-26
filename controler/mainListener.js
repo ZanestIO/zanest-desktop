@@ -11,7 +11,7 @@ const {userAuth} = require('./Channel/user/authCh')
 const {logout} = require('./Channel/user/logoutCh')
 const {pageCount} = require('./Channel/pagination/Counter')
 const {getBulk} = require('./Channel/getBulk/getBulk')
-
+const {croom, uroom, droom, rroom} = require('./Channel/classRoom/classRoomCh')
 module.exports = {
     // teacher
     ctch,
@@ -33,7 +33,12 @@ module.exports = {
     utime,
     dtime,
     rtime,
-
+    // classRoom
+    croom,
+    uroom,
+    droom,
+    rroom,
+    
     getBulk,
     searchEvent,
     // user
