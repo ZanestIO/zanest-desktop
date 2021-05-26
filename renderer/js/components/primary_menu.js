@@ -143,24 +143,17 @@ module.exports = {
           <i class="fas fa-bullhorn text-xl"></i>
 
           <ul class="main-dropdown" v-if="notifyMenu"  :class="userColor.solid[userColor.name]">
-            <li
+            <a href="themeUpdate.html"><li
                 class="main-dropdown-li flex-col text-right p-2 justify-start border-b-2 border-gray-400 items-start cursor-pointer">
               <p class="font-bold">تغییرات نسحه جدید</p>
               <p class="text-xs mb-2">اکنون می توانید رنگ منوها را در پنل ادمین عوض کنید</p>
-              <a href="#" class="text-xs underline">
+              <a class="text-xs underline">
                 بیشتر بخوانید
                 <i class="fas fas fa-angle-double-left"></i>
               </a>
             </li>
-
-            <li class="main-dropdown-li flex-col text-right justify-start p-2 border-white items-start cursor-pointer">
-              <p class="font-bold">تغییرات نسحه جدید</p>
-              <p class="text-xs mb-2">اکنون می توانید رنگ منوها را در پنل ادمین عوض کنید</p>
-              <a href="#" class="text-xs underline cursor-pointer">
-                بیشتر بخوانید
-                <i class="fas fas fa-angle-double-left"></i>
-              </a>
-            </li>
+            </a>
+            
           </ul>
         </li>
         <li class="border-white border-r-2 flex flex-row items-center pl-10 pr-5 h-inherit hover:bg-gray-700 dropdown-holder"
