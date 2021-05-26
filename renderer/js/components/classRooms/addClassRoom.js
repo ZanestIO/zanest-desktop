@@ -43,6 +43,8 @@ module.exports = {
 
             if (isEmpty(input)) {
                 this.valid = false
+            } else if (biggerThan(input, 50)) {
+                this.valid = false
             } else {
                 input.success = true
             }

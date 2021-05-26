@@ -82,7 +82,7 @@ module.exports = {
         <i class="text-lg fas fa-tachometer-alt"></i>
       </li>
 
-      <li class="side-nav-li" :class="{closed: !expanded}">
+      <li class="side-nav-li" :class="{closed: !expanded}"  @click="$emit('request-page', 'classes', currentPage)">
         <span class="second-nav-text">کلاس ها</span>
         <i class="text-lg fas fa-chalkboard"></i>
       </li>
