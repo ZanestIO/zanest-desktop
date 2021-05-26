@@ -5,6 +5,21 @@ module.exports = {
         return {
             expanded: true,
             userType: '',
+            userColor: {
+                name: 'purple',
+                gradient: {
+                    purple: 'from-purple-700 to-purple-900',
+                    blue: 'from-blue-600 to-blue-900',
+                    green: 'from-green-600 to-teal-900',
+                    pink: 'from-pink-500 to-purple-900',
+                },
+                solid: {
+                    purple: 'from-purple-700',
+                    blue: 'from-blue-700',
+                    green: 'from-green-600',
+                    pink: 'from-pink-600',
+                }
+            }
         }
     },
     beforeCreate() {
@@ -23,8 +38,15 @@ module.exports = {
                 setTimeout(() => {
                     main.style.transition = 'all ease .2s'
                 }, 300)
-
             }
+
+            if (args.userColor)
+                this.userColor.name = args.userColor
+        })
+
+        ipcRenderer.on('responseUserColor', (e, args) => {
+            if (args)
+                this.userColor.name = args
         })
     },
     created() {
@@ -53,8 +75,8 @@ module.exports = {
     template:
 `
       <ul id="secondary-menu"
-          class="fixed right-0 bottom-0 hidden z-20 md:flex flex-col justify-start h-92v items-center bg-gradient-to-tr text-white from-pink-500 to bg-purple-900"
-          :class="{'w-56': expanded, 'w-16': !expanded}">
+          class="fixed right-0 bottom-0 hidden z-20 md:flex flex-col justify-start h-92v items-center bg-gradient-to-tr text-white"
+          :class="{'w-56': expanded, 'w-16': !expanded}" :class="userColor.gradient[userColor.name]">
       <li class="side-nav-li" :class="{closed: !expanded}" @click="$emit('request-page', 'dashboard', currentPage)">
         <span class="second-nav-text">داشبورد</span>
         <i class="text-lg fas fa-tachometer-alt"></i>

@@ -2,6 +2,7 @@ const db = require('../../../models/Db')
 const {webContentsSend, setCookies} = require('../../../main')
 const {log} = require('./../../../logger')
 const message = require('./../../massege')
+const {ipcRenderer} = require('electron')
 // ===================================================================================================
 // Create User
 // ===================================================================================================
@@ -148,6 +149,39 @@ module.muser = {
                 })
         } catch (err) {
             log.record('error', err +":in:"+ __filename)
+        }
+    })
+}
+
+// ===================================================================================================
+// Change User Color
+// ===================================================================================================
+module.coloruser = {
+    coloruser: global.share.ipcMain.on('changeUserColor', async (e, args) => {
+        try {
+            const check = await db().sequelize.models.User.updateUserColor(args)
+
+            if (check[0]) {
+                // process successfully done
+                let ses = global.share.session.defaultSession.cookies
+                let cookie = {url: 'https://zanest.io', name: 'userColor', value: args.userColor}
+                ses.set(cookie)
+                webContentsSend('responseUserColor', args.userColor)
+            } else {
+                // process failed
+                return webContentsSend('errorNot', {
+                    title: 'خطا در تغییر رنگ',
+                    message: 'تغییر رنگ در دیتابیس با موفقیت انجام نشد',
+                    contactAdmin: true,
+                })
+            }
+        } catch (err) {
+            log.record('error', err + ":in:" + __filename)
+            return webContentsSend('errorNot', {
+                title: message.title('update', 'رنگ'),
+                message: err,
+                contactAdmin: true
+            })
         }
     })
 }
