@@ -18,7 +18,7 @@ exports.User = class User extends Model {
         if (adminUser === null) {
             let hashedPass = '323da#(df$#fald50..'
             bcrypt.hash(hashedPass, 10, async (err, hash) => {
-                await User.create({fullName: 'zanest admin', userName: 'admin', password: hash, userType: 'admin'});
+                await User.create({fullName: 'zanest admin', userName: 'admin', password: hash, userType: 'admin', userColor: 'purple'});
             })
         }
     }
@@ -60,7 +60,7 @@ exports.User = class User extends Model {
     // delete User
     /**
      * delete User from DB 
-     * @param String (username)
+     * @param args (username)
      * @returns {Array<2>} [boolean, message]
      */
     static async delete(args) {
@@ -71,7 +71,7 @@ exports.User = class User extends Model {
     // show User
     /**
      * show User info
-     * @param String (username)
+     * @param args (username)
      * @returns {Array<2>} [boolean, message]
      */
     static async show(args) {
@@ -92,13 +92,17 @@ exports.User = class User extends Model {
     // get user info
     /**
      * 
-     * @param {integer} limit 
-     * @param {integer} offset 
+     * @param username
      * @returns 
      */
     static async getUsers(username) {
         const getter = require('./get')
         return await getter(username)
+    }
+
+    static async updateUserColor(args) {
+        const updateColor = require('./updateUserColor')
+        return await updateColor(args.id, args.userColor)
     }
 }
 
@@ -130,7 +134,7 @@ exports.userData = {
         userType: {
             type: DataTypes.STRING,
             allowNull: false,
-            default: 'staff'
+            defaultValue: 'staff'
         },
 
         birthDate: {
@@ -140,7 +144,12 @@ exports.userData = {
 
         phoneNumber: {
             type: DataTypes.STRING,
-        }
+        },
+
+        userColor: {
+            type: DataTypes.STRING,
+            defaultValue: 'purple',
+        },
     },
     options: {
         "modelName": 'User'
