@@ -1,16 +1,21 @@
 const {ctch, utch, dtch, rtch} = require('./Channel/teacher/teacherCh')
+const {croom, uroom, droom, rroom} = require('./Channel/classRoom/classRoomCh')
 const {csem, usem, dsem, rsem} = require('./Channel/semester/semesterCh')
 const {ctime, utime, dtime,rtime} = require('./Channel/timeSlice/timeSliceCh')
 const {cstd, ustd, dstd, rstd} = require('./Channel/student/studentCh')
 const {searchEvent} = require('./Channel/search/searchCh')
+const {uins, rins} = require('./Channel/institution/institutionCh')
+const {cuser ,duser ,uuser, ruser, muser} = require('./Channel/user/userCh')
 const {cuser ,duser ,uuser, ruser, muser, coloruser} = require('./Channel/user/userCh')
 const {ctopic, dtopic,utopic,rtopic} = require('./Channel/Topic/topicCh')
 const {load} = require('./Channel/session/loadCh')
+const {rins, uins} = require('./Channel/institution/institutionCh')
 const {reqUserSession, setMenuDocked, requestUserColor} = require('./Channel/session/reqUserSessionCh')
 const {userAuth} = require('./Channel/user/authCh')
 const {logout} = require('./Channel/user/logoutCh')
 const {pageCount} = require('./Channel/pagination/Counter')
 const {getBulk} = require('./Channel/getBulk/getBulk')
+
 
 module.exports = {
     // teacher
@@ -33,6 +38,15 @@ module.exports = {
     utime,
     dtime,
     rtime,
+    // classRoom
+    croom,
+    uroom,
+    droom,
+    rroom,
+
+    // institution
+    uins,
+    rins,
 
     getBulk,
     searchEvent,

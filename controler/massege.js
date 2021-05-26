@@ -62,18 +62,22 @@ module.exports = {
             return `درخواست با خطا مواجه شد`
         }
     },
+
     // check that type is founded or not.
-    check(status, sid=null) {
+    check(status, id=null) {
         if(status) {
-            return ` اطلاعاتی با شناسه \'${sid}\' قبلا ثبت گردیده`
+            return ` اطلاعاتی با شناسه \'${id}\'پش از این ثبت گردیده. `
         } else if (status == false) {
-            return `اطلاعاتی با شناسه \'${sid}\' موجود نیست `
+            return `اطلاعاتی با شناسه \'${id}\' موجود نیست `
         }
 
     },
-    finishTimeError: 'تاریخ پایان نمی تواند قبل از تاریخ شروع باشد',
+
+    finishDateError: 'تاریخ پایان نمی تواند قبل از تاریخ شروع باشد',
+    finishTimeError: 'ساعت پایان نمیتواند قبل از ساعت شروع باشد',
     conflictSemester: ' بازه زمانی انتخاب شده با ترم های دیگر تداخل دارد.',
     conflictTimeSlice: 'زمان شروع یا پایان با بازه های دیگر تداخل دارد',
+
     reqUserTypeExists: "درخواست بررسی  وضعیت نام کاربری ",
 
     // auth message

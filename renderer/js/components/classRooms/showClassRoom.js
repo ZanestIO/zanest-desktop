@@ -15,7 +15,7 @@ module.exports = {
         ipcRenderer.send('getClassRoomInfo', {id: this.currentlyShowing.value})
 
         ipcRenderer.on('responseGetClassRoomInfo', (e, args) => {
-            this.name = args.year
+            this.name = args.name
             this.capacity = args.capacity
         })
     },

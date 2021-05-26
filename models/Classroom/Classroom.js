@@ -1,9 +1,9 @@
 const {DataTypes, Model} = require('sequelize')
 
 // ==================================================================================
-// TimeSlice CLASS WITH METHODS
+// CLASSROOM CLASS WITH METHODS
 // ==================================================================================
-exports.TimeSlice = class TimeSlice extends Model {
+exports.ClassRoom = class ClassRoom extends Model {
 
     /**
      * add object to DB
@@ -12,7 +12,7 @@ exports.TimeSlice = class TimeSlice extends Model {
      */
     static async add(args) {
         const adds = require('./add')
-        return await adds(args.startTime, args.finishTime)
+        return await adds(args.name, args.capacity)
     }
 
     /**
@@ -22,7 +22,7 @@ exports.TimeSlice = class TimeSlice extends Model {
      */
     static async update(args) {
         const updates = require('./update')
-        return await updates(args.id, args.startTime, args.finishTime)
+        return await updates(args.id, args.name, args.capacity)
     }
     
     /**
@@ -36,7 +36,7 @@ exports.TimeSlice = class TimeSlice extends Model {
     }
 
     /**
-     * show detail's 
+     * show detail 
      * @param {id} args 
      * @returns {promoise<object>} 
      */
@@ -54,24 +54,24 @@ exports.TimeSlice = class TimeSlice extends Model {
 }
 
 // ==================================================================================
-// Timeslice DATA TO INITIALIZE THE CLASS IN DB 
+// CLASS ROOM DATA TO INITIALIZE THE CLASS IN DB 
 // ==================================================================================
 /**
- * define Timeslice's attributes
+ * define Class Room attributes
  * @type
  */
-exports.timeSliceData = {
+exports.classRoomData = {
     attributes: {
-        startTime: {
-            type: DataTypes.TIME,
+        name: {
+            type: DataTypes.STRING,
             allowNull: false,
+            unique: true
         },
-        finishTime: {
-            type: DataTypes.TIME,
-            allowNull: false,
-        },
+        capacity: {
+            type: DataTypes.INTEGER
+        }
     },
     options: {
-        "modelName": 'TimeSlice'
+        "modelName": 'ClassRoom'
     }
 }

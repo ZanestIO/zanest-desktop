@@ -26,7 +26,8 @@ module.exports = async (id, year, startDate, finishDate) => {
             }
         })
 
-        check = await db().sequelize.models.Semester.findAll({
+        if (semester.startDate != startDate || semester.finishDate != finishDate){
+            check = await db().sequelize.models.Semester.findAll({
                 where: {
                     [Op.or]: [{
                         startDate: {
@@ -38,10 +39,18 @@ module.exports = async (id, year, startDate, finishDate) => {
                         }
                     }]
                 }
-        })
+            })
+        }
+
+        // if start date greater then finish date return error message
+        if (startDate >= finishDate) {
+            const msg = message.request('update', false, semester.id, 'semester')
+            log.record('info', msg)
+            return [false, message.finishDateError]
+        }
 
         // if update does't have any conflict then updated else return conflict message
-        if(!check[1]){
+        if(check == null){
             semester.update({year: year, startDate: startDate, finishDate: finishDate})
 
             const msg = message.request('update',true ,id, 'semester')
