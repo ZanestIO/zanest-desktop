@@ -75,6 +75,21 @@ module.exports = {
                     success: false
                 },
             },
+            userColor: {
+                name: 'purple',
+                gradient: {
+                    purple: 'from-purple-700 to-purple-900',
+                    blue: 'from-blue-600 to-blue-900',
+                    green: 'from-green-600 to-teal-900',
+                    pink: 'from-pink-500 to-purple-900',
+                },
+                solid: {
+                    purple: 'bg-purple-700',
+                    blue: 'bg-blue-700',
+                    green: 'bg-green-600',
+                    pink: 'bg-pink-600',
+                }
+            }
         }
     },
     created() {
@@ -100,6 +115,12 @@ module.exports = {
                 this.birthDate.day.value = date[2]
             }
 
+        })
+
+        ipcRenderer.send('requestUserColor')
+        ipcRenderer.on('responseUserColor', (e, args) => {
+            if (args)
+                this.userColor.name = args
         })
     },
     inject: ['loggedInUser', 'loggedInID'],
@@ -338,7 +359,8 @@ module.exports = {
           <teleport to="#main">
           <div class="w-1/3 bg-white rounded-lg u-center-h top-20" style="z-index: 2003">
             <div
-                class="p-8 pb-2 w-full border-t-8 border-purple-700 rounded-lg flex flex-row flex-wrap justify-center items-center">
+                class="p-8 pb-2 w-full border-t-8 rounded-lg flex flex-row flex-wrap justify-center items-center"
+            :class="'border-' + userColor.name + '-700'">
               <h3 class="text-xl text-right mb-4 font-bold text-gray-800">
                 ویرایش کاربر
               </h3>
@@ -422,7 +444,8 @@ module.exports = {
                  class="w-1/2 px-4 py-3 ml-2 text-center bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-black font-bold rounded-lg text-sm"
                  v-on:click="$emit('cancel-user-edit')">انصراف</a>
               <a href="#"
-                 class="w-1/2 px-4 py-3 text-center text-pink-100 bg-purple-600 rounded-lg hover:bg-pink-700 hover:text-white font-bold text-sm"
+                 class="w-1/2 px-4 py-3 text-center text-pink-100 rounded-lg hover:bg-pink-700 hover:text-white font-bold text-sm"
+                 :class="'bg-'+ userColor.name +'-600'"
                  v-on:click="updateUserInfo">ویرایش حساب</a>
             </div>
           </div>

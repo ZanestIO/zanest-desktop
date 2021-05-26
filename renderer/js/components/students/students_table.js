@@ -4,10 +4,29 @@ module.exports = {
     data() {
         return {
             students: [],
+            userColor: {
+                name: 'purple',
+                gradient: {
+                    purple: 'from-purple-700 to-purple-900',
+                    blue: 'from-blue-600 to-blue-900',
+                    green: 'from-green-600 to-teal-900',
+                    pink: 'from-pink-500 to-purple-900',
+                },
+                solid: {
+                    purple: 'bg-purple-700',
+                    blue: 'bg-blue-700',
+                    green: 'bg-green-600',
+                    pink: 'bg-pink-600',
+                }
+            }
         }
     },
     created() {
       this.requestData(10, 1)
+        ipcRenderer.on('responseUserColor', (e, args) => {
+            if (args)
+                this.userColor.name = args
+        })
     },
     components: {
         pagination,
@@ -34,7 +53,7 @@ module.exports = {
       <div class="table-holder">
       <p v-if="!students[0]">هیچ زبان آموزی در سیستم ثبت نشده است</p>
       <table class="table-norm" v-if="students[0]">
-        <tr class="header">
+        <tr class="header" :class="userColor.solid[userColor.name]">
           <th>نام</th>
           <th>شماره تماس</th>
           <th>جنسیت</th>
