@@ -14,7 +14,6 @@ exports.Institution = class Institution extends Model {
                 id: 1
             }
         })
-        console.log('create default')
         if (insInfo === null) {
             await Institution.create({name: 'Zanest', address: 'default address', phone: 'default phone'});
         }

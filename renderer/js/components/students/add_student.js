@@ -67,10 +67,32 @@ module.exports = {
                 errMsg: '',
                 success: false
             },
+            userColor: {
+                name: 'purple',
+                gradient: {
+                    purple: 'from-purple-700 to-purple-900',
+                    blue: 'from-blue-600 to-blue-900',
+                    green: 'from-green-600 to-teal-900',
+                    pink: 'from-pink-500 to-purple-900',
+                },
+                solid: {
+                    purple: 'bg-purple-700',
+                    blue: 'bg-blue-700',
+                    green: 'bg-green-600',
+                    pink: 'bg-pink-600',
+                }
+            }
         }
     },
     inject: ['addSeen'],
     emits: ['cancelAdd'],
+    created() {
+        ipcRenderer.send('requestUserColor')
+        ipcRenderer.on('responseUserColor', (e, args) => {
+            if (args)
+                this.userColor.name = args
+        })
+    },
     methods: {
         processName() {
             let input = this.name
@@ -349,7 +371,7 @@ module.exports = {
       </div>
 
       <div class="px-4 flex items-end">
-        <button class="btn btn-mid btn-primary ml-8" v-on:click="submit">
+        <button class="btn btn-mid btn-primary ml-8" :class="'bg-'+ userColor.name +'-700'" v-on:click="submit">
           ایجاد زبان آموز
         </button>
         <button class="btn btn-mid btn-cancel" v-on:click="$emit('cancelAdd')">

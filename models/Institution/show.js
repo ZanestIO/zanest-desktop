@@ -18,14 +18,14 @@ module.exports = async () => {
 
         // if find info for those id then return all attribute
         if (info !== null) {
-            log.record('info', message.request('read', true, 1, 'Institution'))
+            log.record('info', message.request('read', true, 'one', 'Institution'))
             info = info[0]
             let result =
                 {
                     id: info.id,
                     name: info.name,
                     address: info.address,
-                    phoneNumber: info.phoneNumber,
+                    phone: info.phone,
                 }
             return [true, result]
 

@@ -60,6 +60,7 @@ class Db {
         if (ConnectionValid) {
 
             User.init(userData.attributes, {sequelize: this.sequelize, modelName: userData.options.modelName})
+            Institution.init(institutionData.attributes, {sequelize: this.sequelize, modelName: classRoomData.options.modelName})
             Person.init(personData.attributes, {sequelize: this.sequelize, modelName: personData.options.modelName})
             Student.init(studentData.attributes, {sequelize: this.sequelize, modelName: studentData.options.modelName})
             Teacher.init(teacherData.attributes, {sequelize: this.sequelize, modelName: teacherData.options.modelName})
@@ -67,7 +68,6 @@ class Db {
             Semester.init(SemesterData.attributes, {sequelize: this.sequelize, modelName: SemesterData.options.modelName})
             TimeSlice.init(timeSliceData.attributes, {sequelize: this.sequelize, modelName: timeSliceData.options.modelName})
             ClassRoom.init(classRoomData.attributes,{sequelize: this.sequelize, modelName: classRoomData.options.modelName})
-            Institution.init(institutionData.attributes, {sequelize: this.sequelize, modelName: classRoomData.options.modelName})
 
             Student.belongsTo(Person, {
                 foreignKey: 'PersonId'

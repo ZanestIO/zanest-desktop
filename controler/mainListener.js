@@ -4,11 +4,11 @@ const {csem, usem, dsem, rsem} = require('./Channel/semester/semesterCh')
 const {ctime, utime, dtime,rtime} = require('./Channel/timeSlice/timeSliceCh')
 const {cstd, ustd, dstd, rstd} = require('./Channel/student/studentCh')
 const {searchEvent} = require('./Channel/search/searchCh')
-const {uins, rins} = require('./Channel/institution/institutionCh')
-const {cuser ,duser ,uuser, ruser, muser} = require('./Channel/user/userCh')
+const {cuser ,duser ,uuser, ruser, muser, coloruser} = require('./Channel/user/userCh')
 const {ctopic, dtopic,utopic,rtopic} = require('./Channel/Topic/topicCh')
 const {load} = require('./Channel/session/loadCh')
-const {reqUserSession, setMenuDocked} = require('./Channel/session/reqUserSessionCh')
+const {rins, uins} = require('./Channel/institution/institutionCh')
+const {reqUserSession, setMenuDocked, requestUserColor} = require('./Channel/session/reqUserSessionCh')
 const {userAuth} = require('./Channel/user/authCh')
 const {logout} = require('./Channel/user/logoutCh')
 const {pageCount} = require('./Channel/pagination/Counter')
@@ -50,13 +50,13 @@ module.exports = {
     searchEvent,
     // user
     userAuth,
-    cuser ,duser ,uuser, ruser, muser,
+    cuser ,duser ,uuser, ruser, muser, coloruser,
     // topic
     ctopic,
     dtopic,utopic,rtopic,
     //
     load,
-    reqUserSession, setMenuDocked,
+    reqUserSession, setMenuDocked, requestUserColor,
     logout,
     pageCount
 }
