@@ -13,6 +13,8 @@ module.exports = {
             userMenu: false,
             notifyMenu: false,
             editUser: false,
+            institutionName: '',
+            institutionEdit: false,
             userColor: {
                 name: 'purple',
                 gradient: {
@@ -31,10 +33,14 @@ module.exports = {
         }
     },
     created() {
+
+        // ========================================================
+        // requesting user session
+        // ========================================================
         ipcRenderer.send('requestUserSession')
         this.userType = 'undefined';
         this.fullName = 'undefined';
-        // _____________________________________________________
+
         // processing logged in user info
         ipcRenderer.on('responseUserSession', (event, args) => {
             switch (args.userType) {
@@ -56,9 +62,22 @@ module.exports = {
                 this.userColor.name = args.userColor
         })
 
+
+        // ========================================================
+        // UPDATING COLOR CHANGES
+        // ========================================================
+
         ipcRenderer.on('responseUserColor', (e, args) => {
             if (args)
                 this.userColor.name = args
+        })
+
+        // ========================================================
+        // GETTING INSTITUTION NAME
+        // ========================================================
+        ipcRenderer.send('getInstitutionInfo')
+        ipcRenderer.on('responseGetInstitutionInfo', (e, args) => {
+            this.institutionName = args.name
         })
     },
     provide() {
@@ -91,6 +110,17 @@ module.exports = {
         },
         changeUserColor(color) {
             ipcRenderer.send('changeUserColor', {id: this.userID, userColor: color})
+        },
+        setInstitutionName() {
+            this.institutionEdit = true
+        },
+        changeInstitutionName() {
+            ipcRenderer.send('setInstitutionName', this.institutionName)
+            this.institutionEdit = false
+        },
+        changeOnEnter(e) {
+            if (e.keyCode === 13)
+                this.changeInstitutionName()
         }
     },
     template: `
@@ -101,7 +131,19 @@ module.exports = {
         <li id="menu-toggle" class="border-l-2 h-inherit flex flex-row items-center border-white px-5 w-16">
           <i class="fas fa-bars cursor-pointer text-2xl"></i>
         </li>
-        <li class="flex-1 text-center">آموزشگاه جهان</li>
+        <li class="flex-1 text-center">
+          <span v-if="institutionName !== '' && institutionEdit === false" @click="setInstitutionName" class="cursor-text">آموزشگاه {{ institutionName }}</span>
+          <span v-if="institutionName === '' && institutionEdit === false" @click="setInstitutionName">
+            نام آموزشگاه خود را وارد کنید
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+          </span>
+          <div v-if="institutionEdit">
+            آموزشگاه: 
+            <input type="text" max="50" autofocus class="w-64 bg-transparent underline focus:outline-none bg-opacity-0 p-4 cursor-blink" v-model="institutionName"
+                   @focusout="changeInstitutionName" @keypress="changeOnEnter" placeholder="نام آموزشگاه خود را وارد کنید"
+            style="background: transparent">
+          </div>
+        </li>
         <li class="dropdown-holder flex flex-row items-center border-white h-inherit border-r-2 px-5 hover:bg-gray-700"
             @mouseover="showMenu('themesMenu')" @mouseleave="hideMenu('themesMenu')">
           <i class="fas fa-paint-roller text-2xl"></i>

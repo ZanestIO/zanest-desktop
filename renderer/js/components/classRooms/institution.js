@@ -28,6 +28,14 @@ module.exports = {
     inject: [],
     emits: [],
     components: {},
+    created() {
+        ipcRenderer.send('getInstitutionInfo')
+        ipcRenderer.on('responseGetInstitutionInfo', (e, args) => {
+            this.name = args.name
+            this.address.value = args.address
+            this.phone.value = args.phoneNumber
+        })
+    },
     methods: {
         // ==========================================================
         // process name
