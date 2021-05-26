@@ -30,9 +30,9 @@ exports.TimeSlice = class TimeSlice extends Model {
      * @param args (attributes)
      * @returns {Promise<*>}
      */
-    static async delete(id) {
+    static async delete(args) {
         const deletes = require('./delete')
-        return await deletes(id)
+        return await deletes(args.id)
     }
 
     /**
@@ -65,12 +65,10 @@ exports.timeSliceData = {
         startTime: {
             type: DataTypes.TIME,
             allowNull: false,
-            unique: true
         },
         finishTime: {
             type: DataTypes.TIME,
             allowNull: false,
-            unique: true
         },
     },
     options: {
