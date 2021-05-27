@@ -15,7 +15,7 @@ exports.Institution = class Institution extends Model {
             }
         })
         if (insInfo === null) {
-            await Institution.create({name: 'Zanest', address: 'default address', phone: 'default phone'});
+            await Institution.create({name: 'Zanest', address: '', phoneNumber: ''});
         }
         
     }
@@ -26,7 +26,7 @@ exports.Institution = class Institution extends Model {
      */
     static async update(args) {
         const updates = require('./update')
-        return await updates(args.name, args.address, args.phone)
+        return await updates(args.name, args.address, args.phoneNumber)
     }
 
     /**
@@ -37,6 +37,11 @@ exports.Institution = class Institution extends Model {
     static async show() {
         const reads = require('./show')
         return await reads()
+    }
+
+    static async setName(args) {
+        const setter = require('./setName')
+        return await setter(args)
     }
 
 }
@@ -51,13 +56,13 @@ exports.Institution = class Institution extends Model {
 exports.institutionData = {
     attributes: {
         name: {
-            type: DataTypes.STRING(50),
+            type: DataTypes.STRING(30),
         },
         address: {
-            type: DataTypes.STRING(50),
+            type: DataTypes.STRING(30),
         },
         phoneNumber: {
-            type: DataTypes.STRING(50)
+            type: DataTypes.STRING(30)
         }
     },
     options: {

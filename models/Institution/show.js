@@ -22,15 +22,14 @@ module.exports = async () => {
             info = info[0]
             let result =
                 {
-                    id: info.id,
                     name: info.name,
                     address: info.address,
-                    phone: info.phone,
+                    phoneNumber: info.phoneNumber,
                 }
             return [true, result]
 
         } else {
-            const msg = message.check(false, id)
+            const msg = message.check(false, 'اطلاعات اموزشگاه')
             log.record('info', msg)
             return [false, msg]
         }

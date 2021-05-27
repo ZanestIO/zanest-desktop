@@ -9,6 +9,13 @@ module.exports = {
         return  `کاربر با شناسه ${username} وارد حساب کاربری خود شد.`
     },
 
+    setNameInstitution(status) {
+        if(status) {
+            return 'نام اموزشگاه با موفقیت تنظیم گردید'
+        } else {
+            return 'خطا در تنظیم نام اموزشگاه. لطفا مجددا تلاش نمایید'
+        }
+    },
     /**
     * status is boolean argument that determines message is succeeded or failed
     * cruds can be 'create', 'read' , 'update' , 'delete', 'search' determines kind of operation

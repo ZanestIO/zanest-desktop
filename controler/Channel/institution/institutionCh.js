@@ -13,7 +13,6 @@ module.uins = {
 
             if (check[0]) {
                 // process successfully done
-                //webContentsSend('responseInstitutionUpdate', true)
                 return webContentsSend('successNot', {
                     title: '',
                     message: check[1],
@@ -59,6 +58,40 @@ module.rins = {
 
         } catch (err) {
             log.record('error', err +":in:"+ __filename)
+        }
+    })
+}
+
+// ===================================================================================================
+// Set Institution Name
+// ===================================================================================================
+module.setins = {
+    setins: global.share.ipcMain.on('setInstitutionName', async (e, args) => {
+        try {
+            const check = await db().sequelize.models.Institution.setName(args)
+            if (check[0]) {
+                // process successfully done
+                return webContentsSend('successNot', {
+                    title: '',
+                    message: message.setNameInstitution(true),
+                    contactAdmin: false
+                })
+            } else {
+                // process failed
+                return webContentsSend('errorNot', {
+                    title: message.title('update', 'اطلاعات اموزشگاه'),
+                    message: message.setNameInstitution(false),
+                    contactAdmin: true
+                })
+            }
+
+        } catch (err) {
+            log.record('error', err + ":in:" + __filename)
+            return webContentsSend('errorNot', {
+                title: message.title('update', 'اطلاعات آموزشگاه'),
+                message: err,
+                contactAdmin: true
+            })
         }
     })
 }

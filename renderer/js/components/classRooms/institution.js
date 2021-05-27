@@ -31,7 +31,7 @@ module.exports = {
     created() {
         ipcRenderer.send('getInstitutionInfo')
         ipcRenderer.on('responseGetInstitutionInfo', (e, args) => {
-            this.name = args.name
+            this.name.value = args.name
             this.address.value = args.address
             this.phone.value = args.phoneNumber
         })
@@ -82,15 +82,15 @@ module.exports = {
             this.processName()
             this.processAddress()
             this.processPhone()
-
+            
             args = {
-                name: this.name.value,
-                phoneNumber: this.phone.value,
-                address: this.address.value,
-            }
+                  name: this.name.value,
+                  phoneNumber: this.phone.value,
+                  address: this.address.value,
+              }
 
-            ipcRenderer.send('institutionUpdate', args)
-        }
+              ipcRenderer.send('institutionUpdate', args)
+            }
 
     },
     template:
@@ -142,3 +142,4 @@ module.exports = {
           </div>
         `
 }
+

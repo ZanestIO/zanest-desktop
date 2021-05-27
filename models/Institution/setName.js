@@ -1,17 +1,15 @@
 const db = require('../Db.js');
 const {log} = require('./../../logger')
 const message = require('./../../controler/massege')
+
 // ================================================================================
-//  UPDATE INSTITUTION INFO 
-// ================================================================================
+//  UPDATE INSTITUTION NAME 
 /**
- * update Institution attributes
+ * update Institution name
  * @param name
- * @param address
- * @param phoneNumber
  * @returns {Promise<(boolean)[]|(String|*)[]>}
  */
-module.exports = async (name, address, phoneNumber) => {
+module.exports = async (name) => {
     try {
         // find institution with id
         const ins = await db().sequelize.models.Institution.findOne({
@@ -20,18 +18,20 @@ module.exports = async (name, address, phoneNumber) => {
             }
         })
 
-        if (ins != null){
-            ins.update({name: name, address: address, phoneNumber: phoneNumber})
+        if ( ins != null ){
+            ins.name = name;
+            await ins.save();
+
             const msg = message.request('update', true, 'Institution')
             log.record('info', msg)
 
-            return [true, message.show(true, 'update', 'اطلاعات آموزشگاه')]
+            return [true]
+
         } else {
             log.record('error', 'update institution error' + __filename)
-            return [false, message.show(false, 'update', 'اطلاعات اموزشگاه')]
+            return [false]
         }
 
-        
     } catch (err) {
         log.record('error', err +":in" + __filename)
         return [false, err]
