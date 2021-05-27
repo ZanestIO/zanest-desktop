@@ -43,7 +43,7 @@ module.exports = {
 
             if (isEmpty(input)) {
                 this.valid = false
-            } else if (biggerThan(input, 50)) {
+            } else if (shorterThan(input, 30)) {
                 this.valid = false
             } else {
                 input.success = true
@@ -112,7 +112,7 @@ module.exports = {
           <div class="mb-4 flex-fullrow">
             <p class="text-sm text-gray-500 mb-2">نام کلاس *</p>
             <input v-bind:class="{fail: name.err, success: name.success}" type="text" class="p-4 common"
-                   placeholder="" @change="processName" v-model="name.value" max="50">
+                   placeholder="" @change="processName" v-model="name.value" maxlength="30">
             <p class="input-error" v-if="name.err">{{ name.errMsg }}</p>
           </div>
 

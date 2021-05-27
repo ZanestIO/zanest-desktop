@@ -44,10 +44,6 @@ exports.Institution = class Institution extends Model {
 // ==================================================================================
 // Institution DATA TO INITIALIZE THE CLASS IN DB 
 // ==================================================================================
-/**
- * define Institution attributes
- * @type
- */
 exports.institutionData = {
     attributes: {
         name: {
