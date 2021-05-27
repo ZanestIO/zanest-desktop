@@ -1,5 +1,17 @@
 const {ipcRenderer} = require('electron')
+const {
+    resetError,
+    isEmpty,
+    exact,
+    smallerThan,
+    biggerThan,
+    isNumber,
+    isLetter,
+    longerThan,
+    shorterThan
+} = require('./../../utils/validation')
 const Vue = require('vue')
+
 module.exports = {
     data() {
         return {
@@ -82,15 +94,19 @@ module.exports = {
             this.processName()
             this.processAddress()
             this.processPhone()
-            
-            args = {
-                  name: this.name.value,
-                  phoneNumber: this.phone.value,
-                  address: this.address.value,
-              }
 
-              ipcRenderer.send('institutionUpdate', args)
+            if (this.valid) {
+                let args = {
+                    name: this.name.value,
+                    phoneNumber: this.phone.value,
+                    address: this.address.value,
+                }
+                alert('sending args')
+                alert(args.name)
+                ipcRenderer.send('institutionUpdate', args)
             }
+
+        }
 
     },
     template:
