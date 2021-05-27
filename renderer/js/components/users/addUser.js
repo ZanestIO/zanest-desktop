@@ -32,7 +32,7 @@ module.exports = {
             userType: {
                 err: false,
                 value: 'staff',
-                errMsg:'',
+                errMsg: '',
                 success: false
             },
             progress: {
@@ -103,28 +103,33 @@ module.exports = {
     // },
     // inject: ['loggedInUser', 'loggedInID'],
     emit: ['cancel-add-user', 'refresh'],
-    components: {
-    },
+    components: {},
     methods: {
-        // ==================================================================================
-        // process full name
-        // ==================================================================================
+
+        // ==========================================================
+        // process fullname
+
         processFullname() {
             let input = this.fullname
             resetError(input)
 
-            if (longerThan(input, 3)) {
+            if (isEmpty(input)) {
                 this.valid = false
             } else if (isLetter(input)) {
+                this.valid = false
+            } else if (longerThan(input, 3)) {
+                this.valid = false
+            } else if (shorterThan(input, 50)) {
                 this.valid = false
             } else {
                 input.success = true
                 this.changed = true
             }
         },
-        // ==================================================================================
+
+        // ==========================================================
         // process username for valid characters
-        // ==================================================================================
+
         processUsername() {
             let regex = new RegExp('^[A-Za-z0-9_-]*$')
             let input = this.username
@@ -144,12 +149,15 @@ module.exports = {
             }
         }, // process username
 
+        // ==========================================================
+        // process birth date
 
         processBirthDay() {
             let input = this.birthDate.day
             resetError(input)
-            if (input.value === '') {
 
+            if (isEmpty(input)) {
+                this.valid = false
             } else if (smallerThan(input, 1)) {
                 this.valid = false
             } else if (biggerThan(input, 31)) {
@@ -160,25 +168,12 @@ module.exports = {
             }
         },
 
-        processPhone() {
-            let input = this.phone
-            resetError(input)
-            if (input.value === '') {
-
-            } else if (isNumber(input)) {
-                this.valid = false
-            } else if (exact(input, 11)) {
-                this.valid = false
-            } else
-                input.success = true
-            this.changed = true
-        },
-
         processBirthMonth() {
             let input = this.birthDate.month
             resetError(input)
-            if (input.value === '') {
 
+            if (isEmpty(input)) {
+                this.valid = false
             } else if (smallerThan(input, 1)) {
                 this.valid = false
             } else if (biggerThan(input, 12)) {
@@ -188,11 +183,13 @@ module.exports = {
                 this.changed = true
             }
         },
+
         processBirthYear() {
             let input = this.birthDate.year
             resetError(input)
-            if (input.value === '') {
 
+            if (isEmpty(input)) {
+                this.valid = false
             } else if (smallerThan(input, 1300)) {
                 this.valid = false
             } else if (biggerThan(input, 1450)) {
@@ -203,9 +200,28 @@ module.exports = {
             }
         },
 
+        // ==========================================================
+        // process phone number
+
+        processPhone() {
+            let input = this.phone
+            resetError(input)
+
+            if (isEmpty(input)) {
+                this.valid = false
+            } else if (isNumber(input)) {
+                this.valid = false
+            } else if (exact(input, 11)) {
+                this.valid = false
+            } else
+                input.success = true
+            this.changed = true
+        },
+
+
         // ==================================================================================
         // process the password strength and updating the strength process bar
-        // ==================================================================================
+
         processPassword() {
             // if(this.password.value === "")
             // {
@@ -260,10 +276,9 @@ module.exports = {
         }, // process password
 
 
-
         // ==================================================================================
         // check if the password and passwordRepeat are equal
-        // ==================================================================================
+
         processPassRep() {
             if (this.password.value !== this.passwordRepeat.value) {
                 this.passwordRepeat.err = true
@@ -320,9 +335,10 @@ module.exports = {
 
             // ==================================================================================
             // if there is no error send request
+
             if (this.valid) {
                 let bday
-                if(this.birthDate.day.value && this.birthDate.month.value && this.birthDate.year.value) {
+                if (this.birthDate.day.value && this.birthDate.month.value && this.birthDate.year.value) {
                     bday = `${this.birthDate.year.value}/${this.birthDate.month.value}/${this.birthDate.day.value}`
                 } else {
                     bday = ''
@@ -374,97 +390,111 @@ module.exports = {
         `
           <section class="w-40p">
           <div class="main-section">
-              <div class="section-title-2">
-                <h2>
-                  ایجاد کاربر
-                </h2>
-                <hr>
-              </div>
+            <div class="section-title-2">
+              <h2>
+                ایجاد کاربر
+              </h2>
+              <hr>
+            </div>
 
-              <div class="mb-4 flex-fullrow flex flex-row flex-nowrap justify-start input-center">
-                <div class="ml-2 flex-1">
+            <!--   username    -->
+            <div class="mb-4 flex-fullrow flex flex-row flex-nowrap justify-start input-center">
+              <div class="ml-2 flex-1">
                 <span class="text-sm text-gray-500 mb-2">نام کاربری*</span>
                 <input v-bind:class="{fail: username.err, success: username.success}" type="text" class="p-4 common"
-                       placeholder="نام کاربری" @change="processUsername" v-model="username.value" max="50">
+                       placeholder="نام کاربری" @change="processUsername" v-model="username.value" minlength="3"
+                       maxlength="50">
                 <p class="input-error" v-if="username.err">{{ username.errMsg }}</p>
                 <p class="input-guide">نام کاربری می تواند شامل حروف انگلیسی، اعداد و _ باشد.</p>
+              </div>
+
+              <!--   user type    -->
+              <div>
+                <span class="text-sm text-gray-500 mb-2">نقش*</span>
+                <select v-bind:class="{fail: userType.err, success: userType.success}" class="p-4 common"
+                        v-model="userType.value" @focusout="userType.success=true">
+                  <option value="manager">مدیر</option>
+                  <option value="staff">منشی</option>
+                </select>
+                <p class="input-error" v-if="userType.err">{{ userType.errMsg }}</p>
+              </div>
+            </div>
+
+            <!--   fullname    -->
+            <div class="mb-4 flex-fullrow flex flex-row flex-nowrap justify-start input-center">
+              <div class="ml-2">
+                <span class="text-sm text-gray-500 mb-2">نام شما*</span>
+                <input type="text" class="p-4 common" :class="{fail: fullname.err, success: fullname.success}"
+                       placeholder="نام شما"
+                       v-model="fullname.value" minlength="3" maxlength="50" @change="processFullname">
+                <p class="input-error" v-if="fullname.err">{{ fullname.errMsg }}</p>
+              </div>
+
+              <!--   phone number    -->
+              <div>
+                <span class="text-sm text-gray-500 mb-2">شماره تماس</span>
+
+                <input type="number" class="common p-4" placeholder="شماره تماس"
+                       :class="{fail: phone.err, success: phone.success}"
+                       v-model="phone.value"
+                       v-on:change="processPhone">
+                <p class="input-error" v-if="phone.err">{{ phone.errMsg }}</p>
+              </div>
+            </div>
+
+            <!--   birth date    -->
+            <div class="mb-4 flex-fullrow">
+              <span class="text-sm text-gray-500 mb-2">تاریخ تولد</span>
+              <div class="input-group">
+                <div>
+                  <input type="number" class="common" placeholder="روز" min="1" max="31"
+                         :class="{fail: birthDate.day.err, success: birthDate.day.success}"
+                         v-model="birthDate.day.value" @change="processBirthDay">
+                  <p class="input-error" v-if="birthDate.day.err">{{ birthDate.day.errMsg }}</p>
                 </div>
 
                 <div>
-                  <span class="text-sm text-gray-500 mb-2">نقش*</span>
-                  <select v-bind:class="{fail: userType.err, success: userType.success}" class="p-4 common" v-model="userType.value" @focusout="userType.success=true">
-                    <option value="manager">مدیر</option>
-                    <option value="staff">منشی</option>
-                  </select>
-                  <p class="input-error" v-if="userType.err">{{ userType.errMsg }}</p>
-                </div>
-              </div>
-
-              <div class="mb-4 flex-fullrow flex flex-row flex-nowrap justify-start input-center">
-                <div class="ml-2">
-                  <span class="text-sm text-gray-500 mb-2">نام شما*</span>
-                  <input type="text" class="p-4 common" :class="{fail: fullname.err, success: fullname.success}"
-                         placeholder="نام شما"
-                         v-model="fullname.value" max="50" @change="processFullname">
-                  <p class="input-error" v-if="fullname.err">{{ fullname.errMsg }}</p>
+                  <input class="common" type="number" placeholder="ماه" min="1" max="12"
+                         :class="{fail: birthDate.month.err, success: birthDate.month.success}"
+                         v-model="birthDate.month.value" @change="processBirthMonth">
+                  <p class="input-error" v-if="birthDate.month.err">{{ birthDate.month.errMsg }}</p>
                 </div>
 
                 <div>
-                  <span class="text-sm text-gray-500 mb-2">شماره تماس</span>
-
-                  <input type="number" class="common p-4" placeholder="شماره تماس" :class="{fail: phone.err, success: phone.success}"
-                         v-model="phone.value"
-                         v-on:change="processPhone">
-                  <p class="input-error" v-if="phone.err">{{ phone.errMsg }}</p>
+                  <input class="common" type="number" placeholder="سال" min='1300' max="1450"
+                         :class="{fail: birthDate.year.err,  success: birthDate.year.success}"
+                         v-model="birthDate.year.value" @change="processBirthYear">
+                  <p class="input-error" v-if="birthDate.year.err">{{ birthDate.year.errMsg }}</p>
                 </div>
               </div>
+            </div>
 
-              <div class="mb-4 flex-fullrow">
-                <span class="text-sm text-gray-500 mb-2">تاریخ تولد</span>
-                <div class="input-group">
-                  <div>
-                    <input type="number" class="common" placeholder="روز" min="1" max="31" :class="{fail: birthDate.day.err, success: birthDate.day.success}"
-                           v-model="birthDate.day.value" @change="processBirthDay">
-                    <p class="input-error" v-if="birthDate.day.err">{{ birthDate.day.errMsg }}</p>
-                  </div>
-
-                  <div>
-                    <input class="common" type="number" placeholder="ماه" min="1" max="12" :class="{fail: birthDate.month.err, success: birthDate.month.success}"
-                           v-model="birthDate.month.value" @change="processBirthMonth">
-                    <p class="input-error" v-if="birthDate.month.err">{{ birthDate.month.errMsg }}</p>
-                  </div>
-
-                  <div>
-                    <input class="common" type="number" placeholder="سال" min='1300' max="1450" :class="{fail: birthDate.year.err,  success: birthDate.year.success}"
-                           v-model="birthDate.year.value" @change="processBirthYear">
-                    <p class="input-error" v-if="birthDate.year.err">{{ birthDate.year.errMsg }}</p>
-                  </div>
-                </div>
+            <!-- Progress Bar -->
+            <div class="h-4 relative max-w-xl rounded-full overflow-hidden mb-2 flex-fullrow" v-if="progress.seen">
+              <div class="w-full h-full bg-gray-200 absolute"></div>
+              <div id="pass-bar" class="progress h-full relative text-right text-white pr-4" style="font-size: 12px"
+                   v-bind:class="progress.width">
+                {{ progress.text }}
               </div>
-
-              <!-- Progress Bar -->
-              <div class="h-4 relative max-w-xl rounded-full overflow-hidden mb-2 flex-fullrow" v-if="progress.seen">
-                <div class="w-full h-full bg-gray-200 absolute"></div>
-                <div id="pass-bar" class="progress h-full relative text-right text-white pr-4" style="font-size: 12px"
-                     v-bind:class="progress.width">
-                  {{ progress.text }}
-                </div>
-              </div>
+            </div>
 
 
-              <div class="mb-2 flex-fullrow">
-                <span class="text-sm text-gray-500 mb-2">رمزعبور*</span>
-                <input type="password" class="p-4 common"
-                       placeholder="رمز عبور " v-on:input="processPassword" v-model="password.value">
-              </div>
+            <!--   password    -->
+            <div class="mb-2 flex-fullrow">
+              <span class="text-sm text-gray-500 mb-2">رمزعبور*</span>
+              <input type="password" class="p-4 common"
+                     placeholder="رمز عبور " v-on:input="processPassword" v-model="password.value" minlength="8">
+            </div>
 
-              <div class="flex-fullrow">
-                <input :class="{fail: passwordRepeat.err}" type="password" class="p-4 common"
-                       placeholder="تکرار رمز عبور " v-model="passwordRepeat.value" v-on:change="processPassRep">
-                <p class="input-error" v-if="passwordRepeatErr.seen" id="pass-err">{{ passwordRepeatErr.text }}</p>
-                <p class="input-guide">رمز عبور شما باید حداقل 8 کاراکتر باشد</p>
-              </div>
-            
+            <!--   confirm password    -->
+            <div class="flex-fullrow">
+              <input :class="{fail: passwordRepeat.err}" type="password" class="p-4 common"
+                     placeholder="تکرار رمز عبور " v-model="passwordRepeat.value" v-on:change="processPassRep"
+                     minlength="8">
+              <p class="input-error" v-if="passwordRepeatErr.seen" id="pass-err">{{ passwordRepeatErr.text }}</p>
+              <p class="input-guide">رمز عبور شما باید حداقل 8 کاراکتر باشد</p>
+            </div>
+
             <div class="p-2 pt-2 flex">
               <a href="#"
                  class="w-1/2 px-4 py-3 text-center text-pink-100 bg-purple-600 rounded-lg hover:bg-pink-700 hover:text-white font-bold text-sm"
@@ -472,7 +502,7 @@ module.exports = {
               <a href="#"
                  class="w-1/2 px-4 py-3 ml-2 text-center bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-black font-bold rounded-lg text-sm"
                  v-on:click="$emit('cancel-add-user')">انصراف</a>
-              
+
             </div>
           </div>
           </section>

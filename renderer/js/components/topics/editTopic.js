@@ -3,11 +3,6 @@ require('vue');
 const {
     resetError,
     isEmpty,
-    exact,
-    smallerThan,
-    biggerThan,
-    isNumber,
-    isLetter,
     longerThan,
     shorterThan
 } = require('./../../utils/validation')
@@ -63,39 +58,51 @@ module.exports = {
         })
     },
     methods: {
+
         // ==========================================================
         // process name
+
         processName() {
             let input = this.name
             resetError(input)
 
-            if (longerThan(input, 3)) {
+            if (isEmpty(input)) {
+                this.valid = false
+            } else if (longerThan(input, 3)) {
+                this.valid = false
+            } else if (shorterThan(input, 50)) {
                 this.valid = false
             } else {
                 input.success = true
             }
         },
+
         // ==========================================================
         // processLevel
+
         processLevel() {
             let input = this.level
             resetError(input)
             input.success = true
         },
+
         // ==========================================================
         // process length
+
         processLength() {
             let input = this.length
             resetError(input)
             input.success = true
         },
+
         // ==========================================================
         // process desc
+
         processDesc() {
             let input = this.desc
             resetError(input)
 
-            if (shorterThan(input, 256)) {
+            if (shorterThan(input, 255)) {
                 this.valid = false
             } else {
                 input.sucess = true
@@ -144,16 +151,19 @@ module.exports = {
           </div>
 
           <div class="section-content">
+
+            <!--  name   -->
             <div class="mb-4 flex-fullrow">
               <p class="text-sm text-gray-500 mb-2">نام سرفصل *</p>
               <input lang="en" v-bind:class="{fail: name.err, success: name.success}" type="text" class="p-4 common"
-                      placeholder="نام شما" @change="processName" v-model="name.value" max="50">
+                     placeholder="نام سرفصل" @change="processName" v-model="name.value" minlength="3" maxlength="50">
               <p class="input-error" v-if="name.err">{{ name.errMsg }}</p>
             </div>
-            
+
+            <!--  level   -->
             <div class="mb-4 flex-fullrow">
               <p class="text-sm text-gray-500 mb-2">سطح *</p>
-              <select v-bind:class="{fail: level.err, success: level.success}" class="p-4 common" 
+              <select v-bind:class="{fail: level.err, success: level.success}" class="p-4 common"
                       @focusout="processLevel" v-model="level.value">
                 <option value="Pre-Elementary">Pre-Elementary</option>
                 <option value="Elementary">Elementary</option>
@@ -164,6 +174,8 @@ module.exports = {
               </select>
               <p class="input-error" v-if="level.err">{{ level.errMsg }}</p>
             </div>
+
+            <!--  length   -->
             <div class="mb-4 flex-fullrow">
               <p class="text-sm text-gray-500 mb-2">طول پیشنهادی (ترم) *</p>
               <select v-bind:class="{fail: length.err, success: length.success}" class="p-4 common"
@@ -178,13 +190,14 @@ module.exports = {
               <p class="input-error" v-if="length.err">{{ length.errMsg }}</p>
             </div>
 
+            <!--  description   -->
             <div class="mb-4 flex-fullrow">
               <p class="text-sm text-gray-500 mb-2">
                 توضیحات :
               </p>
               <br>
               <textarea v-bind:class="{fail: desc.err, success: desc.success}" class="p-4 common w-full"
-                        @focusout="processDesc" v-model="desc.value" >
+                        @focusout="processDesc" v-model="desc.value" maxlength="255">
                             </textarea>
               <p class="input-error" v-if="desc.err">{{ desc.errMsg }}</p>
             </div>
