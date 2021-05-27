@@ -34,7 +34,8 @@ module.exports = {
                     id: user.dataValues.id,
                     fullName: user.dataValues.fullName,
                     userName: user.dataValues.userName,
-                    userType: user.dataValues.userType
+                    userType: user.dataValues.userType,
+                    userColor: user.dataValues.userColor,
                 }]
             } else {
                 log.record('warn', message.incPassowrd)

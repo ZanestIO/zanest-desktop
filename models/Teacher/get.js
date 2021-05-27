@@ -29,6 +29,7 @@ module.exports = async (limit, offset) => {
         
         holder.forEach(node => {
             let teacher = {
+                id: node.id,
                 fullName: node.Person.fullName,
                 phoneNumber: node.Person.phoneNumber,
                 sex: node.Person.sex,

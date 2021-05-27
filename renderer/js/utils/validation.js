@@ -56,7 +56,7 @@ module.exports = {
     shorterThan(input, num) {
         if (input.value.length > num) {
             input.err = true
-            input.errMsg = errors.shorter(num)
+            input.errMsg = errors.shorter(num+1)
             return true
         }
         return false

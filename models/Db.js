@@ -2,11 +2,14 @@ const {Sequelize} = require('sequelize')
 const { Student, studentData } = require('./Student/Student')
 const { Teacher, teacherData } = require('./Teacher/Teacher')
 const { Person, personData } = require('./Person/Person')
+const { Institution, institutionData } = require('./Institution/Institution')
 const {Topic, topicData} = require('./Topic/Topic')
 const {User, userData} = require('./User/User')
 const {log} = require('./../logger')
 const { Semester, SemesterData } = require('./Semester/Semester')
 const { TimeSlice, timeSliceData } = require('./Timeslice/Timeslice')
+const { ClassRoom, classRoomData } = require('./Classroom/Classroom')
+
 let database
 
 // ==================================================================================
@@ -58,12 +61,14 @@ class Db {
         if (ConnectionValid) {
 
             User.init(userData.attributes, {sequelize: this.sequelize, modelName: userData.options.modelName})
+            Institution.init(institutionData.attributes, {sequelize: this.sequelize, modelName: institutionData.options.modelName})
             Person.init(personData.attributes, {sequelize: this.sequelize, modelName: personData.options.modelName})
             Student.init(studentData.attributes, {sequelize: this.sequelize, modelName: studentData.options.modelName})
             Teacher.init(teacherData.attributes, {sequelize: this.sequelize, modelName: teacherData.options.modelName})
             Topic.init(topicData.attributes, {sequelize: this.sequelize, modelName: topicData.options.modelName})
             Semester.init(SemesterData.attributes, {sequelize: this.sequelize, modelName: SemesterData.options.modelName})
             TimeSlice.init(timeSliceData.attributes, {sequelize: this.sequelize, modelName: timeSliceData.options.modelName})
+            ClassRoom.init(classRoomData.attributes,{sequelize: this.sequelize, modelName: classRoomData.options.modelName})
 
             Student.belongsTo(Person, {
                 foreignKey: 'PersonId'
@@ -78,6 +83,8 @@ class Db {
 
             // creating default admin if not exists
             await User.createDefaultAdmin()
+            await Institution.createDefault()
+            
             return true
         }
     }

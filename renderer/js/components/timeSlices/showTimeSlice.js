@@ -16,7 +16,6 @@ module.exports = {
         ipcRenderer.send('getTimeSliceInfo', {id: this.currentlyShowing.value})
 
         ipcRenderer.on('responseGetTimeSliceInfo', (e, args) => {
-            this.name = args.year
             this.startTime = this.convert24To12(args.startTime)
             this.finishTime = this.convert24To12(args.finishTime)
 

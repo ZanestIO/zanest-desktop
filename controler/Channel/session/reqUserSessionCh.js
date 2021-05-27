@@ -1,4 +1,4 @@
-
+const {webContentsSend} = require('../../../main')
 const {log} = require('./../../../logger')
 // ===================================================================================================
 // requesting the user information
@@ -40,17 +40,40 @@ module.exports = {
             log.record('error', err +":in:"+ __filename)
         })
 
+        // send user color
+        ses.get({url: 'https://zanest.io', name: 'userColor'}).then(cookie => {
+            arguments.userColor = cookie[0].value
+
+        }).catch(err => {
+            log.record('error', err +":in:"+ __filename)
+        })
+
         ses.get({}).then((cookies) => {
-            e.sender.send('responseUserSession', arguments)
+            webContentsSend('responseUserSession', arguments)
+            webContentsSend('responseUserColor', arguments.userColor)
         }).catch(err => {
             log.record('error', err +":in:"+ __filename)
         })
     }),
+
+
     setMenuDocked: global.share.ipcMain.on('setMenuDocked', async (e, args) => {
         let ses = global.share.session.defaultSession.cookies
 
         // set menu type
         let cookie = {url: 'https://zanest.io', name: 'menuDocked', value: args}
         ses.set(cookie)
-    })
+    }),
+
+
+    requestUserColor: global.share.ipcMain.on('requestUserColor', async (e, args) => {
+        let ses = global.share.session.defaultSession.cookies
+
+        // send user color
+        ses.get({url: 'https://zanest.io', name: 'userColor'}).then(cookie => {
+            webContentsSend('responseUserColor', cookie[0].value)
+        }).catch(err => {
+            log.record('error', err +":in:"+ __filename)
+        })
+    }),
 }

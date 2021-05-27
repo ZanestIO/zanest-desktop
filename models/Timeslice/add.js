@@ -31,6 +31,12 @@ module.exports = async (startTime, finishTime) => {
             }
         })
 
+        // if start date greater then finish date return error message
+        if (campareTime(startTime, finishTime)) {
+            const msg = message.request('create', false, startTime + '(:)' + finishTime, 'timeSlice')
+            log.record('info', msg)
+            return [false, message.finishTimeError]
+        }
 
         // if new TimeSlice does not exist create it. 
         if (!newTime) {
@@ -49,5 +55,16 @@ module.exports = async (startTime, finishTime) => {
     } catch (err) {
         log.record('error', err +":in:"+ __filename)
         return [false, err]
+    }
+}
+
+function campareTime(from, to){
+    let start = parseFloat(from.replace(/\:/g, ""))
+    let finish = parseFloat(to.replace(/\:/g, ""))
+    
+    if(start >= finish) {
+        return true
+    } else {
+        return false
     }
 }

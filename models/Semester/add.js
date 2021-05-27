@@ -32,9 +32,9 @@ module.exports = async (year, startDate, finishDate) => {
 
         // if start date greater then finish date return error message
         if (startDate >= finishDate) {
-            const msg = message.request('create', false, newSem.id, 'semester')
+            const msg = message.request('create', false, startDate + "(:)" + finishDate, 'semester')
             log.record('info', msg)
-            return [false, message.finishTimeError]
+            return [false, message.finishDateError]
         }
         
         // if new semester have no conflict create it else return conflict message
