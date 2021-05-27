@@ -90,6 +90,9 @@ module.exports = {
         },
 
         updateInstitution() {
+            if (!this.changed)
+                return
+
             this.valid = true
             this.processName()
             this.processAddress()
@@ -101,8 +104,6 @@ module.exports = {
                     phoneNumber: this.phone.value,
                     address: this.address.value,
                 }
-                alert('sending args')
-                alert(args.name)
                 ipcRenderer.send('institutionUpdate', args)
             }
 

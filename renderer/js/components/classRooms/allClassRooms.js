@@ -64,13 +64,14 @@ module.exports = {
               <p v-if="!allClassRooms.value[0]">تاکنون هیچ کلاسی اضافه نشده است.</p>
               <div  v-for="classRoom in allClassRooms.value" class="setting-item w-full cursor-pointer transition hover:bg-gray-400"
                     :class="{ 'setting-item-active'  : isClassActive( classRoom.id ) }">
-                            <span class="flex-1" @click="$emit('show-classRoom', classRoom.id)">
+                            <span class="flex-1 w-max-70 word-break" @click="$emit('show-classRoom', classRoom.id)">
                                 {{ classRoom.name }}
-                               - 
+                                - ظرفیت: 
                               {{ classRoom.capacity }}
+                               نفر
                             </span>
                 <i class="far fa-edit text-2xl text-black ml-3 transform transition scale-100 hover:scale-125" @click="$emit('edit-classRoom', classRoom.id)"></i>
-                <i class="far fa-times-circle text-pink-700 text-2xl transform transition scale-100 hover:scale-125"  @click="deleteClassRoom(classRoom.year, classRoom.id)"></i>
+                <i class="far fa-times-circle text-pink-700 text-2xl transform transition scale-100 hover:scale-125"  @click="deleteClassRoom(classRoom.name, classRoom.id)"></i>
               </div>
             </div>
           </div>

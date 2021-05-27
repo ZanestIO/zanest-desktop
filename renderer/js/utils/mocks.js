@@ -8,14 +8,3 @@ exports.studentMock =  {
     address: 'marivan, hazhara',
     parentsName: 'abbas',
 }
-
-// {
-//     fullName: ,
-//         phoneNumber:,
-//     sex:,
-//     socialID: ,
-//     birthDate: ',
-//     parentNumber: ,
-//     address: ,
-//     parentsName: ,
-// }

@@ -1,15 +1,6 @@
 const {ipcRenderer} = require('electron')
-const {
-    resetError,
-    isEmpty,
-    exact,
-    smallerThan,
-    biggerThan,
-    isNumber,
-    isLetter,
-    shorterThan,
-    longerThan
-} = require('../../utils/validation')
+const { resetError, isEmpty, exact, smallerThan, biggerThan, isNumber, isLetter, shorterThan, longerThan} = require('../../utils/validation')
+const {pWeekdays} = require('./../../utils/converts')
 
 module.exports = {
     data() {
@@ -29,7 +20,7 @@ module.exports = {
             },
             classType: {
                 err: false,
-                value: 'virtual',
+                value: 'actual',
                 errMsg: '',
                 success: false
             },
@@ -38,15 +29,74 @@ module.exports = {
                 value: '',
                 errMsg: '',
                 success: false,
-                active: false
+                active: true
             },
             tuition: {
                 err: false,
-                value: '100000',
+                value: '',
                 errMsg: '',
                 success: false
             },
+            weekdays: {
+                saturday: false,
+                sunday: false,
+                monday: false,
+                tuesday: false,
+                wednesday: false,
+                thursday: false,
+            },
+            timeSlices: {
+                saturday: {
+                    err: false,
+                    value: '',
+                    errMsg: '',
+                    success: false
+                },
+                sunday: {
+                    err: false,
+                    value: '',
+                    errMsg: '',
+                    success: false
+                },
+                monday: {
+                    err: false,
+                    value: '',
+                    errMsg: '',
+                    success: false
+                },
+                tuesday: {
+                    err: false,
+                    value: '',
+                    errMsg: '',
+                    success: false
+                },
+                wednesday: {
+                    err: false,
+                    value: '',
+                    errMsg: '',
+                    success: false
+                },
+                thursday: {
+                    err: false,
+                    value: '',
+                    errMsg: '',
+                    success: false
+                },
+            },
+            persianWeekdays: pWeekdays,
 
+            // all the info to be retrieved
+            allTopics: [],
+            allTeachers: [],
+            allClassrooms: [],
+            availableTimeSlices: {
+                saturday: [],
+                sunday: [],
+                monday: [],
+                tuesday: [],
+                wednesday: [],
+                thursday: [],
+            },
 
             userColor: {
                 name: 'purple',
@@ -75,6 +125,27 @@ module.exports = {
             if (args)
                 this.userColor.name = args
         })
+
+        // =============================================
+        // getTopics
+        ipcRenderer.send('getBulk', {type:'topic'})
+        ipcRenderer.on('responseTopicGetBulk', (e,args) => {
+            this.allTopics = args.topics
+        })
+
+        // =============================================
+        // getTeachers
+        ipcRenderer.send('getBulk', {type:'teacher', offset:1, number:500})
+        ipcRenderer.on('responseTeacherGetBulk', (e,args) => {
+            this.allTeachers = args.teachers
+        })
+
+        // =============================================
+        // getClasses
+        ipcRenderer.send('getBulk', {type: 'classRoom'})
+        ipcRenderer.on('responseClassRoomGetBulk', (e,args) => {
+            this.allClassrooms = args.classRooms
+        })
     },
     methods: {
         processTopic() {
@@ -87,7 +158,13 @@ module.exports = {
                 input.success = true
         },
         processTeacher() {
+            let input = this.teacher
+            resetError(input)
 
+            if (isEmpty(input)) {
+                this.valid = false
+            } else
+                input.success = true
         },
         processClassType() {
             let input = this.classType
@@ -97,7 +174,13 @@ module.exports = {
             input.success = true
         },
         processClassRoom() {
+            let input = this.classRoom
+            resetError(input)
 
+            if (isEmpty(input)) {
+                this.valid = false
+            } else
+                input.success = true
         },
         processTuition() {
             let input = this.tuition
@@ -112,10 +195,34 @@ module.exports = {
             }
         },
 
+        // process timeSlices
+        processTimeSlices(value) {
+            let input = this.timeSlices[value]
+            resetError(input)
+            if (isEmpty(input)) {
+                this.valid = false
+            } else
+                input.success = true
+        },
+
 
         processAll() {
             this.valid = true
-            // this.processName()
+            this.processTopic()
+            this.processTeacher()
+            this.processClassType()
+
+            // only process classroom if it is active
+            if (this.classRoom.active)
+                this.processClassRoom()
+
+            this.processTuition()
+
+            for ([key, value] of Object.entries(this.timeSlices)) {
+                if (this.weekdays[key]) {
+                    this.processTimeSlices(key)
+                }
+            }
         },
 
         // ==================================================================================
@@ -124,16 +231,46 @@ module.exports = {
         submit() {
             this.processAll()
             if (this.valid) {
-                ipcRenderer.send('classCreation', {
-                    fullName: this.name.value,
 
-                })
+                let args = {
+                    topic: this.topic.value,
+                    teacher: this.teacher.value,
+                    type: this.classType.value,
+                    classRoom: this.classRoom.value,
+                    tuition: this.tuition.value,
+                    times: {
+
+                    }
+                }
+                for ([key, value] of Object.entries(this.weekdays)) {
+                    if (value) {
+                        args.times[key] = this.timeSlices[key].value
+                    }
+                }
+
+                console.log(args)
+
+                ipcRenderer.send('classCreation', args)
 
                 // clearing the fields for another creation
-                // this.name.value = ''
+                // this.topic.value = ''
+                // this.teacher.value = ''
+                // this.classType.value = ''
+                // this.classRoom.value = ''
+                // this.tuition.value = ''
+                // for ([key, value] of Object.entries(this.timeSlices)) {
+                //     this.timeSlices[key].value = ''
+                // }
 
                 // resetting every field
                 resetError(this.topic)
+                resetError(this.teacher)
+                resetError(this.classRoom)
+                resetError(this.classType)
+                resetError(this.tuition)
+                for ([key, value] of Object.entries(this.timeSlices)) {
+                    resetError(this.timeSlices[key])
+                }
 
             }
         }
@@ -152,7 +289,8 @@ module.exports = {
             عنوان
           </span>
           <select :class="{fail: topic.err, success: topic.success}" v-model="topic.value" @change="processTopic">
-            <option value="">Family and Friends 1</option>
+            <option value="">انتخاب کنید</option>
+            <option v-for="topic in allTopics" :value="topic.id" lang="en">{{ topic.name }}</option>
           </select>
           <p class="input-error" v-if="topic.err">{{ topic.errMsg }}</p>
         </div>
@@ -163,7 +301,8 @@ module.exports = {
           </span>
           <select :class="{fail: teacher.err, success: teacher.success}" v-model="teacher.value"
                   @change="processTeacher">
-            <option value="">صادق شیخی</option>
+            <option value="">انتخاب کنید</option>
+            <option v-for="teacher in allTeachers" :value="teacher.id">{{ teacher.fullName }}</option>
           </select>
           <p class="input-error" v-if="teacher.err">{{ teacher.errMsg }}</p>
         </div>
@@ -186,7 +325,8 @@ module.exports = {
           </span>
           <select :class="{fail: classRoom.err, success: classRoom.success}" v-model="classRoom.value"
                   @change="processClassRoom">
-            <option value="virtual">A0</option>
+            <option value="">انتخاب کنید</option>
+            <option v-for="cls in allClassrooms" :value="cls.id">{{ cls.name }}</option>
           </select>
           <p class="input-error" v-if="classRoom.err">{{ classRoom.errMsg }}</p>
         </div>
@@ -197,30 +337,41 @@ module.exports = {
             شهریه (تومان)
           </span>
           <input type="number" :class="{fail: tuition.err, success: tuition.success}" v-model="tuition.value"
-                 @change="processTuition" min="100000">
+                 @change="processTuition" min="0" placeholder="مثلا 100000" step="10000">
           <p class="input-error" v-if="tuition.err">{{ tuition.errMsg }}</p>
         </div>
       </div> <!-- ./full-edit-box -->
 
-      <div class="px-4 flex w-full flex-row justify-start items-start flex-wrap">
+      <!-- =======================================================================     -->
+      <!-- SELECTING TIME FOR THE CLASS     -->
+      <!-- =======================================================================     -->
+      <div class="px-4 flex w-full flex-row justify-start items-start flex-wrap" 
+           v-if="(this.classRoom.value && this.classRoom.active) || this.classType.value === 'virtual'">
         <p class="text-sm flex-fullrow mb-4 border-b-2 pb-2 border-gray-300">
           زمان های برگذاری
         </p>
-        
+
         <div class="flex-fullrow class-time-select">
-          <div>
+          
+          <div v-for="(value, name) in weekdays" class="mb-4">
             <div class="mb-2 p-2 bg-gray-200 w-full rounded-lg flex flex-nowrap items-center justify-between">
-              <label for="saturday" class="flex-1">شنبه</label>
-              <input id="saturday" class="h-6 w-10" type="checkbox" value="saturday">
+              <label :for="name" class="flex-1 cursor-pointer">{{ persianWeekdays[name] }} </label>
+              <input :id="name" class="h-6 w-10 cursor-pointer" type="checkbox" value="saturday" v-model="weekdays[name]">
             </div>
-            <select class="common text-sm" :class="{fail: tuition.err, success: tuition.success}" v-model="tuition.value"
-                    @change="processTuition">
-              <option value="1" selected>8:00 am - 9:30 am</option>
-            </select>
-            <p class="input-error" v-if="tuition.err">{{ tuition.errMsg }}</p>
+            <div v-if="weekdays[name]">
+              <span class="text-sm text-gray-600 mb-2 inline-block">بازه ی زمانی</span>
+              <select class="common text-sm ltr" lang="en"
+                      :class="{fail: timeSlices[name].err, success: timeSlices[name].success}"
+                      v-model="timeSlices[name].value"
+                      @change="processTimeSlices(name)">
+                <option value="">انتخاب کنید</option>
+                <option value="10" selected>8:00 am - 9:30 am</option>
+              </select>
+              <p class="input-error" v-if="timeSlices[name].err">{{ timeSlices[name].errMsg }}</p>
+            </div>
           </div>
-          
-          
+
+
         </div>
       </div>
       <div class="px-4 flex items-end mt-10">

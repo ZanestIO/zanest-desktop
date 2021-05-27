@@ -77,8 +77,8 @@ module.exports = {
                             براساس
                         </span>
           <select v-model="searchType">
-            <option value="name">نام</option>
-            <option value="sid">کدملی</option>
+            <option value="topic">سرفصل</option>
+            <option value="teacher">استاد</option>
           </select>
         </div>
 
