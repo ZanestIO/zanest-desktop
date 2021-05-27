@@ -71,7 +71,7 @@ module.exports = {
       </button>
       <div class="search-box" :class="{open: searching}">
         <div class="search-field">
-          <input type="text" placeholder="جست و جو ..." v-model="searchValue" @input="search">
+          <input type="text" placeholder="جست و جو ..." v-model="searchValue" @input="search" maxlength="50">
           <i class="fa fa-circle-notch fa-spin inline-block ml-2" v-if="searchLoading"></i>
           <span>
                             براساس

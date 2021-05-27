@@ -20,6 +20,7 @@ module.exports = {
 
         // ==================================================================================
         // sends out search request
+
         search() {
             // only send search request if input is more than 3 chars
             if (this.searchValue.length < 3) {
@@ -63,6 +64,7 @@ module.exports = {
     // ==================================================================================
     // TEMPLATE STRING
     // ==================================================================================
+
     template: `
       <section class="search-and-button" :class="{join: addSeen.value}">
       <button class="h-28 focus:outline-none" v-on:click="$emit('adding-student')">
@@ -71,7 +73,7 @@ module.exports = {
       </button>
       <div class="search-box" :class="{open: searching}">
         <div class="search-field">
-          <input type="text" placeholder="جست و جو ..." v-model="searchValue" @input="search">
+          <input type="text" placeholder="جست و جو ..." v-model="searchValue" @input="search" maxlength="50">
           <i class="fa fa-circle-notch fa-spin inline-block ml-2" v-if="searchLoading"></i>
           <span>
                             براساس

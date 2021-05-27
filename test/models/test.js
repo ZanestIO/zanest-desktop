@@ -9,4 +9,10 @@ describe("#Models", function () {
 
     // testing teacher model
     require('./teacher');
+
+    // testing topic model
+    require('./topic');
+
+    // testing semester model
+    require('./semester');
 });

@@ -3,11 +3,8 @@ require('vue');
 const {
     resetError,
     isEmpty,
-    exact,
     smallerThan,
     biggerThan,
-    isNumber,
-    isLetter,
     longerThan,
     shorterThan
 } = require('./../../utils/validation')
@@ -69,13 +66,19 @@ module.exports = {
     emit: ['cancel-add-semester', 'refresh'],
     components: {},
     methods: {
+
         // ==========================================================
         // process name
+
         processName() {
             let input = this.name
             resetError(input)
 
-            if (longerThan(input, 3)) {
+            if (isEmpty(input)) {
+                this.valid = false
+            } else if (longerThan(input, 9)) {
+                this.valid = false
+            } else if (shorterThan(input, 50)) {
                 this.valid = false
             } else {
                 input.success = true
@@ -84,6 +87,7 @@ module.exports = {
 
         // ==========================================================
         // process StartDate
+
         processStartDay() {
             let input = this.startDate.day
             resetError(input)
@@ -138,7 +142,7 @@ module.exports = {
             }
 
             let output = ''
-            if ( 1 <= month && month <=3) {
+            if (1 <= month && month <= 3) {
                 output += 'بهار'
             } else if (4 <= month && month <= 6) {
                 output += 'تابستان'
@@ -160,6 +164,7 @@ module.exports = {
 
         // ==========================================================
         // process finishDate
+
         processFinishDay() {
             let input = this.finishDate.day
             resetError(input)
@@ -209,6 +214,7 @@ module.exports = {
 
         // ==========================================================
         // Add Semester To Database
+
         addSemesterInfo() {
             this.valid = true
             this.processName()
@@ -302,7 +308,7 @@ module.exports = {
               </div>
             </div>
 
-            <!--          name of the semester -->
+            <!--    finish of the semester -->
             <div class="mb-4 flex-fullrow">
               <span class="text-sm text-gray-500 mb-2">تاریخ پایان ترم *</span>
               <div class="input-group">
@@ -329,11 +335,11 @@ module.exports = {
               </div>
             </div>
 
-            <!--          name of the semester -->
+            <!-- name of the semester -->
             <div class="mb-4 flex-fullrow">
               <p class="text-sm text-gray-500 mb-2">نام ترم *</p>
               <input v-bind:class="{fail: name.err, success: name.success}" type="text" class="p-4 common"
-                     placeholder="" @change="processName" v-model="name.value" max="50">
+                     placeholder="" @change="processName" v-model="name.value" minlength="9" maxlength="50">
               <p class="input-error" v-if="name.err">{{ name.errMsg }}</p>
             </div>
 

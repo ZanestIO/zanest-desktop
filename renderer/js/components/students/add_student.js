@@ -1,5 +1,15 @@
 const {ipcRenderer} = require('electron')
-const {resetError, isEmpty, exact, smallerThan, biggerThan, isNumber, isLetter} = require('../../utils/validation')
+const {
+    resetError,
+    isEmpty,
+    exact,
+    smallerThan,
+    biggerThan,
+    isNumber,
+    isLetter,
+    shorterThan,
+    longerThan
+} = require('../../utils/validation')
 
 module.exports = {
     data() {
@@ -72,6 +82,10 @@ module.exports = {
     inject: ['addSeen'],
     emits: ['cancelAdd'],
     methods: {
+
+        // ==========================================================
+        // process name
+
         processName() {
             let input = this.name
             resetError(input)
@@ -80,9 +94,18 @@ module.exports = {
                 this.valid = false
             } else if (isLetter(input)) {
                 this.valid = false
-            } else
+            } else if (longerThan(input, 3)) {
+                this.valid = false
+            } else if (shorterThan(input, 50)) {
+                this.valid = false
+            } else {
                 input.success = true
+            }
         },
+
+        // ==========================================================
+        // process phone number
+
         processPhone() {
             let input = this.phone
             resetError(input)
@@ -96,6 +119,10 @@ module.exports = {
             } else
                 input.success = true
         },
+
+        // ==========================================================
+        // process sex
+
         processSex() {
             let input = this.sex
             resetError(input)
@@ -106,11 +133,16 @@ module.exports = {
                 input.success = true
         },
 
+        // ==========================================================
+        // process social id
+
         processSid() {
             let input = this.sid
             resetError(input)
 
             if (isEmpty(input)) {
+                this.valid = false
+            } else if (isNumber(input)) {
                 this.valid = false
             } else if (exact(input, 10)) {
                 this.valid = false
@@ -118,10 +150,13 @@ module.exports = {
                 input.success = true
         },
 
+        // ==========================================================
+        // process birth date
 
         processBirthDay() {
             let input = this.birthDate.day
             resetError(input)
+
             if (isEmpty(input)) {
                 this.valid = false
             } else if (smallerThan(input, 1)) {
@@ -136,6 +171,7 @@ module.exports = {
         processBirthMonth() {
             let input = this.birthDate.month
             resetError(input)
+
             if (isEmpty(input)) {
                 this.valid = false
             } else if (smallerThan(input, 1)) {
@@ -146,9 +182,11 @@ module.exports = {
                 input.success = true
             }
         },
+
         processBirthYear() {
             let input = this.birthDate.year
             resetError(input)
+
             if (isEmpty(input)) {
                 this.valid = false
             } else if (smallerThan(input, 1300)) {
@@ -159,17 +197,30 @@ module.exports = {
                 input.success = true
             }
         },
+
+        // ==========================================================
+        // process parent name
+
         processParentName() {
             let input = this.parentName
             resetError(input)
+
             if (isEmpty(input)) {
                 this.valid = false
             } else if (isLetter(input)) {
+                this.valid = false
+            } else if (longerThan(input, 3)) {
+                this.valid = false
+            } else if (shorterThan(input, 50)) {
                 this.valid = false
             } else {
                 input.success = true
             }
         },
+
+        // ==========================================================
+        // process parent phone number
+
         processParentPhone() {
             let input = this.parentPhone
             resetError(input)
@@ -183,11 +234,17 @@ module.exports = {
             } else
                 input.success = true
         },
+
+        // ==========================================================
+        // process address
+
         processAddress() {
             let input = this.address
             resetError(input)
 
             if (isEmpty(input)) {
+                this.valid = false
+            } else if (shorterThan(255)) {
                 this.valid = false
             } else
                 input.success = true
@@ -255,26 +312,33 @@ module.exports = {
     // Template
     // ==================================================================================
     template: `
+
       <section class="big-section rounded-tr-none" v-if="addSeen.value">
+
+      <!--   name of the student   -->
       <div class="full-edit-box">
         <div>
           <span>
             نام
           </span>
-          <input type="text" placeholder="نام و نام خانوادگی" :class="{fail: name.err, success: name.success}" v-model="name.value"
-                 v-on:change="processName">
+          <input type="text" placeholder="نام و نام خانوادگی" :class="{fail: name.err, success: name.success}"
+                 v-model="name.value"
+                 v-on:change="processName" minlength="3" maxlength="50">
           <p class="input-error" v-if="name.err">{{ name.errMsg }}</p>
         </div>
 
+        <!--    phone number    -->
         <div>
           <span>
             شماره تماس
           </span>
-          <input type="number" placeholder="(زبان آموز)" :class="{fail: phone.err, success: phone.success}" v-model="phone.value"
+          <input type="number" placeholder="(زبان آموز)" :class="{fail: phone.err, success: phone.success}"
+                 v-model="phone.value"
                  v-on:change="processPhone">
           <p class="input-error" v-if="phone.err">{{ phone.errMsg }}</p>
         </div>
 
+        <!--   sex    -->
         <div>
           <span>
             جنسیت
@@ -287,63 +351,75 @@ module.exports = {
           <p class="input-error" v-if="sex.err">{{ sex.errMsg }}</p>
         </div>
 
+        <!--   social id    -->
         <div>
           <span>
             کدملی
           </span>
-          <input type="number" placeholder="--" :class="{fail: sid.err, success: sid.success}" v-model="sid.value" @change="processSid">
+          <input type="number" placeholder="--" :class="{fail: sid.err, success: sid.success}" v-model="sid.value"
+                 @change="processSid">
           <p class="input-error" v-if="sid.err">{{ sid.errMsg }}</p>
         </div>
 
+        <!--   birth date    -->
         <div class="mb-4 w-full flex-1/3">
           <span>
             تاریخ تولد
           </span>
           <div class="input-group">
             <div>
-              <input type="number" placeholder="روز" min="1" max="31" :class="{fail: birthDate.day.err, success: birthDate.day.success}"
+              <input type="number" placeholder="روز" min="1" max="31"
+                     :class="{fail: birthDate.day.err, success: birthDate.day.success}"
                      v-model="birthDate.day.value" @change="processBirthDay">
               <p class="input-error" v-if="birthDate.day.err">{{ birthDate.day.errMsg }}</p>
             </div>
 
             <div>
-              <input type="number" placeholder="ماه" min="1" max="12" :class="{fail: birthDate.month.err, success: birthDate.month.success}"
+              <input type="number" placeholder="ماه" min="1" max="12"
+                     :class="{fail: birthDate.month.err, success: birthDate.month.success}"
                      v-model="birthDate.month.value" @change="processBirthMonth">
               <p class="input-error" v-if="birthDate.month.err">{{ birthDate.month.errMsg }}</p>
             </div>
 
             <div>
-              <input type="number" placeholder="سال" min='1300' max="1450" :class="{fail: birthDate.year.err,  success: birthDate.year.success}"
+              <input type="number" placeholder="سال" min='1300' max="1450"
+                     :class="{fail: birthDate.year.err,  success: birthDate.year.success}"
                      v-model="birthDate.year.value" @change="processBirthYear">
               <p class="input-error" v-if="birthDate.year.err">{{ birthDate.year.errMsg }}</p>
             </div>
           </div>
         </div>
 
+        <!--   parent name    -->
         <div>
           <span>
             نام والد
           </span>
-          <input type="text" placeholder="(پدر یا مادر)" :class="{fail: parentName.err, success: parentName.success}" v-model="parentName.value"
-                 @change="processParentName">
+          <input type="text" placeholder="(پدر یا مادر)" :class="{fail: parentName.err, success: parentName.success}"
+                 v-model="parentName.value"
+                 @change="processParentName" minlength="3" maxlength="50">
           <p class="input-error" v-if="parentName.err">{{ parentName.errMsg }}</p>
         </div>
 
+        <!--   parent phone number   -->
         <div>
           <span>
             شماره تماس والد
           </span>
-          <input type="number" placeholder="(پدر یا مادر)" :class="{fail: parentPhone.err , success: parentPhone.success}" v-model="parentPhone.value"
+          <input type="number" placeholder="(پدر یا مادر)"
+                 :class="{fail: parentPhone.err , success: parentPhone.success}" v-model="parentPhone.value"
                  @change="processParentPhone">
           <p class="input-error" v-if="parentPhone.err">{{ parentPhone.errMsg }}</p>
         </div>
 
+        <!--   address    -->
         <div class="flex-1/3">
           <span>
             آدرس
           </span>
-          <input type="text" placeholder="محل سکونت" :class="{fail: address.err, success: address.success}" v-model="address.value"
-                 @change="processAddress">
+          <input type="text" placeholder="محل سکونت" :class="{fail: address.err, success: address.success}"
+                 v-model="address.value"
+                 @change="processAddress" maxlength="255">
           <p class="input-error" v-if="address.err">{{ address.errMsg }}</p>
         </div>
       </div>
