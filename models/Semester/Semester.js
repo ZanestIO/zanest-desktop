@@ -51,6 +51,11 @@ exports.Semester = class Semester extends Model {
         return await gets()
     }
 
+    static async current() {
+        const curt = require('./current')
+        return await curt()
+    }
+
 }
 
 // ==================================================================================

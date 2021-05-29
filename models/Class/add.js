@@ -21,6 +21,8 @@ module.exports = async (topicId, timeId, teacherId, classRoomId, tuition, weekda
     let newClass
     // get Current Semester ID
     let currentSemesterId = await Semester.current()
+
+
     try {
 
         // search in database
@@ -40,7 +42,12 @@ module.exports = async (topicId, timeId, teacherId, classRoomId, tuition, weekda
             }
         })
 
+        if(currentSemesterId == 0) {
+            const msg = message.request('create', true, holder.id, 'class')
+            log.record('info', msg)
 
+            return [false, message.currentSemesterError]
+        }
         // if newClass is null then create it. 
         if (!newClass) {
             const holder = await db().sequelize.models.Class.create({topicId: topicId, teacherId: teacherId, classRoomId: classRoomId, 

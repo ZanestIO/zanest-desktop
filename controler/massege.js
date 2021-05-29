@@ -4,7 +4,7 @@ module.exports = {
     error: "خطا رخداده است",
     incPassowrd: "رمز عبور وارد شده اشتباه است",
     reqLogin: "درخواست ورود به سیستم",
-
+    currentSemesterError: 'ترم تحصیلی فعلی تعریف نشده است',
     successLogin(username) {
         return  `کاربر با شناسه ${username} وارد حساب کاربری خود شد.`
     },
