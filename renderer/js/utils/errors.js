@@ -1,19 +1,19 @@
 module.exports = {
     empty: 'نمی تواند خالی باشد',
     max(num) {
-        return `نباید از ${num} بزرگتر باشد`
+        return `بزرگتر از ${num}  مجاز نیست`
     },
     min(num) {
-        return `نباید از ${num} کوچکتر باشد`
+        return `کوچکتر از ${num}  مجاز نیست`
     },
     exact(num) {
-        return `باید ${num} رقم باشد.`
+        return ` ${num} رقم مجاز است.`
     },
     longer(num) {
-        return `باید بیشتر از ${num} کاراکتر باشد`
+        return `کمتر از ${num} کاراکتر مجاز نیست`
     },
     shorter(num) {
-        return `باید از ${num} کاراکتر کمتر باشد`
+        return `بیشتر از ${num} کاراکتر مجاز نیست`
     },
     invalid: "کاراکتر غیرمجاز",
     onlyNum: 'فقط استفاده از اعداد مجاز',
