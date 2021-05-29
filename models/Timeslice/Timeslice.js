@@ -54,7 +54,7 @@ exports.TimeSlice = class TimeSlice extends Model {
     // get free Timeslice 
     static async pull(args) {
         const getFree = require('./getFreeTime')
-        return await getFree(args.weekday, args.classRoomId)
+        return await getFree(args.classRoomId)
     }
 
 }

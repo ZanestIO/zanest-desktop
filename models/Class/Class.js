@@ -11,9 +11,9 @@ exports.Class = class Class extends Model {
      * @returns {Promise<*>}
      */
     static async add(args) {
-        const adds = require('./add')
-        return await adds(args.topicId, args.timeId, args.teacherId, args.classRoomId,
-                            args.tuition, args.weekday, args.type)
+        let adds = require('./add')
+        return await adds(args.topicId, args.teacherId, args.classRoomId,
+                            args.tuition, args.type, args.timeSlices)
     }
 
     /**
@@ -23,8 +23,8 @@ exports.Class = class Class extends Model {
      */
     static async update(args) {
         const updates = require('./update')
-        return await updates(args.id, args.topicId, args.timeId, args.teacherId, args.classRoomId,
-                                args.tuition, args.weekday, args.type)
+        return await updates(args.id, args.topicId, args.teacherId, args.classRoomId,
+                                args.tuition, args.type, args.timeSlices)
     }
     
     /**

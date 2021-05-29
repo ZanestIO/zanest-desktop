@@ -19,7 +19,7 @@ module.exports = {
     data() {
         return {
             valid: true,
-
+            timeSelect: true,
             // ==================================================================================
             // basic fields
             topic: {
@@ -229,8 +229,10 @@ module.exports = {
 
             if (isEmpty(input)) {
                 this.valid = false
-            } else
+            } else {
                 input.success = true
+                this.getTimeSliceForDay()
+            }
         },
 
         // TUITION
@@ -255,6 +257,7 @@ module.exports = {
                 this.valid = false
             } else
                 input.success = true
+                this.timeSelect = true
         },
 
         // ALL
@@ -271,16 +274,21 @@ module.exports = {
             this.processTuition()
 
             // only process active timeSlices
+            flag = false
             for ([key, value] of Object.entries(this.timeSlices)) {
                 if (this.weekdays[key]) {
+                    flag = true
                     this.processTimeSlices(key)
                 }
             }
+            this.timeSelect = flag
+            this.valid = flag
         },
 
         // ==================================================================================
         // FINAL SUBMIT and sending the values
         submit() {
+
 
             // processing all of form
             this.valid = true
@@ -291,19 +299,24 @@ module.exports = {
                 // _____________________________________________________
                 // arguments to be send to server
                 let args = {
-                    topic: this.topic.value,
-                    teacher: this.teacher.value,
+                    topicId: this.topic.value,
+                    teacherId: this.teacher.value,
                     type: this.classType.value,
-                    classRoom: this.classRoom.value,
+                    classRoomId: this.classRoom.value,
                     tuition: this.tuition.value,
-                    times: {}
+                    timeSlices: {}
+                }
+                if (!this.classRoom.active) {
+                    args.classRoomId = ''
                 }
                 // only send timeSlices that are active
                 for ([key, value] of Object.entries(this.weekdays)) {
                     if (value) {
-                        args.times[key] = this.timeSlices[key].value
+                        args.timeSlices[key] = this.timeSlices[key].value
                     }
                 }
+
+                console.log(args)
 
                 ipcRenderer.send('classCreation', args)
 
@@ -339,33 +352,21 @@ module.exports = {
             return `${hour}:${minute} ${suffix}`
         },
 
-        getTimeSliceForDay(day) {
-
+        // ==================================================================================
+        // get time slices per day
+        getTimeSliceForDay() {
             if (this.classType === 'virtual')
                 return
 
             let args = {
-                weekday: day,
-                classRoom: this.classRoom.value
+                classRoomId: this.classRoom.value
             }
 
-
-            ipcRenderer.send('getBulk', {type: 'timeSlice'})
-            ipcRenderer.on('responseTimeSliceGetBulk', (e, args) => {
-                for ([key, value] of Object.entries(this.availableTimeSlices)) {
-                    this.availableTimeSlices[key] = args.timeSlices
-                }
+            // alert('before send')
+            ipcRenderer.send('getAllFreeTimeSlice', args)
+            ipcRenderer.on('responseGetAllFreeTimeSlice', (e, args) => {
+                    this.availableTimeSlices = args
             })
-
-            // ipcRenderer.send('getTimeSlicePerDay', args)
-            // ipcRenderer.on('responseGetTimeSlicePerDay', (e, args) => {
-            //     resetError(this.timeSlices[day])
-            //     this.availableTimeSlices[day] = args.timeSlices
-            //     if (!this.availableTimeSlices[day]) {
-            //         this.timeSlices[day].err = true
-            //         this.timeSlices[day].errMsg = `کلاس انتخاب شده هیچ زمان خالی در روز ${this.persianWeekdays[day]} ندارد`
-            //     }
-            // })
 
         }
 
@@ -447,6 +448,7 @@ module.exports = {
            v-if="(this.classRoom.value && this.classRoom.active) || this.classType.value === 'virtual'">
         <p class="text-sm flex-fullrow mb-4 border-b-2 pb-2 border-gray-300">
           زمان های برگذاری
+          <span class="inline-block mr-4 input-error" v-if="!timeSelect">زمانی برای برگذاری کلاس تعیین کنید</span>
         </p>
 
 
@@ -456,8 +458,8 @@ module.exports = {
           <div v-for="(value, name) in weekdays" class="mb-4">
             <div class="mb-2 p-2 bg-gray-200 w-full rounded-lg flex flex-nowrap items-center justify-between">
               <label :for="name" class="flex-1 cursor-pointer">{{ persianWeekdays[name] }} </label>
-              <input :id="name" class="h-6 w-10 cursor-pointer" type="checkbox" value="saturday"
-                     v-model="weekdays[name]" @change="getTimeSliceForDay(weekdays[name])">
+              <input :id="name" class="h-6 w-10 cursor-pointer" type="checkbox"
+                     v-model="weekdays[name]">
             </div>
             <div v-if="weekdays[name]">
               <span class="text-sm text-gray-600 mb-2 inline-block">بازه ی زمانی</span>

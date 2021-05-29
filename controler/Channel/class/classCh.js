@@ -22,7 +22,6 @@ module.cclss = {
                 })
 
                 verify = true
-
             } else {
                 verify = false
                 return webContentsSend('errorNot', {
@@ -113,7 +112,7 @@ module.uclss = {
 }
 
 // ===================================================================================================
-// READ Class 
+// READ Class
 // ===================================================================================================
 module.rclss = {
     rclss: global.share.ipcMain.on('getClassInfo', async (e, args) => {

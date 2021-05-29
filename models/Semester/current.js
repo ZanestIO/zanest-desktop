@@ -5,33 +5,35 @@ const {Op} = require('sequelize');
 // ================================================================================
 // Current Semester
 /**
- * return Current Semester id 
+ * return Current Semester id
  * @returns {Promise<(boolean|string)[]|(boolean|*)[]>}
  */
 module.exports = async () => {
-        try {
+    try {
 
-        const  moment = require('jalali-moment');
-        const currentDate = moment().locale('fa').format('YYYY-M-D')
-        console.log(currentDate)
+        const moment = require('jalali-moment');
+        let currentDate = moment().locale('fa').format('YYYY-MM-DD')
 
-        const currentSemester = await db().sequelize.models.Semester.findOne({
-            where: {
-                [Op.and]: [
-                    {
-                        startDate: { [Op.gte]: currentDate }
-                    },
-                    { 
-                        finishDate: {  [Op.lt]: currentDate }
-                    }
-                ]
-            }
+        let query = 'SELECT * FROM `Semesters`'
+        let result = await db().sequelize.query(query)
+        result = result[0]
+
+        currentDate = parseInt(currentDate.split('-').join(""))
+        let flag = 0
+
+        result.forEach( sem => {
+            const startDate = parseInt(sem.startDate.split('-').join(""))
+            const finishDate = parseInt(sem.finishDate.split('-').join(""))
+            if (startDate <= currentDate && finishDate >= currentDate)
+                flag = sem.id
         })
 
-        return currentSemester.id
+        return flag
 
-        } catch (err) {
-            log.record('Error', 'Current Semester Not Found:' + err + __filename)
-            return 0
-        }
+
+
+    } catch (err) {
+        log.record('Error', 'Current Semester Not Found:' + err + __filename)
+        return 0
+    }
 }

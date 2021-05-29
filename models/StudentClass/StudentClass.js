@@ -18,20 +18,7 @@ exports.StudentClass = class StudentClass extends Model {
 */
 exports.StudentClassData = {
     attributes: {
-        // sid: {
-        //     type: DataTypes.INTEGER,
-        //     refernces: {
-        //         model: Student,
-        //         key: 'id'
-        // },
-        // cid: {
-        //     type: DataTypes.INTEGER,
-        //     refernces: {
-        //         model: Class,
-        //         key: 'id'
-        //     }
-        // }
-        // },
+
     },
     options: {
         "modelName": 'StudentClass'

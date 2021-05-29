@@ -8,9 +8,8 @@ const {log} = require('../../../logger')
 module.gatime = {
     gatime: global.share.ipcMain.on('getAllFreeTimeSlice', async (E, args) => {
         try {
-            const freeTime = db().sequelize.models.TimeSlice.pull(args)
-            webContentsSend('responseGetAllFreeTimeSlice', {freeTime: freeTime})
-
+            const freeTime = await db().sequelize.models.TimeSlice.pull(args)
+            webContentsSend('responseGetAllFreeTimeSlice', freeTime)
         } catch (err) {
             log.record('error', err +":in:"+ __filename)
         }

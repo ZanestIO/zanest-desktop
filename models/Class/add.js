@@ -1,8 +1,9 @@
 const db = require('../Db.js');
 const {log} = require('./../../logger')
 const message = require('./../../controler/massege');
-const { Op } = require('sequelize/types');
-const { Semester } = require('../Semester/Semester.js');
+// const { Op } = require('sequelize/types');
+const {Semester} = require('../Semester/Semester.js');
+const {pWeekdays} = require('../../renderer/js/utils/converts')
 
 // ================================================================================
 // ADD NEW CLASS
@@ -13,59 +14,82 @@ const { Semester } = require('../Semester/Semester.js');
  * @param teacherId
  * @param type
  * @param tuition
- * @param weekday
- * @param timId
+ * @param classRoomId
+ * @param timeSlices
  * @returns {Promise<(boolean|string)[]|(boolean|*)[]>}
  */
-module.exports = async (topicId, timeId, teacherId, classRoomId, tuition, weekday, type) => {
-    let newClass
-    // get Current Semester ID
-    let currentSemesterId = await Semester.current()
-
-
+module.exports = async (topicId, teacherId, classRoomId, tuition, type, timeSlices) => {
     try {
+        // ==================================================================================
+        // FIND CURRENT SEMESTER
+        let currentSemesterId = await Semester.current()
+        if(currentSemesterId === 0) {
+                    const msg = message.request('create', true, holder.id, 'class')
+                    log.record('info', msg)
+                    return [false, message.currentSemesterError]
+        }
 
-        // search in database
-        newClass = await db().sequelize.models.Class.findOne({
-            where: {
-                [Op.and]: [
-                    {
-                        timeId: timeId
-                    },
-                    {
-                        teacherId: teacherId
-                    },
-                    {
-                        weekday: weekday
+        // ==================================================================================
+        // CHECK IF ANOTHER CLASS WITH THIS TEACHER EXISTS IN THE SPECIFIED TIMES
+        let query = 'SELECT `weekday`, `timeSlouseId` FROM ' +
+            '(`TimeClasses` INNER JOIN (SELECT `id` FROM `classes` WHERE `teacherId` = +' + teacherId + ') ' +
+            'ON id = ClassId)'
+        let teacherTimes = await db().sequelize.query(query)
+        teacherTimes = teacherTimes[0]
+
+        let errMsg
+        if (teacherTimes) {
+            for ([key, value] of Object.entries(timeSlices)) {
+
+                teacherTimes.forEach(time => {
+                    if (time.hasOwnProperty('weekday')) {
+                        if (time.weekday === key) {
+                            if (time.TimeSlouseId === value) {
+                                errMsg = 'تداخل کاری استاد:'
+                                errMsg += 'استاد انتخابی در ساعت انتخابی روز '
+                                errMsg += pWeekdays[key] + ' کلاس دیگری دارد '
+                            }
+                        }
                     }
-                ] 
-            }
-        })
 
-        if(currentSemesterId == 0) {
-            const msg = message.request('create', true, holder.id, 'class')
-            log.record('info', msg)
-
-            return [false, message.currentSemesterError]
+                }) // end second for
+            } // end first for
         }
-        // if newClass is null then create it. 
-        if (!newClass) {
-            const holder = await db().sequelize.models.Class.create({topicId: topicId, teacherId: teacherId, classRoomId: classRoomId, 
-                                semesterId: currentSemesterId, type: type, tuition: tuition, weekday: weekday, timeId: timeId});
+        if (errMsg)
+            return [false, errMsg]
 
-            const msg = message.request('create', true, holder.id, 'class')
-            log.record('info', msg)
 
-            return [true, message.show(true, 'create', 'کلاس ')]
-
+        // ==================================================================================
+        // choose a different approach based on classRoomId
+        let holder
+        if (classRoomId) {
+            holder = await db().sequelize.models.Class.create({
+                topicId: topicId, teacherId: teacherId, classRoomId: classRoomId,
+                semesterId: currentSemesterId, type: type, tuition: tuition
+            });
         } else {
-            const msg = message.check(false, newClass.id)
-            log.record('error', msg)
-            return [false, msg]
+            holder = await db().sequelize.models.Class.create({
+                topicId: topicId, teacherId: teacherId,
+                semesterId: currentSemesterId, type: type, tuition: tuition
+            });
         }
+
+        // ==================================================================================
+        // saving times and weekdays in db
+        for ([key, value] of Object.entries(timeSlices)) {
+            await db().sequelize.models.TimeClass.create({TimeSlouseId: value, weekday: key, ClassId: holder.id})
+        }
+
+
+        // ==================================================================================
+        // setting logs and return
+        const msg = message.request('create', true, holder.id, 'class')
+        log.record('info', msg)
+
+        return [true, message.show(true, 'create', 'کلاس ')]
 
     } catch (err) {
-        log.record('error', err +":in:"+ __filename)
+        log.record('error', err + ":in:" + __filename)
         return [false, err]
     }
 }

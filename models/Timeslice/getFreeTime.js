@@ -5,70 +5,35 @@ const {Op} = require('sequelize')
 // ================================================================================
 // RETURN INFO OF SOME TIMESLICE
 // ================================================================================
-module.exports = async (weekday, classRoomId) => {
-    let busyTime
-    let freeTime
-    let timeSlices = []
-    let arrayOfBusyTime= []
+module.exports = async (classRoomId) => {
+    try {
 
+        availableTimeSlices = {
+            saturday: [],
+            sunday: [],
+            monday: [],
+            tuesday: [],
+            wednesday: [],
+            thursday: [],
+        }
 
-    let query = 'SELECT `id, `startTime`, `finishTime` FROM' +
-        ' INNER JOIN (' +
-        'SELECT `id`, `classRoomId` FROM `Classes` UNION ' +
-        'SELECT `id`, `startTime`, `FinishTime` FROM `TimeSlice`' +
-        'UNION SELECT * FROM `TimeClass`)'
-    const freeTimes = await db().sequelize.query(query)
+        for ([key, value] of Object.entries(availableTimeSlices)) {
 
+            query = "SELECT `id`, `startTime`, `finishTime` FROM `TimeSlice` AS A LEFT JOIN "
+            query +=
+                "(SELECT `ClassId`, `timeSlouseId`, `classRoomId` FROM `Classes` INNER JOIN (SELECT * FROM `TimeClasses` WHERE weekday = '" +
+                key + "') ON id = ClassId" +
+                " WHERE classRoomId = '" + classRoomId + "') AS B"
+            query += ' ON A.id = B.timeSlouseId WHERE B.timeSlouseId IS NULL'
 
-    // try {
-    //     // get time that take it in class with weekday and classRoomId
-    //     busyTime = await db().sequelize.models.Class.findAll({
-    //         attributes: [
-    //             'timeId', 'classRoomId', 'weekday' // We had to list all attributes...
-    //         ],
-    //         where: {
-    //             classRoomId: classRoomId,
-    //             weekday: weekday
-    //         },
-    //         nest: false
-    //     })
-    //
-    //     // converts info to a JSON string
-    //     const strBusyTime = JSON.stringify(busyTime)
-    //     const holder1 = JSON.parse(strBusyTime)
-    //
-    //     holder1.forEach(node => {
-    //         arrayOfBusyTime.push(node.timeId)
-    //     })
-    //
-    //     // get time that not taked before
-    //     freeTime = await db().sequelize.models.TimeSlice.findAll({
-    //         where: {
-    //             id: {
-    //                 [Op.notIn]: arrayOfBusyTime
-    //             }
-    //         },
-    //         order: [
-    //             ['createdAt', 'ASC']
-    //         ],
-    //     })
-    //
-    //     const strFreeTime = JSON.stringify(freeTime)
-    //     const holder2 = JSON.parse(strFreeTime)
-    //
-    //     holder2.forEach(node => {
-    //         let slice = {
-    //             id: node.id,
-    //             startTime: node.startTime,
-    //             finishTime: node.finishTime
-    //         }
-    //         timeSlices.push(slice)
-    //     })
-    //
-    //     console.log(timeSlices)
-    //     return timeSlices
-    //
-    // } catch(err) {
-    //     log.record('error', err +":in:"+ __filename)
-    // }
+            let freeTimes = await db().sequelize.query(query)
+            freeTimes = freeTimes[0]
+            availableTimeSlices[key] = freeTimes
+        }
+        return availableTimeSlices
+
+    } catch (err) {
+        log.record('error', err + ":in:" + __filename)
+    }
+
 }
