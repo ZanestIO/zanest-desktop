@@ -346,17 +346,26 @@ module.exports = {
 
             let args = {
                 weekday: day,
-                classRoom : this.classRoom.value
+                classRoom: this.classRoom.value
             }
-            ipcRenderer.send('getTimeSlicePerDay', args)
-            ipcRenderer.on('responseGetTimeSlicePerDay', (e, args) => {
-                resetError(this.timeSlices[day])
-                this.availableTimeSlices[day] = args.timeSlices
-                if (!this.availableTimeSlices[day]) {
-                    this.timeSlices[day].err = true
-                    this.timeSlices[day].errMsg = `کلاس انتخاب شده هیچ زمان خالی در روز ${this.persianWeekdays[day]} ندارد`
+
+
+            ipcRenderer.send('getBulk', {type: 'timeSlice'})
+            ipcRenderer.on('responseTimeSliceGetBulk', (e, args) => {
+                for ([key, value] of Object.entries(this.availableTimeSlices)) {
+                    this.availableTimeSlices[key] = args.timeSlices
                 }
             })
+
+            // ipcRenderer.send('getTimeSlicePerDay', args)
+            // ipcRenderer.on('responseGetTimeSlicePerDay', (e, args) => {
+            //     resetError(this.timeSlices[day])
+            //     this.availableTimeSlices[day] = args.timeSlices
+            //     if (!this.availableTimeSlices[day]) {
+            //         this.timeSlices[day].err = true
+            //         this.timeSlices[day].errMsg = `کلاس انتخاب شده هیچ زمان خالی در روز ${this.persianWeekdays[day]} ندارد`
+            //     }
+            // })
 
         }
 

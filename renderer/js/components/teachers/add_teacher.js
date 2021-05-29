@@ -223,7 +223,7 @@ module.exports = {
 
             if (isEmpty(input)) {
                 this.valid = false
-            } else if (shorterThan(255)) {
+            } else if (shorterThan(input, 255)) {
                 this.valid = false
             } else
                 input.success = true

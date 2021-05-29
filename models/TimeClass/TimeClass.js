@@ -1,9 +1,9 @@
 const {DataTypes, Model} = require('sequelize')
 
 // ==================================================================================
-// Studnet Class CLASS WITH METHODS
+// Time-Class CLASS WITH METHODS
 // ==================================================================================
-exports.StudentClass = class StudentClass extends Model {
+exports.TimeClass = class TimeClass extends Model {
 
 
 
@@ -15,25 +15,14 @@ exports.StudentClass = class StudentClass extends Model {
 // ==================================================================================
 /**
  * define studnet class attributes
-*/
-exports.StudentClassData = {
+ */
+exports.TimeClassData = {
     attributes: {
-        // sid: {
-        //     type: DataTypes.INTEGER,
-        //     refernces: {
-        //         model: Student,
-        //         key: 'id'
-        // },
-        // cid: {
-        //     type: DataTypes.INTEGER,
-        //     refernces: {
-        //         model: Class,
-        //         key: 'id'
-        //     }
-        // }
-        // },
+        weekday: {
+            type: DataTypes.STRING,
+        },
     },
     options: {
-        "modelName": 'StudentClass'
+        "modelName": 'TimeClass'
     }
 }

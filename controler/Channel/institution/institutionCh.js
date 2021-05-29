@@ -49,11 +49,11 @@ module.rins = {
             if (check[0]) {
                 return webContentsSend('responseGetInstitutionInfo', check[1])
             } else {
-                return webContentsSend('normalNot', {
-                    title: '',
-                    message: message.notFound,
-                    contactAdmin: false,
-                })
+                // return webContentsSend('normalNot', {
+                //     title: '',
+                //     message: message.notFound,
+                //     contactAdmin: false,
+                // })
             }
 
         } catch (err) {
@@ -71,11 +71,11 @@ module.setins = {
             const check = await db().sequelize.models.Institution.setName(args)
             if (check[0]) {
                 // process successfully done
-                return webContentsSend('successNot', {
-                    title: '',
-                    message: message.setNameInstitution(true),
-                    contactAdmin: false
-                })
+                // return webContentsSend('successNot', {
+                //     title: '',
+                //     message: message.setNameInstitution(true),
+                //     contactAdmin: false
+                // })
             } else {
                 // process failed
                 return webContentsSend('errorNot', {

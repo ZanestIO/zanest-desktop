@@ -79,20 +79,8 @@ exports.classData = {
             type: DataTypes.INTEGER,
             allowNull: false
         },
-        timeId: {
-            type: DataTypes.INTEGER,
-            allowNull: false
-        },
-        classRoomId: {
-            type: DataTypes.INTEGER,
-
-        },
         topicId: {
             type: DataTypes.INTEGER,
-            allowNull: false
-        },
-        weekday: {
-            type: DataTypes.STRING,
             allowNull: false
         },
         tuition: {

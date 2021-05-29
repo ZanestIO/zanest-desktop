@@ -15,9 +15,9 @@ exports.Institution = class Institution extends Model {
             }
         })
         if (insInfo === null) {
-            await Institution.create({name: 'Zanest', address: '', phoneNumber: ''});
+            await Institution.create({name: '', address: '', phoneNumber: ''});
         }
-        
+
     }
     /**
      * updates some attributes

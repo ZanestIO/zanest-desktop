@@ -2,7 +2,6 @@ const {Sequelize} = require('sequelize')
 const { Student, studentData } = require('./Student/Student')
 const { Teacher, teacherData } = require('./Teacher/Teacher')
 const { Person, personData } = require('./Person/Person')
-const { Institution, institutionData } = require('./Institution/Institution')
 const {Topic, topicData} = require('./Topic/Topic')
 const {User, userData} = require('./User/User')
 const {log} = require('./../logger')
@@ -11,6 +10,9 @@ const { TimeSlice, timeSliceData } = require('./Timeslice/Timeslice')
 const { ClassRoom, classRoomData } = require('./Classroom/Classroom')
 const { Class , classData} = require('./Class/Class')
 const { StudentClass, StudentClassData } = require('./StudentClass/StudentClass')
+const { TimeClass, TimeClassData } = require('./TimeClass/TimeClass')
+const { Institution, institutionData } = require('./Institution/Institution')
+
 
 let database
 
@@ -73,6 +75,7 @@ class Db {
             TimeSlice.init(timeSliceData.attributes, {sequelize: this.sequelize, modelName: timeSliceData.options.modelName})
             ClassRoom.init(classRoomData.attributes,{sequelize: this.sequelize, modelName: classRoomData.options.modelName})
             StudentClass.init(StudentClassData.attributes, {sequelize: this.sequelize, modelName: StudentClassData.options.modelName})
+            TimeClass.init(TimeClassData.attributes, {sequelize: this.sequelize, modelName: TimeClassData.options.modelName})
 
             Student.belongsTo(Person, {
                 foreignKey: 'PersonId'
@@ -86,9 +89,15 @@ class Db {
                 foreignKey: 'topicId'
             });
 
-            TimeSlice.hasMany(Class, {
-                foreignKey: 'timeId'
+            // ====================================================
+            //  many to many relationship
+            TimeSlice.belongsToMany(Class, {
+                through: 'TimeClass'
             })
+            Class.belongsToMany(TimeSlice, {
+                through: 'TimeClass'
+            })
+            // ====================================================
 
             ClassRoom.hasMany(Class, {
                 foreignKey: 'ClassRoomId'
@@ -101,8 +110,13 @@ class Db {
             Teacher.hasMany(Class, {
                 foreignKey: 'teacherId'
             })
-            // studnet class is juntion table
-            Student.belongsToMany(Class, { through: StudentClass})
+
+            Student.belongsToMany(Class, {
+                through: 'StudentClass'
+            })
+            Class.belongsToMany(Student, {
+                through: 'StudentClass'
+            })
 
             // syncing db
             await this.sequelize.sync()
