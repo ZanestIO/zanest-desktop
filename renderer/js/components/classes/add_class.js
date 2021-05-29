@@ -1,11 +1,27 @@
 const {ipcRenderer} = require('electron')
-const { resetError, isEmpty, exact, smallerThan, biggerThan, isNumber, isLetter, shorterThan, longerThan} = require('../../utils/validation')
+const {
+    resetError,
+    isEmpty,
+    exact,
+    smallerThan,
+    biggerThan,
+    isNumber,
+    isLetter,
+    shorterThan,
+    longerThan
+} = require('../../utils/validation')
 const {pWeekdays} = require('./../../utils/converts')
 
 module.exports = {
+    // ==================================================================================
+    // -------------- DATA VALUES
+    // ==================================================================================
     data() {
         return {
             valid: true,
+
+            // ==================================================================================
+            // basic fields
             topic: {
                 err: false,
                 value: '',
@@ -37,6 +53,9 @@ module.exports = {
                 errMsg: '',
                 success: false
             },
+
+            // ==================================================================================
+            // weekday and timeSlice
             weekdays: {
                 saturday: false,
                 sunday: false,
@@ -85,7 +104,8 @@ module.exports = {
             },
             persianWeekdays: pWeekdays,
 
-            // all the info to be retrieved
+            // ==================================================================================
+            // Data taken from models
             allTopics: [],
             allTeachers: [],
             allClassrooms: [],
@@ -98,6 +118,8 @@ module.exports = {
                 thursday: [],
             },
 
+            // ==================================================================================
+            // coloring options
             userColor: {
                 name: 'purple',
                 gradient: {
@@ -117,6 +139,10 @@ module.exports = {
     },
     inject: ['addSeen'],
     emits: ['cancelAdd'],
+
+    // ==================================================================================
+    // -------------- INITIALIZATION
+    // ==================================================================================
     created() {
         // =============================================
         // changing the color of button
@@ -128,26 +154,32 @@ module.exports = {
 
         // =============================================
         // getTopics
-        ipcRenderer.send('getBulk', {type:'topic'})
-        ipcRenderer.on('responseTopicGetBulk', (e,args) => {
+        ipcRenderer.send('getBulk', {type: 'topic'})
+        ipcRenderer.on('responseTopicGetBulk', (e, args) => {
             this.allTopics = args.topics
         })
 
         // =============================================
         // getTeachers
-        ipcRenderer.send('getBulk', {type:'teacher', offset:1, number:500})
-        ipcRenderer.on('responseTeacherGetBulk', (e,args) => {
+        ipcRenderer.send('getBulk', {type: 'teacher', offset: 1, number: 500})
+        ipcRenderer.on('responseTeacherGetBulk', (e, args) => {
             this.allTeachers = args.teachers
         })
 
         // =============================================
         // getClasses
         ipcRenderer.send('getBulk', {type: 'classRoom'})
-        ipcRenderer.on('responseClassRoomGetBulk', (e,args) => {
+        ipcRenderer.on('responseClassRoomGetBulk', (e, args) => {
             this.allClassrooms = args.classRooms
         })
     },
+
+    // ==================================================================================
+    // -------------- METHODS
+    // ==================================================================================
     methods: {
+        // ==================================================================================
+        // PROCESSING THE FIELDS
         processTopic() {
             let input = this.topic
             resetError(input)
@@ -157,6 +189,8 @@ module.exports = {
             } else
                 input.success = true
         },
+
+        // TEACHER
         processTeacher() {
             let input = this.teacher
             resetError(input)
@@ -166,13 +200,29 @@ module.exports = {
             } else
                 input.success = true
         },
+
+        // CLASS TYPE
         processClassType() {
             let input = this.classType
             resetError(input)
 
             this.classRoom.active = input.value === 'actual';
+            if (input.value === 'virtual') {
+
+                ipcRenderer.send('getBulk', {type: 'timeSlice'})
+                ipcRenderer.on('responseTimeSliceGetBulk', (e, args) => {
+                    for ([key, value] of Object.entries(this.availableTimeSlices)) {
+                        this.availableTimeSlices[key] = args.timeSlices
+                    }
+                })
+                // Get All Time Slices For All Days
+
+            } // ./if virtual
+
             input.success = true
         },
+
+        // CLASSROOM
         processClassRoom() {
             let input = this.classRoom
             resetError(input)
@@ -182,6 +232,8 @@ module.exports = {
             } else
                 input.success = true
         },
+
+        // TUITION
         processTuition() {
             let input = this.tuition
             resetError(input)
@@ -195,7 +247,7 @@ module.exports = {
             }
         },
 
-        // process timeSlices
+        // TIMESLICES
         processTimeSlices(value) {
             let input = this.timeSlices[value]
             resetError(input)
@@ -205,7 +257,7 @@ module.exports = {
                 input.success = true
         },
 
-
+        // ALL
         processAll() {
             this.valid = true
             this.processTopic()
@@ -218,6 +270,7 @@ module.exports = {
 
             this.processTuition()
 
+            // only process active timeSlices
             for ([key, value] of Object.entries(this.timeSlices)) {
                 if (this.weekdays[key]) {
                     this.processTimeSlices(key)
@@ -226,32 +279,35 @@ module.exports = {
         },
 
         // ==================================================================================
-        // final submit and sending the values
-        // ==================================================================================
+        // FINAL SUBMIT and sending the values
         submit() {
+
+            // processing all of form
+            this.valid = true
             this.processAll()
+
             if (this.valid) {
 
+                // _____________________________________________________
+                // arguments to be send to server
                 let args = {
                     topic: this.topic.value,
                     teacher: this.teacher.value,
                     type: this.classType.value,
                     classRoom: this.classRoom.value,
                     tuition: this.tuition.value,
-                    times: {
-
-                    }
+                    times: {}
                 }
+                // only send timeSlices that are active
                 for ([key, value] of Object.entries(this.weekdays)) {
                     if (value) {
                         args.times[key] = this.timeSlices[key].value
                     }
                 }
 
-                console.log(args)
-
                 ipcRenderer.send('classCreation', args)
 
+                // _____________________________________________________
                 // clearing the fields for another creation
                 // this.topic.value = ''
                 // this.teacher.value = ''
@@ -273,17 +329,47 @@ module.exports = {
                 }
 
             }
-        }
+        }, // ./submit
 
+        convert24To12(time) {
+            let [hour, minute] = time.split(":")
+            hour = parseInt(hour)
+            let suffix = hour >= 12 ? "pm" : "am";
+            hour = (((hour + 11) % 12) + 1)
+            return `${hour}:${minute} ${suffix}`
+        },
+
+        getTimeSliceForDay(day) {
+
+            if (this.classType === 'virtual')
+                return
+
+            let args = {
+                weekday: day,
+                classRoom : this.classRoom.value
+            }
+            ipcRenderer.send('getTimeSlicePerDay', args)
+            ipcRenderer.on('responseGetTimeSlicePerDay', (e, args) => {
+                resetError(this.timeSlices[day])
+                this.availableTimeSlices[day] = args.timeSlices
+                if (!this.availableTimeSlices[day]) {
+                    this.timeSlices[day].err = true
+                    this.timeSlices[day].errMsg = `کلاس انتخاب شده هیچ زمان خالی در روز ${this.persianWeekdays[day]} ندارد`
+                }
+            })
+
+        }
 
     },
 
     // ==================================================================================
-    // Template
+    // ------------- TEMPLATE
     // ==================================================================================
     template: `
       <section class="big-section rounded-tr-none" v-if="addSeen.value">
       <div class="full-edit-box">
+
+        <!-- TOPICS -->
         <div class="flex-1/4">
           <span>
             عنوان
@@ -295,6 +381,7 @@ module.exports = {
           <p class="input-error" v-if="topic.err">{{ topic.errMsg }}</p>
         </div>
 
+        <!-- TEACHERS -->
         <div class="flex-1/4">
           <span>
             استاد
@@ -307,18 +394,20 @@ module.exports = {
           <p class="input-error" v-if="teacher.err">{{ teacher.errMsg }}</p>
         </div>
 
+        <!-- CLASS TYPE -->
         <div class="flex-1/4">
           <span>
             نوع کلاس
           </span>
           <select :class="{fail: classType.err, success: classType.success}" v-model="classType.value"
-                  @change="processClassType">
+                  @change="processClassType" @focusout="processClassType">
             <option value="virtual">مجازی</option>
             <option value="actual">حضوری</option>
           </select>
           <p class="input-error" v-if="classType.err">{{ classType.errMsg }}</p>
         </div>
 
+        <!-- CLASSROOM -->
         <div class="flex-1/4" v-if="classRoom.active">
           <span>
             مکان
@@ -331,7 +420,7 @@ module.exports = {
           <p class="input-error" v-if="classRoom.err">{{ classRoom.errMsg }}</p>
         </div>
 
-
+        <!-- TUITION -->
         <div class="flex-1/4 flex-fullrow">
           <span>
             شهریه (تومان)
@@ -342,21 +431,24 @@ module.exports = {
         </div>
       </div> <!-- ./full-edit-box -->
 
+
       <!-- =======================================================================     -->
-      <!-- SELECTING TIME FOR THE CLASS     -->
-      <!-- =======================================================================     -->
-      <div class="px-4 flex w-full flex-row justify-start items-start flex-wrap" 
+      <!-- SELECTING TIME FOR THE CLASS -->
+      <div class="px-4 flex w-full flex-row justify-start items-start flex-wrap"
            v-if="(this.classRoom.value && this.classRoom.active) || this.classType.value === 'virtual'">
         <p class="text-sm flex-fullrow mb-4 border-b-2 pb-2 border-gray-300">
           زمان های برگذاری
         </p>
 
+
         <div class="flex-fullrow class-time-select">
-          
+
+          <!--          Create Dynamic Weekday And TimeSlice Selectors-->
           <div v-for="(value, name) in weekdays" class="mb-4">
             <div class="mb-2 p-2 bg-gray-200 w-full rounded-lg flex flex-nowrap items-center justify-between">
               <label :for="name" class="flex-1 cursor-pointer">{{ persianWeekdays[name] }} </label>
-              <input :id="name" class="h-6 w-10 cursor-pointer" type="checkbox" value="saturday" v-model="weekdays[name]">
+              <input :id="name" class="h-6 w-10 cursor-pointer" type="checkbox" value="saturday"
+                     v-model="weekdays[name]" @change="getTimeSliceForDay(weekdays[name])">
             </div>
             <div v-if="weekdays[name]">
               <span class="text-sm text-gray-600 mb-2 inline-block">بازه ی زمانی</span>
@@ -365,15 +457,17 @@ module.exports = {
                       v-model="timeSlices[name].value"
                       @change="processTimeSlices(name)">
                 <option value="">انتخاب کنید</option>
-                <option value="10" selected>8:00 am - 9:30 am</option>
+                <option v-for="time in availableTimeSlices[name]" :value="time.id">{{ this.convert24To12(time.startTime) + ' - ' + this.convert24To12(time.finishTime) }}</option>
               </select>
               <p class="input-error" v-if="timeSlices[name].err">{{ timeSlices[name].errMsg }}</p>
             </div>
           </div>
 
 
-        </div>
-      </div>
+        </div> <!-- /class-time-select -->
+      </div> <!-- /wrapper for time select -->
+
+      <!--      =================================================================================== SUBMITTING FORM-->
       <div class="px-4 flex items-end mt-10">
         <button class="btn btn-mid btn-primary ml-8" :class="'bg-'+ userColor.name +'-700'" v-on:click="submit">
           ایجاد کلاس
