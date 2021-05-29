@@ -13,7 +13,8 @@ const {userAuth} = require('./Channel/user/authCh')
 const {logout} = require('./Channel/user/logoutCh')
 const {pageCount} = require('./Channel/pagination/Counter')
 const {getBulk} = require('./Channel/getBulk/getBulk')
-
+const {gatime} = require('./Channel/timeSlice/getFreeTimeCh')
+const {cclss, uclss, dclss, rclss} = require('./Channel/class/classCh')
 
 module.exports = {
     // teacher
@@ -47,6 +48,15 @@ module.exports = {
     rins,
     setins,
 
+    // class
+    cclss,
+    uclss,
+    dclss,
+    rclss,
+
+    // 
+    gatime,
+    
     getBulk,
     searchEvent,
     // user
