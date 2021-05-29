@@ -1,393 +1,390 @@
-const {ipcRenderer} = require('electron')
-const Vue = require('vue')
+const { ipcRenderer } = require("electron");
+const Vue = require("vue");
 const {
-    resetError,
-    isEmpty,
-    exact,
-    smallerThan,
-    biggerThan,
-    isNumber,
-    isLetter,
-    longerThan,
-    shorterThan
-} = require('./../../utils/validation')
+  resetError,
+  isEmpty,
+  exact,
+  smallerThan,
+  biggerThan,
+  isNumber,
+  isLetter,
+  longerThan,
+  shorterThan,
+} = require("./../../utils/validation");
 
 module.exports = {
-    data() {
-        return {
-            changed: false,
-            valid: false,
-            fullname: {
-                err: false,
-                value: '',
-                errMsg: '',
-                success: false,
-            },
-            username: {
-                err: false,
-                value: '',
-                errMsg: '',
-                success: false,
-            },
-            userType: {
-                err: false,
-                value: 'staff',
-                errMsg: '',
-                success: false
-            },
-            progress: {
-                seen: false,
-                width: 'w-1/4',
-                text: '',
-            },
-            password: {
-                value: ''
-            },
-            passwordRepeat: {
-                value: '',
-                err: false
-            },
-            passwordRepeatErr: {
-                seen: false,
-                text: ''
-            },
-            phone: {
-                err: false,
-                value: '',
-                errMsg: '',
-                success: false,
-            },
-            birthDate: {
-                year: {
-                    err: false,
-                    value: '',
-                    success: false,
-                    errMsg: ''
-                },
-                day: {
-                    err: false,
-                    value: '',
-                    errMsg: '',
-                    success: false
-                },
-                month: {
-                    err: false,
-                    value: '',
-                    errMsg: '',
-                    success: false
-                },
-            },
-        }
+  data() {
+    return {
+      changed: false,
+      valid: false,
+      fullname: {
+        err: false,
+        value: "",
+        errMsg: "",
+        success: false,
+      },
+      username: {
+        err: false,
+        value: "",
+        errMsg: "",
+        success: false,
+      },
+      userType: {
+        err: false,
+        value: "staff",
+        errMsg: "",
+        success: false,
+      },
+      progress: {
+        seen: false,
+        width: "w-1/4",
+        text: "",
+      },
+      password: {
+        value: "",
+      },
+      passwordRepeat: {
+        value: "",
+        err: false,
+      },
+      passwordRepeatErr: {
+        seen: false,
+        text: "",
+      },
+      phone: {
+        err: false,
+        value: "",
+        errMsg: "",
+        success: false,
+      },
+      birthDate: {
+        year: {
+          err: false,
+          value: "",
+          success: false,
+          errMsg: "",
+        },
+        day: {
+          err: false,
+          value: "",
+          errMsg: "",
+          success: false,
+        },
+        month: {
+          err: false,
+          value: "",
+          errMsg: "",
+          success: false,
+        },
+      },
+    };
+  },
+  // created() {
+  //     ipcRenderer.send('getUserInfo', {userName: this.loggedInUser.value})
+  //
+  //     ipcRenderer.on('responseGetUserInfo', (e, args) => {
+  //         console.log(args)
+  //         this.username.value = args.userName
+  //         this.fullname.value = args.fullName
+  //
+  //         if (args.phone) {
+  //             this.phone = args.phone
+  //         }
+  //
+  //         // handling the date
+  //         if (args.birthDate) {
+  //             let date = args.birthDate.split('/')
+  //             this.birthDate.year.value = date[0]
+  //             this.birthDate.month.value = date[1]
+  //             this.birthDate.day.value = date[2]
+  //         }
+  //
+  //     })
+  // },
+  // inject: ['loggedInUser', 'loggedInID'],
+  emit: ["cancel-add-user", "refresh"],
+  components: {},
+  methods: {
+    // ==========================================================
+    // process fullname
+
+    processFullname() {
+      let input = this.fullname;
+      resetError(input);
+
+      if (isEmpty(input)) {
+        this.valid = false;
+      } else if (isLetter(input)) {
+        this.valid = false;
+      } else if (longerThan(input, 3)) {
+        this.valid = false;
+      } else if (shorterThan(input, 50)) {
+        this.valid = false;
+      } else {
+        input.success = true;
+        this.changed = true;
+      }
     },
-    // created() {
-    //     ipcRenderer.send('getUserInfo', {userName: this.loggedInUser.value})
-    //
-    //     ipcRenderer.on('responseGetUserInfo', (e, args) => {
-    //         console.log(args)
-    //         this.username.value = args.userName
-    //         this.fullname.value = args.fullName
-    //
-    //         if (args.phone) {
-    //             this.phone = args.phone
-    //         }
-    //
-    //         // handling the date
-    //         if (args.birthDate) {
-    //             let date = args.birthDate.split('/')
-    //             this.birthDate.year.value = date[0]
-    //             this.birthDate.month.value = date[1]
-    //             this.birthDate.day.value = date[2]
-    //         }
-    //
-    //     })
-    // },
-    // inject: ['loggedInUser', 'loggedInID'],
-    emit: ['cancel-add-user', 'refresh'],
-    components: {},
-    methods: {
 
-        // ==========================================================
-        // process fullname
+    // ==========================================================
+    // process username for valid characters
 
-        processFullname() {
-            let input = this.fullname
-            resetError(input)
+    processUsername() {
+      let regex = new RegExp("^[A-Za-z0-9_-]*$");
+      let input = this.username;
+      resetError(input);
 
-            if (isEmpty(input)) {
-                this.valid = false
-            } else if (isLetter(input)) {
-                this.valid = false
-            } else if (longerThan(input, 3)) {
-                this.valid = false
-            } else if (shorterThan(input, 50)) {
-                this.valid = false
-            } else {
-                input.success = true
-                this.changed = true
-            }
-        },
+      if (!regex.test(this.username.value)) {
+        this.username.err = true;
+        this.username.errMsg = "کاراکتر غیر مجاز";
+        this.valid = false;
+      } else if (isEmpty(input)) {
+        this.valid = false;
+      } else {
+        // resetting the styles to no error
+        this.username.err = false;
+        this.username.success = true;
+        this.changed = true;
+      }
+    }, // process username
 
-        // ==========================================================
-        // process username for valid characters
+    // ==========================================================
+    // process birth date
 
-        processUsername() {
-            let regex = new RegExp('^[A-Za-z0-9_-]*$')
-            let input = this.username
-            resetError(input)
+    processBirthDay() {
+      let input = this.birthDate.day;
+      resetError(input);
 
-            if (!regex.test(this.username.value)) {
-                this.username.err = true
-                this.username.errMsg = "کاراکتر غیر مجاز"
-                this.valid = false
-            } else if (isEmpty(input)) {
-                this.valid = false
-            } else {
-                // resetting the styles to no error
-                this.username.err = false
-                this.username.success = true
-                this.changed = true
-            }
-        }, // process username
-
-        // ==========================================================
-        // process birth date
-
-        processBirthDay() {
-            let input = this.birthDate.day
-            resetError(input)
-
-            if (isEmpty(input)) {
-                this.valid = false
-            } else if (smallerThan(input, 1)) {
-                this.valid = false
-            } else if (biggerThan(input, 31)) {
-                this.valid = false
-            } else {
-                input.success = true
-                this.changed = true
-            }
-        },
-
-        processBirthMonth() {
-            let input = this.birthDate.month
-            resetError(input)
-
-            if (isEmpty(input)) {
-                this.valid = false
-            } else if (smallerThan(input, 1)) {
-                this.valid = false
-            } else if (biggerThan(input, 12)) {
-                this.valid = false
-            } else {
-                input.success = true
-                this.changed = true
-            }
-        },
-
-        processBirthYear() {
-            let input = this.birthDate.year
-            resetError(input)
-
-            if (isEmpty(input)) {
-                this.valid = false
-            } else if (smallerThan(input, 1300)) {
-                this.valid = false
-            } else if (biggerThan(input, 1450)) {
-                this.valid = false
-            } else {
-                input.success = true
-                this.changed = true
-            }
-        },
-
-        // ==========================================================
-        // process phone number
-
-        processPhone() {
-            let input = this.phone
-            resetError(input)
-
-            if (isEmpty(input)) {
-                this.valid = false
-            } else if (isNumber(input)) {
-                this.valid = false
-            } else if (exact(input, 11)) {
-                this.valid = false
-            } else
-                input.success = true
-            this.changed = true
-        },
-
-
-        // ==================================================================================
-        // process the password strength and updating the strength process bar
-
-        processPassword() {
-            // if(this.password.value === "")
-            // {
-            //     this.progress.seen = false
-            //     return
-            // }
-            this.changed = false
-            // counts the strength of password from 1 to 4
-            let strengthPoints = 1
-            let input = this.password
-
-            // if password length is more than 8
-            if (this.password.value.length >= 8) {
-                strengthPoints = 2
-                let smallLetters = new RegExp('[a-z]')
-                let capitalLetters = new RegExp('[A-Z]')
-                let numbers = new RegExp('[0-9]')
-                let symbols = new RegExp('[-!@#$%^&*()_+|~=`{}\\[\\]:";\'<>?,.\\/]')
-
-                if (capitalLetters.test(this.password.value) || symbols.test(this.password.value)) {
-                    strengthPoints++
-                }
-
-                if (numbers.test(this.password.value) && smallLetters.test(this.password.value)) {
-                    strengthPoints++
-                }
-            }
-
-            this.progress.seen = true
-            switch (strengthPoints) {
-                case 1:
-                    // these are tailwind css classes for different widths
-                    this.progress.width = 'w-1/4'
-                    this.progress.text = 'غیرقابل قبول'
-                    this.valid = false
-                    break
-                case 2:
-                    this.progress.width = 'w-1/2'
-                    this.progress.text = 'قابل قبول اما ضعیف'
-                    this.changed = true
-                    break
-                case 3:
-                    this.progress.width = 'w-3/4'
-                    this.progress.text = 'امن'
-                    this.changed = true
-                    break
-                case 4:
-                    this.progress.width = 'w-full'
-                    this.progress.text = 'بسیار امن'
-                    this.changed = true
-            }
-        }, // process password
-
-
-        // ==================================================================================
-        // check if the password and passwordRepeat are equal
-
-        processPassRep() {
-            if (this.password.value !== this.passwordRepeat.value) {
-                this.passwordRepeat.err = true
-                this.passwordRepeatErr.seen = true
-                this.valid = false
-                this.passwordRepeatErr.text = 'رمز عبور و تکرار آن یکسان نیستند'
-            } else {
-                this.passwordRepeat.err = false
-                this.passwordRepeatErr.seen = false
-            }
-        }, // /processPassRep
-
-        updateUserInfo() {
-
-            this.valid = true
-            this.processFullname()
-            this.processUsername()
-            this.processPhone()
-            this.processBirthDay()
-            this.processBirthMonth()
-            this.processBirthYear()
-
-            if (this.birthDate.day.value || this.birthDate.month.value || this.birthDate.year.value) {
-                if (!this.birthDate.day.value) {
-                    this.birthDate.day.err = true
-                    this.birthDate.day.errMsg = "نباید خالی باشد"
-                    this.valid = false
-                }
-                if (!this.birthDate.month.value) {
-                    this.birthDate.month.err = true
-                    this.birthDate.month.errMsg = "نباید خالی باشد"
-                    this.valid = false
-                }
-                if (!this.birthDate.year.value) {
-                    this.birthDate.year.err = true
-                    this.birthDate.year.errMsg = "نباید خالی باشد"
-                    this.valid = false
-                }
-            }
-
-            this.processPassword()
-            this.processPassRep()
-
-            if (this.password.value === '') {
-                this.passwordRepeatErr.seen = true
-                this.passwordRepeatErr.text = "رمز عبور نمی تواند خالی باشد"
-                this.valid = false
-            } else if (this.password.value.length < 8) {
-                this.valid = false
-                this.passwordRepeatErr.seen = true
-                this.passwordRepeatErr.text = "رمز عبور نباید کمتر از 8 کاراکتر باشد"
-            }
-
-
-            // ==================================================================================
-            // if there is no error send request
-
-            if (this.valid) {
-                let bday
-                if (this.birthDate.day.value && this.birthDate.month.value && this.birthDate.year.value) {
-                    bday = `${this.birthDate.year.value}/${this.birthDate.month.value}/${this.birthDate.day.value}`
-                } else {
-                    bday = ''
-                }
-
-                let args = {
-                    fullName: this.fullname.value,
-                    userName: this.username.value,
-                    password: this.password.value,
-                    userType: this.userType.value,
-                    birthDate: bday,
-                    phoneNumber: this.phone.value,
-                }
-                ipcRenderer.send('userCreation', args)
-
-                ipcRenderer.on('responseUserCreation', (e, args) => {
-                    if (args) {
-                        this.fullname.value = ''
-                        this.fullname.success = false
-                        this.username.value = ''
-                        this.username.success = false
-                        this.password.value = ''
-                        this.progress.seen = false
-                        this.passwordRepeat.value = ''
-                        this.userType.value = 'staff'
-                        this.userType.success = false
-
-                        this.birthDate.day.value = ''
-                        this.birthDate.day.success = false
-
-                        this.birthDate.month.value = ''
-                        this.birthDate.month.success = false
-
-                        this.birthDate.year.value = ''
-                        this.birthDate.year.success = false
-
-                        this.phone.value = ''
-                        this.phone.success = false
-
-
-                        this.$emit('refresh')
-                    }
-
-                })
-            }
-        }
+      if (smallerThan(input, 1)) {
+        this.valid = false;
+      } else if (biggerThan(input, 31)) {
+        this.valid = false;
+      } else {
+        input.success = true;
+        this.changed = true;
+      }
     },
-    template:
-        `
+
+    processBirthMonth() {
+      let input = this.birthDate.month;
+      resetError(input);
+
+      if (smallerThan(input, 1)) {
+        this.valid = false;
+      } else if (biggerThan(input, 12)) {
+        this.valid = false;
+      } else {
+        input.success = true;
+        this.changed = true;
+      }
+    },
+
+    processBirthYear() {
+      let input = this.birthDate.year;
+      resetError(input);
+
+      if (smallerThan(input, 1300)) {
+        this.valid = false;
+      } else if (biggerThan(input, 1450)) {
+        this.valid = false;
+      } else {
+        input.success = true;
+        this.changed = true;
+      }
+    },
+
+    // ==========================================================
+    // process phone number
+
+    processPhone() {
+      let input = this.phone;
+      resetError(input);
+
+      if (isNumber(input)) {
+        this.valid = false;
+      } else if (exact(input, 11)) {
+        this.valid = false;
+      } else input.success = true;
+      this.changed = true;
+    },
+
+    // ==================================================================================
+    // process the password strength and updating the strength process bar
+
+    processPassword() {
+      // if(this.password.value === "")
+      // {
+      //     this.progress.seen = false
+      //     return
+      // }
+      this.changed = false;
+      // counts the strength of password from 1 to 4
+      let strengthPoints = 1;
+      let input = this.password;
+
+      // if password length is more than 8
+      if (this.password.value.length >= 8) {
+        strengthPoints = 2;
+        let smallLetters = new RegExp("[a-z]");
+        let capitalLetters = new RegExp("[A-Z]");
+        let numbers = new RegExp("[0-9]");
+        let symbols = new RegExp("[-!@#$%^&*()_+|~=`{}\\[\\]:\";'<>?,.\\/]");
+
+        if (
+          capitalLetters.test(this.password.value) ||
+          symbols.test(this.password.value)
+        ) {
+          strengthPoints++;
+        }
+
+        if (
+          numbers.test(this.password.value) &&
+          smallLetters.test(this.password.value)
+        ) {
+          strengthPoints++;
+        }
+      }
+
+      this.progress.seen = true;
+      switch (strengthPoints) {
+        case 1:
+          // these are tailwind css classes for different widths
+          this.progress.width = "w-1/4";
+          this.progress.text = "غیرقابل قبول";
+          this.valid = false;
+          break;
+        case 2:
+          this.progress.width = "w-1/2";
+          this.progress.text = "قابل قبول اما ضعیف";
+          this.changed = true;
+          break;
+        case 3:
+          this.progress.width = "w-3/4";
+          this.progress.text = "امن";
+          this.changed = true;
+          break;
+        case 4:
+          this.progress.width = "w-full";
+          this.progress.text = "بسیار امن";
+          this.changed = true;
+      }
+    }, // process password
+
+    // ==================================================================================
+    // check if the password and passwordRepeat are equal
+
+    processPassRep() {
+      if (this.password.value !== this.passwordRepeat.value) {
+        this.passwordRepeat.err = true;
+        this.passwordRepeatErr.seen = true;
+        this.valid = false;
+        this.passwordRepeatErr.text = "رمز عبور و تکرار آن یکسان نیستند";
+      } else {
+        this.passwordRepeat.err = false;
+        this.passwordRepeatErr.seen = false;
+      }
+    }, // /processPassRep
+
+    updateUserInfo() {
+      this.valid = true;
+      this.processFullname();
+      this.processUsername();
+      this.processPhone();
+      this.processBirthDay();
+      this.processBirthMonth();
+      this.processBirthYear();
+
+      if (
+        this.birthDate.day.value ||
+        this.birthDate.month.value ||
+        this.birthDate.year.value
+      ) {
+        if (!this.birthDate.day.value) {
+          this.birthDate.day.err = true;
+          this.birthDate.day.errMsg = "نمیتواند خالی باشد";
+          this.valid = false;
+        }
+        if (!this.birthDate.month.value) {
+          this.birthDate.month.err = true;
+          this.birthDate.month.errMsg = "نمیتواند خالی باشد";
+          this.valid = false;
+        }
+        if (!this.birthDate.year.value) {
+          this.birthDate.year.err = true;
+          this.birthDate.year.errMsg = "نمیتواند خالی باشد";
+          this.valid = false;
+        }
+      }
+
+      this.processPassword();
+      this.processPassRep();
+
+      if (this.password.value === "") {
+        this.passwordRepeatErr.seen = true;
+        this.passwordRepeatErr.text = "رمز عبور نمی تواند خالی باشد";
+        this.valid = false;
+      } else if (this.password.value.length < 8) {
+        this.valid = false;
+        this.passwordRepeatErr.seen = true;
+        this.passwordRepeatErr.text = "رمز عبور کمتر از 8 کاراکتر مجاز نیست";
+      }
+
+      // ==================================================================================
+      // if there is no error send request
+
+      if (this.valid) {
+        let bday;
+        if (
+          this.birthDate.day.value &&
+          this.birthDate.month.value &&
+          this.birthDate.year.value
+        ) {
+          bday = `${this.birthDate.year.value}/${this.birthDate.month.value}/${this.birthDate.day.value}`;
+        } else {
+          bday = "";
+        }
+
+        let args = {
+          fullName: this.fullname.value,
+          userName: this.username.value,
+          password: this.password.value,
+          userType: this.userType.value,
+          birthDate: bday,
+          phoneNumber: this.phone.value,
+        };
+        ipcRenderer.send("userCreation", args);
+
+        ipcRenderer.on("responseUserCreation", (e, args) => {
+          if (args) {
+            this.fullname.value = "";
+            this.fullname.success = false;
+            this.username.value = "";
+            this.username.success = false;
+            this.password.value = "";
+            this.progress.seen = false;
+            this.passwordRepeat.value = "";
+            this.userType.value = "staff";
+            this.userType.success = false;
+
+            this.birthDate.day.value = "";
+            this.birthDate.day.success = false;
+
+            this.birthDate.month.value = "";
+            this.birthDate.month.success = false;
+
+            this.birthDate.year.value = "";
+            this.birthDate.year.success = false;
+
+            this.phone.value = "";
+            this.phone.success = false;
+
+            this.$emit("refresh");
+          }
+        });
+      }
+    },
+  },
+  template: `
           <section class="w-40p">
           <div class="main-section">
             <div class="section-title-2">
@@ -507,5 +504,5 @@ module.exports = {
           </div>
           </section>
           <section class="w-10p"></section>
-        `
-}
+        `,
+};

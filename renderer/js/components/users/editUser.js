@@ -165,9 +165,7 @@ module.exports = {
             let input = this.birthDate.day
             resetError(input)
 
-            if (isEmpty(input)) {
-                this.valid = false
-            } else if (smallerThan(input, 1)) {
+            if (smallerThan(input, 1)) {
                 this.valid = false
             } else if (biggerThan(input, 31)) {
                 this.valid = false
@@ -181,9 +179,7 @@ module.exports = {
             let input = this.birthDate.month
             resetError(input)
 
-            if (isEmpty(input)) {
-                this.valid = false
-            } else if (smallerThan(input, 1)) {
+            if (smallerThan(input, 1)) {
                 this.valid = false
             } else if (biggerThan(input, 12)) {
                 this.valid = false
@@ -197,9 +193,7 @@ module.exports = {
             let input = this.birthDate.year
             resetError(input)
 
-            if (isEmpty(input)) {
-                this.valid = false
-            } else if (smallerThan(input, 1300)) {
+            if (smallerThan(input, 1300)) {
                 this.valid = false
             } else if (biggerThan(input, 1450)) {
                 this.valid = false
@@ -216,9 +210,7 @@ module.exports = {
             let input = this.phone
             resetError(input)
 
-            if (isEmpty(input)) {
-                this.valid = false
-            } else if (isNumber(input)) {
+            if (isNumber(input)) {
                 this.valid = false
             } else if (exact(input, 11)) {
                 this.valid = false
@@ -311,17 +303,17 @@ module.exports = {
             if (this.birthDate.day.value || this.birthDate.month.value || this.birthDate.year.value) {
                 if (!this.birthDate.day.value) {
                     this.birthDate.day.err = true
-                    this.birthDate.day.errMsg = "نباید خالی باشد"
+                    this.birthDate.day.errMsg = "نمیتواند خالی باشد"
                     this.valid = false
                 }
                 if (!this.birthDate.month.value) {
                     this.birthDate.month.err = true
-                    this.birthDate.month.errMsg = "نباید خالی باشد"
+                    this.birthDate.month.errMsg = "نمیتواند خالی باشد"
                     this.valid = false
                 }
                 if (!this.birthDate.year.value) {
                     this.birthDate.year.err = true
-                    this.birthDate.year.errMsg = "نباید خالی باشد"
+                    this.birthDate.year.errMsg = "نمیتواند خالی باشد"
                     this.valid = false
                 }
             }
