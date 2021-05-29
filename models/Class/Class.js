@@ -1,18 +1,19 @@
 const {DataTypes, Model} = require('sequelize')
 
 // ==================================================================================
-// SEMESTER CLASS WITH METHODS
+// Class Course WITH METHODS
 // ==================================================================================
-exports.Semester = class Semester extends Model {
+exports.Class = class Class extends Model {
 
     /**
-     * add to DB
+     * add object to DB
      * @param args (attributes)
      * @returns {Promise<*>}
      */
     static async add(args) {
         const adds = require('./add')
-        return await adds(args.year, args.startDate, args.finishDate)
+        return await adds(args.topicId, args.timeId, args.teacherId, args.classRoomId,
+                            args.tuition, args.weekday, args.type)
     }
 
     /**
@@ -22,11 +23,12 @@ exports.Semester = class Semester extends Model {
      */
     static async update(args) {
         const updates = require('./update')
-        return await updates(args.id, args.year, args.startDate, args.finishDate)
+        return await updates(args.id, args.topicId, args.timeId, args.teacherId, args.classRoomId,
+                                args.tuition, args.weekday, args.type)
     }
     
     /**
-     * delete from DB 
+     * delete object from DB 
      * @param args (attributes)
      * @returns {Promise<*>}
      */
@@ -36,7 +38,7 @@ exports.Semester = class Semester extends Model {
     }
 
     /**
-     * show detail's 
+     * show detail 
      * @param {id} args 
      * @returns {promoise<object>} 
      */
@@ -45,47 +47,65 @@ exports.Semester = class Semester extends Model {
         return await reads(args.id)
     }
 
-    // get data
+    // get all element
     static async get() {
         const gets = require('./get')
         return await gets()
     }
 
-    static async current() {
-        const curt = require('./current')
-        return await curt()
-    }
-
+    
 }
 
 // ==================================================================================
-//  SEMESTER DATA TO INITIALIZE THE CLASS IN DB
+// Class DATA TO INITIALIZE THE CLASS IN DB
 // ==================================================================================
 /**
- * define Semster's attributes
+ * define Class's attributes
  * @type
  */
-exports.SemesterData = {
+exports.classData = {
     attributes: {
         flag: {
-           type: DataTypes.BOOLEAN,
-           allowNull: false,
-           defaultValue: true
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: true
         },
-        year: {
+        semesterId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            //defaultValue: // last id of semester 
+        },
+        teacherId: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
+        timeId: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
+        classRoomId: {
+            type: DataTypes.INTEGER,
+
+        },
+        topicId: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
+        weekday: {
             type: DataTypes.STRING,
             allowNull: false
         },
-        startDate: {
-            type: DataTypes.DATEONLY,
-            allowNull: false
+        tuition: {
+            type: DataTypes.STRING
+            // allowNull
         },
-        finishDate: {
-            type: DataTypes.DATEONLY,
-            allowNull: false
-        }
+        type: {
+            type: DataTypes.STRING,
+            allowNull: false    
+        },
+
     },
     options: {
-        "modelName": 'Semester'
+        "modelName": 'Class'
     }
 }

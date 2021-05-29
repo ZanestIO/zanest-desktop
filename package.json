@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
+    "jalali-moment": "^3.3.10",
     "sequelize": "^6.5.0",
     "sqlite3": "^5.0.2",
     "vue": "^3.0.7",
