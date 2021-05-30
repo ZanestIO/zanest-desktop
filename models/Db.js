@@ -96,11 +96,17 @@ class Db {
             // ====================================================
             //  many to many relationship
             TimeSlice.belongsToMany(Class, {
-                through: 'TimeClass',
-                onDelete: 'RESTRICT'
+                through: {
+                    model: 'TimeClass',
+                    unique: false
+                },
+                onDelete: 'RESTRICT',
             })
             Class.belongsToMany(TimeSlice, {
-                through: 'TimeClass',
+                through: {
+                    model: 'TimeClass',
+                    unique: false
+                },
                 onDelete: 'RESTRICT', // what happens when you delete time slice
             })
             // ====================================================
@@ -138,45 +144,45 @@ class Db {
             await this.sequelize.sync()
 
             // creating default admin if not exists
-            //let person = await this.sequelize.models.Person.create({fullName: 'صهیب کهنه پوشی', socialID: '3810443355', address: 'مریوان',
-            //    sex: 'male', birthDate: '1377/7/1', phoneNumber: '3810443355', personType: "std" })
-            //await this.sequelize.models.Student.create({socialID: '3810443355', parentName: 'عابد', parentNumber: '09184545461', PersonId: person.id})
-//
-            //let person1 = await this.sequelize.models.Person.create({fullName: 'ندا نادری', socialID: '3405891212', address: 'مریوان',
-            //    sex: 'female', birthDate: '1377/7/1', phoneNumber: '09184578965', personType: "std" })
-            //await this.sequelize.models.Student.create({socialID: '3405891212', parentName: 'عابد', parentNumber: '09184545461', PersonId: person1.id})
-//
-            //let person2 = await this.sequelize.models.Person.create({fullName: 'مهسا کلوچه', socialID: '4875982413', address: 'مریوان',
-            //    sex: 'female', birthDate: '1377/7/1', phoneNumber: '09187578541', personType: "std" })
-            //await this.sequelize.models.Student.create({socialID: '4875982413', parentName: 'عابد', parentNumber: '09184545461', PersonId: person2.id})
-//
-            //person = await this.sequelize.models.Person.create({fullName: 'روژین', socialID: '5465468794', address: 'مریوان',
-            //    sex: 'female', birthDate: '1377/10/9', phoneNumber: '09188758796', personType: "tch" })
-            //await this.sequelize.models.Teacher.create({socialID: '5465468794',
-            //    degree: 'karshenasi', PersonId: person.id })
-//
-            //person2 = await this.sequelize.models.Person.create({fullName: 'صادق', socialID: '3801213141', address: 'مریوان',
-            //    sex: 'male', birthDate: '1377/1/2', phoneNumber: '09188758796', personType: "tch" })
-            //await this.sequelize.models.Teacher.create({socialID: '3801213141',
-            //    degree: 'karshenasi', PersonId: person2.id })
-//
-            //let person3 = await this.sequelize.models.Person.create({fullName: 'اقبال', socialID: '2124578981', address: 'مریوان',
-            //    sex: 'male', birthDate: '1377/10/9', phoneNumber: '09188758796', personType: "tch" })
-            //await this.sequelize.models.Teacher.create({socialID: '2124578981',
-            //    degree: 'kardani', PersonId: person3.id })
-
-            await this.sequelize.models.Topic.create({name: 'Four Corners', level: 'elementary', length: '3', description: ''})
-            await this.sequelize.models.Topic.create({name: 'Top Notch', level: 'elementary', length: '3', description: ''})
-            await this.sequelize.models.Topic.create({name: 'Family And Friends', level: 'elementary', length: '3', description: ''})
-            await this.sequelize.models.Semester.create({year: '1400', startDate: '1400-01-01', finishDate: '1400-10-01'})
-            await this.sequelize.models.ClassRoom.create({name: 'A', capacity: '30'})
-            await this.sequelize.models.ClassRoom.create({name: 'B', capacity: '40'})
-            await this.sequelize.models.ClassRoom.create({name: 'C', capacity: '50'})
-            await this.sequelize.models.TimeSlice.create({startTime: '8:00', finishTime: '9:30'})
-            await this.sequelize.models.TimeSlice.create({startTime: '9:30', finishTime: '11:00'})
-            await this.sequelize.models.TimeSlice.create({startTime: '11:00', finishTime: '12:30'})
-            await this.sequelize.models.TimeSlice.create({startTime: '14:00', finishTime: '15:30'})
-            await this.sequelize.models.TimeSlice.create({startTime: '15:30', finishTime: '17:00'})
+            // let person = await this.sequelize.models.Person.create({fullName: 'صهیب کهنه پوشی', socialID: '3810443355', address: 'مریوان',
+            //     sex: 'male', birthDate: '1377/7/1', phoneNumber: '3810443355', personType: "std" })
+            // await this.sequelize.models.Student.create({socialID: '3810443355', parentName: 'عابد', parentNumber: '09184545461', PersonId: person.id})
+            //
+            // let person1 = await this.sequelize.models.Person.create({fullName: 'ندا نادری', socialID: '3405891212', address: 'مریوان',
+            //     sex: 'female', birthDate: '1377/7/1', phoneNumber: '09184578965', personType: "std" })
+            // await this.sequelize.models.Student.create({socialID: '3405891212', parentName: 'عابد', parentNumber: '09184545461', PersonId: person1.id})
+            //
+            // let person2 = await this.sequelize.models.Person.create({fullName: 'مهسا کلوچه', socialID: '4875982413', address: 'مریوان',
+            //     sex: 'female', birthDate: '1377/7/1', phoneNumber: '09187578541', personType: "std" })
+            // await this.sequelize.models.Student.create({socialID: '4875982413', parentName: 'عابد', parentNumber: '09184545461', PersonId: person2.id})
+            //
+            // person = await this.sequelize.models.Person.create({fullName: 'روژین', socialID: '5465468794', address: 'مریوان',
+            //     sex: 'female', birthDate: '1377/10/9', phoneNumber: '09188758796', personType: "tch" })
+            // await this.sequelize.models.Teacher.create({socialID: '5465468794',
+            //     degree: 'karshenasi', PersonId: person.id })
+            //
+            // person2 = await this.sequelize.models.Person.create({fullName: 'صادق', socialID: '3801213141', address: 'مریوان',
+            //     sex: 'male', birthDate: '1377/1/2', phoneNumber: '09188758796', personType: "tch" })
+            // await this.sequelize.models.Teacher.create({socialID: '3801213141',
+            //     degree: 'karshenasi', PersonId: person2.id })
+            //
+            // let person3 = await this.sequelize.models.Person.create({fullName: 'اقبال', socialID: '2124578981', address: 'مریوان',
+            //     sex: 'male', birthDate: '1377/10/9', phoneNumber: '09188758796', personType: "tch" })
+            // await this.sequelize.models.Teacher.create({socialID: '2124578981',
+            //     degree: 'kardani', PersonId: person3.id })
+            //
+            // await this.sequelize.models.Topic.create({name: 'Four Corners', level: 'elementary', length: '3', description: ''})
+            // await this.sequelize.models.Topic.create({name: 'Top Notch', level: 'elementary', length: '3', description: ''})
+            // await this.sequelize.models.Topic.create({name: 'Family And Friends', level: 'elementary', length: '3', description: ''})
+            // await this.sequelize.models.Semester.create({year: '1400', startDate: '1400-01-01', finishDate: '1400-10-01'})
+            // await this.sequelize.models.ClassRoom.create({name: 'A', capacity: '30'})
+            // await this.sequelize.models.ClassRoom.create({name: 'B', capacity: '40'})
+            // await this.sequelize.models.ClassRoom.create({name: 'C', capacity: '50'})
+            // await this.sequelize.models.TimeSlice.create({startTime: '8:00', finishTime: '9:30'})
+            // await this.sequelize.models.TimeSlice.create({startTime: '9:30', finishTime: '11:00'})
+            // await this.sequelize.models.TimeSlice.create({startTime: '11:00', finishTime: '12:30'})
+            // await this.sequelize.models.TimeSlice.create({startTime: '14:00', finishTime: '15:30'})
+            // await this.sequelize.models.TimeSlice.create({startTime: '15:30', finishTime: '17:00'})
             await User.createDefaultAdmin()
             await Institution.createDefault()
             

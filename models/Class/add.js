@@ -22,9 +22,9 @@ module.exports = async (topicId, teacherId, classRoomId, tuition, type, timeSlic
     try {
         // ==================================================================================
         // FIND CURRENT SEMESTER
-        let currentSemester = await Semester.current()
-        if(currentSemester.id === 0) {
-                    const msg = message.request('create', true, currentSemester.id, 'class')
+        let currentSemesterId = await Semester.current()
+        if(currentSemesterId === 0) {
+                    const msg = message.request('create', true, currentSemesterId, 'class')
                     log.record('info', msg)
                     return [false, message.currentSemesterError]
         }
@@ -73,10 +73,12 @@ module.exports = async (topicId, teacherId, classRoomId, tuition, type, timeSlic
                 semesterId: currentSemesterId, type: type, tuition: tuition
             });
         }
-
+        console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
+        console.log(timeSlices)
         // ==================================================================================
         // saving times and weekdays in db
         for ([key, value] of Object.entries(timeSlices)) {
+            console.log(key, value)
             await db().sequelize.models.TimeClass.create({TimeSlouseId: value, weekday: key, ClassId: holder.id})
         }
 

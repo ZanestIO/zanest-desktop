@@ -18,6 +18,11 @@ exports.TimeClass = class TimeClass extends Model {
  */
 exports.TimeClassData = {
     attributes: {
+        timeClassId: {
+            autoIncrement: true,
+            primaryKey: true,
+            type: DataTypes.INTEGER(11)
+        },
         weekday: {
             type: DataTypes.STRING,
         },
