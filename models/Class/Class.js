@@ -70,19 +70,6 @@ exports.classData = {
             allowNull: false,
             defaultValue: true
         },
-        semesterId: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            //defaultValue: // last id of semester 
-        },
-        teacherId: {
-            type: DataTypes.INTEGER,
-            allowNull: false
-        },
-        topicId: {
-            type: DataTypes.INTEGER,
-            allowNull: false
-        },
         tuition: {
             type: DataTypes.STRING
             // allowNull
