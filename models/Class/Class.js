@@ -47,6 +47,12 @@ exports.Class = class Class extends Model {
         return await reads(args.id)
     }
 
+    // search student info
+    static async search(searchBy, value) {
+        const searchStudent = require('./search')
+        return await searchStudent(searchBy, value)
+    }
+
     // get all element
     static async get() {
         const gets = require('./get')

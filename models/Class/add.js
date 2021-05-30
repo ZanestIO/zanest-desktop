@@ -23,10 +23,11 @@ module.exports = async (topicId, teacherId, classRoomId, tuition, type, timeSlic
         // ==================================================================================
         // FIND CURRENT SEMESTER
         let currentSemester = await Semester.current()
-        if(currentSemester.id === 0) {
-                    const msg = message.request('create', true, currentSemester.id, 'class')
-                    log.record('info', msg)
-                    return [false, message.currentSemesterError]
+
+        if(currentSemester == 0) {
+            const msg = message.request('create', true, currentSemester.id, 'class')
+            log.record('info', msg)
+            return [false, message.currentSemesterError]
         }
 
         // ==================================================================================
@@ -65,12 +66,12 @@ module.exports = async (topicId, teacherId, classRoomId, tuition, type, timeSlic
         if (classRoomId) {
             holder = await db().sequelize.models.Class.create({
                 topicId: topicId, teacherId: teacherId, classRoomId: classRoomId,
-                semesterId: currentSemesterId, type: type, tuition: tuition
+                semesterId: currentSemester, type: type, tuition: tuition
             });
         } else {
             holder = await db().sequelize.models.Class.create({
                 topicId: topicId, teacherId: teacherId,
-                semesterId: currentSemesterId, type: type, tuition: tuition
+                semesterId: currentSemester, type: type, tuition: tuition
             });
         }
 

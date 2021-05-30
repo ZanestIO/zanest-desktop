@@ -23,6 +23,12 @@ module.exports = {
             } else if (args.info.name) {
                 result = await db().sequelize.models.Teacher.search('name', args.info.name)
             }
+        } else if (args.type === "class") {
+            if (args.info.topic) {
+                result = await db().sequelize.models.Class.search('topic', args.info.topic)
+            } else if (args.info.teacher) {
+                result = await db().sequelize.models.Class.search('teacher', args.info.teacher)
+            }
         }
 
         webContentsSend('responseSearch',  result)
