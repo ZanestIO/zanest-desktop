@@ -1,7 +1,5 @@
 const db = require('../Db.js');
 const {log} = require('./../../logger')
-const message = require('./../../controler/massege');
-const {Op} = require('sequelize');
 // ================================================================================
 // Current Semester
 /**
@@ -31,9 +29,8 @@ module.exports = async () => {
         return flag
 
 
-
     } catch (err) {
-        log.record('Error', 'Current Semester Not Found:' + err + __filename)
+        log.record('Error', 'Current Semester :' + err +':'+ __filename)
         return 0
     }
 }

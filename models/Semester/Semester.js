@@ -46,9 +46,9 @@ exports.Semester = class Semester extends Model {
     }
 
     // get data
-    static async get() {
+    static async get(id) {
         const gets = require('./get')
-        return await gets()
+        return await gets(id)
     }
 
     static async current() {

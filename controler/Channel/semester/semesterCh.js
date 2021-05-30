@@ -133,3 +133,22 @@ module.rsem = {
         }
     })
 }
+
+// ===================================================================================================
+// READ Semester INFO
+// ===================================================================================================
+module.curtsem = {
+    curtsem: global.share.ipcMain.on('getCurrentSemester', async (e) => {
+        try {
+            const flag = await db().sequelize.models.Semester.current()
+            
+            if ( flag != null ){
+                const currentSem = await db().sequelize.models.Semester.get(flag)
+                webContentsSend('responseCurrentSemester', {currentSem: currentSem})
+            }
+
+        } catch (err) {
+            log.record('error', err +":in:"+ __filename)
+        }
+    })
+}

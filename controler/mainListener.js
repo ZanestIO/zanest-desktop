@@ -1,6 +1,6 @@
 const {ctch, utch, dtch, rtch} = require('./Channel/teacher/teacherCh')
 const {croom, uroom, droom, rroom} = require('./Channel/classRoom/classRoomCh')
-const {csem, usem, dsem, rsem} = require('./Channel/semester/semesterCh')
+const {csem, usem, dsem, rsem, curtsem} = require('./Channel/semester/semesterCh')
 const {ctime, utime, dtime,rtime} = require('./Channel/timeSlice/timeSliceCh')
 const {cstd, ustd, dstd, rstd} = require('./Channel/student/studentCh')
 const {searchEvent} = require('./Channel/search/searchCh')
@@ -32,6 +32,7 @@ module.exports = {
     usem,
     dsem,
     rsem,
+    curtsem,
     // timeSlice
     ctime,
     utime,
