@@ -316,10 +316,7 @@ module.exports = {
                     }
                 }
 
-                console.log(args)
-
                 ipcRenderer.send('classCreation', args)
-
                 // _____________________________________________________
                 // clearing the fields for another creation
                 // this.topic.value = ''
@@ -341,6 +338,9 @@ module.exports = {
                     resetError(this.timeSlices[key])
                 }
 
+                alert('sending')
+                // refreshing table
+                ipcRenderer.send('getBulk', {type: 'class'})
             }
         }, // ./submit
 

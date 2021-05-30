@@ -98,14 +98,14 @@ class Db {
             TimeSlice.belongsToMany(Class, {
                 through: {
                     model: 'TimeClass',
-                    unique: false
+                    unique: false,
                 },
                 onDelete: 'RESTRICT',
             })
             Class.belongsToMany(TimeSlice, {
                 through: {
                     model: 'TimeClass',
-                    unique: false
+                    unique: false,
                 },
                 onDelete: 'RESTRICT', // what happens when you delete time slice
             })
