@@ -91,7 +91,8 @@ module.exports = {
             <td v-for="time in timeSlices">
               <div>
                 <div v-for="cls in timeline[name]">
-                  <div class="timetable-item hover:bg-pink-700 cursor-pointer" v-if="time.id === cls.time">
+                  <div class="timetable-item hover:bg-pink-700 cursor-pointer" v-if="time.id === cls.time"
+                  @dblclick="$emit('open-class', cls.id)">
                     <p>{{ cls.topic }}</p>
                     <div>
                     <span>

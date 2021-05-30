@@ -338,7 +338,6 @@ module.exports = {
                     resetError(this.timeSlices[key])
                 }
 
-                alert('sending')
                 // refreshing table
                 ipcRenderer.send('getBulk', {type: 'class'})
             }
