@@ -1,7 +1,9 @@
 const {ipcRenderer} = require('electron')
+const {pWeekday} = require('./../../utils/converts')
 module.exports = {
     data() {
         return {
+            weekdays:  pWeekday,
             userColor: {
                 name: 'purple',
                 gradient: {
@@ -20,6 +22,8 @@ module.exports = {
         }
     },
     created() {
+        // ==================================================================================
+        // colors management
         ipcRenderer.on('responseUserColor', (e, args) => {
             if (args)
                 this.userColor.name = args

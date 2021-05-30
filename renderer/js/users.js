@@ -3,6 +3,7 @@ const add_user = require('./components/users/addUser')
 const edit_user = require('./components/users/editUser')
 const {ipcRenderer} = require('electron')
 const Vue = require('vue')
+const footer_el = require('./components/footer')
 
 let users = {
     data() {
@@ -25,6 +26,7 @@ let users = {
         all_users,
         add_user,
         edit_user,
+        footer_el
     },
     created() {
         ipcRenderer.send('requestUserSession')

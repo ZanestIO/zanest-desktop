@@ -3,6 +3,8 @@ const Vue = require('vue')
 const search_add = require('./components/students/search_add')
 const add_student = require('./components/students/add_student')
 const students_table = require('./components/students/students_table')
+const footer_el = require('./components/footer')
+
 
 let students = {
     data() {
@@ -21,6 +23,7 @@ let students = {
         search_add,
         add_student,
         students_table,
+        footer_el,
     },
     methods:  {
 

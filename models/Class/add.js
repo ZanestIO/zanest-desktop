@@ -22,9 +22,9 @@ module.exports = async (topicId, teacherId, classRoomId, tuition, type, timeSlic
     try {
         // ==================================================================================
         // FIND CURRENT SEMESTER
-        let currentSemesterId = await Semester.current()
-        if(currentSemesterId === 0) {
-                    const msg = message.request('create', true, holder.id, 'class')
+        let currentSemester = await Semester.current()
+        if(currentSemester.id === 0) {
+                    const msg = message.request('create', true, currentSemester.id, 'class')
                     log.record('info', msg)
                     return [false, message.currentSemesterError]
         }

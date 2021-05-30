@@ -3,6 +3,7 @@ const Vue = require('vue')
 const search_add = require('./components/teachers/search_add')
 const add_teacher = require('./components/teachers/add_teacher')
 const teachers_table = require('./components/teachers/teachers_table')
+const footer_el = require('./components/footer')
 
 let teachers = {
     data() {
@@ -21,6 +22,7 @@ let teachers = {
         search_add,
         add_teacher,
         teachers_table,
+        footer_el,
     },
     methods:  {
 
