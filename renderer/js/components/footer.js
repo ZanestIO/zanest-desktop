@@ -1,24 +1,53 @@
+const {ipcRenderer} = require('electron')
 module.exports = {
     data() {
         return {
-
+            semester: '',
+            currentSem: {},
+            allSems: [],
         }
     },
+    emits: [],
+    components: {},
+    beforeCreate() {
+        // =============================================
+        // getSemesters
+        ipcRenderer.send('getBulk', {type: 'semester'})
+        ipcRenderer.on('responseSemesterGetBulk', (e, args) => {
+            this.allSems = args.semesters
+        })
+
+        // =============================================
+        // getCurrentSemester
+        ipcRenderer.send('getCurrentSemester')
+        ipcRenderer.on('responseCurrentSemester', (e, args) => {
+            this.semester = args.id
+            this.currentSem = args
+        })
+    },
+    props: ['showCheckBox'],
+    methods: {},
     template: `
-      <teleport to="#footer">
       <p>
-        تمامی حقوق متعلق به زانست می باشد
+      تمامی حقوق متعلق به زانست می باشد
       </p>
       <div class="text-center md:text-right">
-                    <span class="ml-4">
-                        ترم تحصیلی
+      <span class="ml-4">
+                        ترم تحصیلی:
                     </span>
-        <select name="semester" class="px-3 text-center py-1 rounded-md" id="semeseter">
-          <option value="#">بهار 98-99</option>
-          <option value="#">تابستان 98-99</option>
-          <option value="#">پاییز 78-98</option>
-        </select>
+      <span v-if="semester && !showCheckBox">
+          {{ currentSem.year }}
+        </span>
+      <span v-if="!semester && !showCheckBox" class="text-sm text-gray-700">
+          هیچ ترم فعالی در تاریخ فعلی نداریم
+        </span>
+
+      <select v-if="showCheckBox" class="px-3 text-center py-1 rounded-md"
+              v-model="semester">
+        <option v-for="semester in allSems" :value="semester.id">
+          {{ semester.year }}
+        </option>
+      </select>
       </div>
-      </teleport>
     `
 }

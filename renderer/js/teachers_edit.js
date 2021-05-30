@@ -1,5 +1,6 @@
 const Vue = require('vue')
 const edit_teacher = require('./components/teachers/edit_teacher')
+const footer_el = require('./components/footer')
 
 let teachers = {
     data() {
@@ -7,6 +8,7 @@ let teachers = {
     },
     components: {
         edit_teacher,
+        footer_el
     },
 }
 

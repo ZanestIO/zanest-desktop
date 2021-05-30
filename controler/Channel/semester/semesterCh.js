@@ -20,6 +20,13 @@ module.csem = {
                     contactAdmin: false
                 })
 
+                // refreshing the footer for current element
+                const flag = await db().sequelize.models.Semester.current()
+                if (flag){
+                    const currentSem = await db().sequelize.models.Semester.show({id: flag})
+                    webContentsSend('responseCurrentSemester', currentSem[1])
+                }
+
                 verify = true
 
             } else {
@@ -48,11 +55,18 @@ module.dsem = {
             let check = await db().sequelize.models.Semester.delete(args)
             if (check[0]) {
 
-                return webContentsSend('successNot', {
+                 webContentsSend('successNot', {
                     title: '',
                     message: check[1],
                     contactAdmin: false
                 })
+
+                // refreshing the footer for current element
+                const flag = await db().sequelize.models.Semester.current()
+                if (flag){
+                    const currentSem = await db().sequelize.models.Semester.show({id: flag})
+                    webContentsSend('responseCurrentSemester', currentSem[1])
+                }
 
             } else {
                 // process failed
@@ -85,11 +99,18 @@ module.usem = {
             if (check[0]) {
                 // process successfully done
                 webContentsSend('responseSemesterUpdate', true)
-                return webContentsSend('successNot', {
+                webContentsSend('successNot', {
                     title: '',
                     message: check[1],
                     contactAdmin: false
                 })
+
+                // refreshing the footer for current element
+                const flag = await db().sequelize.models.Semester.current()
+                if (flag){
+                    const currentSem = await db().sequelize.models.Semester.show({id: flag})
+                    webContentsSend('responseCurrentSemester', currentSem[1])
+                }
             } else {
                 // process failed
                 return webContentsSend('errorNot', {
@@ -141,10 +162,11 @@ module.curtsem = {
     curtsem: global.share.ipcMain.on('getCurrentSemester', async (e) => {
         try {
             const flag = await db().sequelize.models.Semester.current()
-            
-            if ( flag != null ){
-                const currentSem = await db().sequelize.models.Semester.get(flag)
-                webContentsSend('responseCurrentSemester', {currentSem: currentSem})
+            if (flag){
+                const currentSem = await db().sequelize.models.Semester.show({id: flag})
+                webContentsSend('responseCurrentSemester', currentSem[1])
+            } else {
+                webContentsSend('responseCurrentSemester', '')
             }
 
         } catch (err) {

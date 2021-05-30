@@ -3,7 +3,7 @@ const Vue = require('vue')
 const search_add = require('./components/classes/search_add')
 const add_class = require('./components/classes/add_class')
 const classes_table = require('./components/classes/classes_table')
-
+const footer_el = require('./components/footer')
 let classes = {
     data() {
         return {
@@ -21,6 +21,7 @@ let classes = {
         search_add,
         add_class,
         classes_table,
+        footer_el
     },
     methods:  {
 
