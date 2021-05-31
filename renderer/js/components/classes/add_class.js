@@ -183,7 +183,6 @@ module.exports = {
         processTopic() {
             let input = this.topic
             resetError(input)
-
             if (isEmpty(input)) {
                 this.valid = false
             } else
@@ -195,6 +194,9 @@ module.exports = {
             let input = this.teacher
             resetError(input)
 
+            if (this.teacher.value=== '') {
+                this.valid = false
+            }
             if (isEmpty(input)) {
                 this.valid = false
             } else
@@ -282,7 +284,6 @@ module.exports = {
                 }
             }
             this.timeSelect = flag
-            this.valid = flag
         },
 
         // ==================================================================================
@@ -294,7 +295,7 @@ module.exports = {
             this.valid = true
             this.processAll()
 
-            if (this.valid) {
+            if (this.valid && this.timeSelect) {
 
                 // _____________________________________________________
                 // arguments to be send to server
@@ -339,7 +340,9 @@ module.exports = {
                 }
 
                 // refreshing table
-                ipcRenderer.send('getBulk', {type: 'class'})
+                setTimeout(() => {
+                    ipcRenderer.send('getBulk', {type: 'class'})
+                }, 300)
             }
         }, // ./submit
 
