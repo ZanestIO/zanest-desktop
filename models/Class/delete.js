@@ -21,14 +21,25 @@ module.exports = async (id) => {
         })
 
         if (course !== null) {
-            await db().sequelize.models.Class.destroy({
+            await db().sequelize.models.TimeClass.destroy({
                 where: {
-                    id: id
+                    classId: id
                 }
             });
+            await db().sequelize.models.StudentClass.destroy({
+                where: {
+                    classId: id
+                }
+            })
+            await db().sequelize.models.Class.destroy({
+                where: {
+                    id: id 
+                }
+            })
             //  
             const msg = message.request('delete', true, id, 'class')
             log.record('info', msg )
+
             return [true, message.show(true, 'delete', 'کلاس ')]
 
         } else {
