@@ -28,7 +28,6 @@ module.exports = {
         if(isFloat(result))
             result = Math.ceil(result)
 
-        console.log(result)
         // send result to Renderer
         webContentsSend('responsePageCount', { result: result })
 

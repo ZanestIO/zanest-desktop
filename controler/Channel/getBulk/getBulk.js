@@ -35,7 +35,6 @@ module.getBulk = {
                     })
                 }
                     let users = await db().sequelize.models.User.getUsers(name);
-                    console.log(users)
                     webContentsSend('responseUserGetBulk', {users: users})
             })
             

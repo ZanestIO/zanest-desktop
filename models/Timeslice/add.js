@@ -20,19 +20,18 @@ module.exports = async (startTime, finishTime) => {
         let query = 'SELECT * FROM `TimeSlice`'
         let alreadyTimes = await db().sequelize.query(query)
         alreadyTimes = alreadyTimes[0]
-        alreadyTimes.forEach(node => {
-            console.log(node.startTime + " <> " + node.finishTime)
-        })
+
         // if start date greater then finish date return error message
-        if (campareTime(startTime, finishTime)) {
+        if (compareTime(startTime, finishTime)) {
             const msg = message.request('create', false, startTime + '(:)' + finishTime, 'timeSlice')
             log.record('info', msg)
             return [false, message.finishTimeError]
         }
-        
+
+        //
         noConflict = checkConflict(startTime, finishTime, alreadyTimes)
 
-        // if new TimeSlice does not exist create it. 
+        // if new TimeSlice have no conflict with other then created else retrun conflict message
         if (noConflict == true) {
             const holder = await db().sequelize.models.TimeSlice.create({startTime: startTime, finishTime: finishTime});
 
@@ -51,8 +50,8 @@ module.exports = async (startTime, finishTime) => {
         return [false, err]
     }
 }
-
-function campareTime(from, to){
+// compare
+function compareTime(from, to){
     let start = parseFloat(from.replace(/\:/g, ""))
     let finish = parseFloat(to.replace(/\:/g, ""))
     

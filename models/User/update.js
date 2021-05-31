@@ -46,7 +46,6 @@ module.exports = async (id, fullname, username, password, usertype, birthdate, p
             if (password) {
                 bcrypt.hash(password, 10,  async (err, hash) => {
                     pass = hash
-                    console.log("1===========================================================" + hash)
                     await user.update({fullName: fullname, userName: username, password: pass, userType: usertype,
                         birthDate: birthdate, phoneNumber: phonenumber})
                 })
