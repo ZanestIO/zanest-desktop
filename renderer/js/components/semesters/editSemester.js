@@ -221,8 +221,8 @@ module.exports = {
             if (this.valid) {
 
                 // assembling dates
-                let sDate = `${this.startDate.year.value}-${this.startDate.month.value}-${this.startDate.day.value}`
-                let fDate = `${this.finishDate.year.value}-${this.finishDate.month.value}-${this.finishDate.day.value}`
+                let sDate = `${parseInt(this.startDate.year.value)}-${parseInt(this.startDate.month.value)}-${parseInt(this.startDate.day.value)}`
+                let fDate = `${parseInt(this.finishDate.year.value)}-${parseInt(this.finishDate.month.value)}-${parseInt(this.finishDate.day.value)}`
 
                 let args = {
                     id: this.id,

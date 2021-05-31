@@ -16,7 +16,7 @@ module.uins = {
                 webContentsSend('successNot', {
                     title: '',
                     message: check[1],
-                    contactAdmin: false
+                    contactAdmin: falseg
                 })
 
                 const showing = await db().sequelize.models.Institution.show()
