@@ -2,18 +2,19 @@ const {ipcRenderer} = require('electron')
 const Vue = require('vue')
 const notification = require('./components/notification')
 const notListener = require('./notListener');
+const { resetError, isEmpty, exact, smallerThan, biggerThan, isNumber, isLetter, longerThan, shorterThan,
+} = require("./utils/validation");
+
 
 // main vue element associated with #signup-box
 const signupBox = {
     data() {
         return {
-            fullname: {
-              err: false,
-              value: '',
-            },
-            fullnameErr: {
-                seen: false,
-                value: ''
+            fullName: {
+                err: false,
+                value: '',
+                success: false,
+                errMsg: '',
             },
             username: {
                 // if err is true class input.fail will be active
@@ -53,11 +54,18 @@ const signupBox = {
         // ==================================================================================
         // process full name
         // ==================================================================================
-        processFullname() {
-            if (this.fullname.value.length > 2) {
-                this.fullname.err = false
-                this.fullnameErr.seen = false
+        processFullName() {
+            if (this.fullName.value.length < 2) {
+                this.fullName.err = true
+                this.fullName.errMsg = 'نام نمی تواند کمتر از 3 حرف باشد'
+                this.valid = false
+            } else if (isLetter(this.fullName)) {
+                this.valid = false
+            } else {
+                this.fullName.err = false
             }
+
+
         },
         // ==================================================================================
         // process username for valid characters
@@ -65,10 +73,18 @@ const signupBox = {
         processUsername() {
             let regex = new RegExp('^[A-Za-z0-9_-]*$')
 
-            if (!regex.test(this.username.value)) {
+            if (this.username.value === '') {
+
+                this.username.err = true
+                this.usernameErr.seen = true
+                this.usernameErr.text = "نام کاربری نمی تواند خالی باشد"
+                this.valid = false
+
+            } else if (!regex.test(this.username.value)) {
                 this.username.err = true
                 this.usernameErr.seen = true
                 this.usernameErr.text = "کاراکتر غیر مجاز"
+                this.valid = false
             } else {
                 // resetting the styles to no error
                 this.username.err = false
@@ -126,12 +142,13 @@ const signupBox = {
         // ==================================================================================
         processPassRep() {
             if (this.password.value !== this.passwordRepeat.value) {
-                this.passwordRepeat.err = true
-                this.passwordRepeatErr.seen = true
-                this.passwordRepeatErr.text = 'رمز عبور و تکرار آن یکسان نیستند'
+                this.passwordRepeat.err = true;
+                this.passwordRepeatErr.seen = true;
+                this.valid = false;
+                this.passwordRepeatErr.text = "رمز عبور و تکرار آن یکسان نیستند";
             } else {
-                this.passwordRepeat.err = false
-                this.passwordRepeatErr.seen = false
+                this.passwordRepeat.err = false;
+                this.passwordRepeatErr.seen = false;
             }
         }, // /processPassRep
 
@@ -144,44 +161,29 @@ const signupBox = {
             if (this.submitButton.success)
                 return
 
-            // holds the verification result
-            let fail = false
-            this.processPassRep()
-            if (this.username.err || this.passwordRepeat.err)
-                fail = true
+            this.valid = true
+            this.processFullName()
+            this.processUsername()
+            this.processPassRep();
 
             // ==================================================================================
-            // check for empty values
-            if(this.fullname.value === '') {
-                this.fullname.err = true
-                this.fullnameErr.seen = true
-                this.fullnameErr.text = 'نام نمی تواند کمتر از 3 حرف باشد'
-            }
-
-            if (!this.username.err) {
-                if (this.username.value === '') {
-                    this.username.err = true
-                    this.usernameErr.seen = true
-                    this.usernameErr.text = "نام کاربری نمی تواند خالی باشد"
-                    fail = true
-                }
-            }
             if (this.password.value === '') {
                 this.passwordRepeatErr.seen = true
                 this.passwordRepeatErr.text = "رمز عبور نمی تواند خالی باشد"
-                fail = true
+                this.valid = false
+
             } else if (this.password.value.length < 8) {
-                fail = true
+                this.valid = false
                 this.passwordRepeatErr.seen = true
-                this.passwordRepeatErr.text = "رمز عبور نباید کمتر از 8 کاراکتر باشد"
+                this.passwordRepeatErr.text = "رمز عبور نمی تواند کمتر از 8 کاراکتر باشد"
             }
 
             // ==================================================================================
             // if there is no error send request
-            if (!fail) {
+            if (this.valid) {
                 this.submitButton.text = '<i class="fas fa-circle-notch fa-spin text-lg"></i>'
                 ipcRenderer.send('userCreation', {
-                    fullName: this.fullname.value,
+                    fullName: this.fullName.value,
                     userName: this.username.value,
                     password: this.password.value,
                     userType: 'manager',
@@ -196,6 +198,10 @@ const signupBox = {
 let app = Vue.createApp(signupBox).mount('#signup-box')
 
 notListener(app)
+document.querySelector('#signup-box').addEventListener('keyup', async e => {
+    if (e.code === 'Enter' || e.code === 'NumpadEnter')
+        app.submitForm()
+})
 // ==================================================================================
 // listening for the response from server
 // ==================================================================================

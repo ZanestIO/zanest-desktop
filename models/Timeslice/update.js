@@ -14,7 +14,7 @@ const {Op} = require('sequelize');
  */
 module.exports = async (id, startTime, finishTime) => {
     try {
-        let noConflict
+        let noConflict = true
 
         // find timeSlice with id
         const ts = await db().sequelize.models.TimeSlice.findOne({
@@ -25,6 +25,7 @@ module.exports = async (id, startTime, finishTime) => {
 
         //
         if( ts.startTime != startTime || ts.finishTime != finishTime){
+            console.log('helloooo')
             // search in database for this start time and finish time that selected.
             let query = 'SELECT * FROM `TimeSlice`'
             let alreadyTimes = await db().sequelize.query(query)
