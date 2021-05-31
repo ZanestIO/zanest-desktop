@@ -14,7 +14,7 @@ const {Op} = require('sequelize');
  */
 module.exports = async (id, startTime, finishTime) => {
     try {
-        let check = null
+        let noConflict
 
         // find timeSlice with id
         const ts = await db().sequelize.models.TimeSlice.findOne({
@@ -25,19 +25,13 @@ module.exports = async (id, startTime, finishTime) => {
 
         //
         if( ts.startTime != startTime || ts.finishTime != finishTime){
-            check = await db().sequelize.models.TimeSlice.findOne({
-                where: {
-                    [Op.or]: [{
-                        startTime: {
-                            [Op.between]: [startTime, finishTime]
-                        }
-                    }, {
-                        finishTime: {
-                            [Op.between]: [startTime, finishTime]
-                        }
-                    }]
-                }
-            })
+            // search in database for this start time and finish time that selected.
+            let query = 'SELECT * FROM `TimeSlice`'
+            let alreadyTimes = await db().sequelize.query(query)
+            alreadyTimes = alreadyTimes[0]
+
+            //  new time update most have no confilct with other time 
+            noConflict = checkConflict(startTime, finishTime, alreadyTimes)
         }
 
         // if start time greater then finish time return error message
@@ -48,7 +42,7 @@ module.exports = async (id, startTime, finishTime) => {
         }
 
         // if new timeSlice info desn't have conflict, updated with new value
-        if (check == null){
+        if (noConflict == true){
             ts.update({startTime: startTime, finishTime: finishTime})
 
             const msg = message.request('update', true, ts.id, 'timeSlice')
@@ -57,7 +51,7 @@ module.exports = async (id, startTime, finishTime) => {
             
         } else {
             // else show already exist message
-            const msg = message.check(true, id )
+            const msg = message.conflictTimeSlice
             log.record('info', msg)
             return [false, msg]
         }
@@ -76,5 +70,25 @@ function campareTime(from, to){
         return true
     } else {
         return false
+    }
+}
+
+function checkConflict(startTime, finishTime, alreadyTimes){
+    let flag = null
+    let from = parseInt(startTime.split(':').join(""))
+    let to = parseInt(finishTime.split(':').join(""))
+
+    alreadyTimes.forEach( time => {
+        const startTime = parseInt(time.startTime.split(':').join(""))
+        const finishTime = parseInt(time.finishTime.split(':').join(""))
+
+        if (startTime <= from && finishTime > from || startTime < to && finishTime >= to)
+            flag = time.id
+    })
+
+    if (flag != null) {
+        return false
+    } else {
+        return true
     }
 }
