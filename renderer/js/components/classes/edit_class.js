@@ -22,12 +22,12 @@ module.exports = {
         return {
             valid: true,
             timeSelect: true,
-
+            id: '',
             changed: false,
             deleteBox: {
                 seen: false,
                 title: 'آیا مطمئن هستید؟',
-                desc: 'با تایید عملیات زبان آموز فعلی از سیستم حذف خواهد شد'
+                desc: 'با تایید عملیات کلاس فعلی از سیستم حذف خواهد شد'
             },
             // ==================================================================================
             // basic fields
@@ -220,7 +220,6 @@ module.exports = {
         // GETTING TIMESLICES AT FIRST
         setTimeout(() => {
             if (this.classType.value === 'virtual') {
-                alert('virtual')
                 ipcRenderer.send('getBulk', {type: 'timeSlice'})
                 ipcRenderer.once('responseTimeSliceGetBulk', (e, args) => {
                     for ([key, value] of Object.entries(this.availableTimeSlices)) {
@@ -229,7 +228,6 @@ module.exports = {
                 })
                 // Get All Time Slices For All Days
             } else {
-                alert(this.classRoom.value)
                 this.getTimeSliceForDay()
 
             }
@@ -412,7 +410,8 @@ module.exports = {
         },
         confirm_delete() {
             this.deleteBox.seen = false
-            ipcRenderer.send('classDeletion', this.sid.value)
+            alert('sending delete to backend')
+            ipcRenderer.send('classDeletion', {id: this.id})
         },
         cancelDelete() {
             this.deleteBox.seen = false
@@ -451,7 +450,6 @@ module.exports = {
                 currentClass: this.id
             }
 
-            // alert('before send')
             ipcRenderer.send('getAllFreeTimeSlice', args)
             ipcRenderer.once('responseGetAllFreeTimeSlice', (e, args) => {
                 this.availableTimeSlices = args
