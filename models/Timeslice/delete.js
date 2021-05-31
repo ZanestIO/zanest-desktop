@@ -25,8 +25,8 @@ module.exports = async (id) => {
                 where: {
                     id: id
                 }
-            });
-            //  
+            })
+             
             const msg = message.request('delete', true, id, 'timeSlice')
             log.record('info', msg )
             return [true, message.show(true, 'delete', 'بازه زمانی')]
@@ -39,6 +39,11 @@ module.exports = async (id) => {
         // =======================================
     } catch (err) {
         log.record('error', err +":in:"+ __filename)
-        return [false, err]
+        if(err == "SequelizeForeignKeyConstraintError: SQLITE_CONSTRAINT: FOREIGN KEY constraint failed") {
+            return [false, message.constraintError('بازه زمانی ')]
+        } else {
+            return [false, err]
+        }
+        
     }
 }

@@ -79,9 +79,9 @@ module.exports = {
         }
 
     },
-    finishTimeError: 'تاریخ پایان از تاریخ شروع جلوتر می باشد',
+    finishDateError: 'تاریخ پایان از تاریخ شروع جلوتر می باشد',
+    finishTimeError: 'ساعت پایان از ساعت شروع جلوتر می باشد',
 
-    finishDateError: 'ساعت پایان از ساعت شروع جلوتر می باشد',
     conflictSemester: ' بازه زمانی انتخاب شده با ترم های دیگر تداخل دارد.',
     conflictTimeSlice: 'زمان شروع یا پایان با بازه های دیگر تداخل دارد',
 
@@ -116,6 +116,10 @@ module.exports = {
             case 'read':
                 return `نمایش ${value}`
         }
-    } 
+    }, 
 
+    // constraint error 
+    constraintError(str) {
+        return ` برای این ${str} کلاس درس تعریف شده است`
+    }
 }

@@ -46,6 +46,10 @@ module.exports = async (sid) => {
         // =======================================
     } catch (err) {
         log.record('error', err +":in:"+ __filename)
-        return [false, err]
+        if(err == "SequelizeForeignKeyConstraintError: SQLITE_CONSTRAINT: FOREIGN KEY constraint failed") {
+            return [false, message.constraintError('استاد  ')]
+        } else {
+            return [false, err]
+        }
     }
 }
