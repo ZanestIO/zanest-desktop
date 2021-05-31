@@ -50,6 +50,10 @@ module.exports = async (id) => {
         // =======================================
     } catch (err) {
         log.record('error', err +":in:"+ __filename)
-        return [false, err]
+        if(err == "SequelizeForeignKeyConstraintError: SQLITE_CONSTRAINT: FOREIGN KEY constraint failed") {
+            return [false, 'کلاس با داده دیگری در ارتباط است']
+        } else {
+            return [false, err]
+        }
     }
 }
