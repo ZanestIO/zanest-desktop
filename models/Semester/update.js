@@ -1,7 +1,7 @@
 const db = require('../Db.js');
 const {log} = require('./../../logger')
 const message = require('./../../controler/massege')
-const {Op} = require('sequelize')
+const moment = require('jalali-moment');
 
 // ================================================================================
 //  UPDATE SEMESTER INFO 
@@ -59,8 +59,13 @@ module.exports = async (id, year, startDate, finishDate) => {
         }
         
     } catch (err) {
-        log.record('error', err)
-        return [false, err]
+        log.record('error', err +":in:"+ __filename)
+        
+        if (err == 'Error: Invalid Jalali year -100721') {
+            return [false, message.incorrectDate]
+        } else {
+            return [false, err]
+        }
     }
 }
 
@@ -70,7 +75,7 @@ async function checkFormat(date) {
         month = 0 + month
     }
     date = year +'-'+month+'-'+day
-
+    date = moment.from(date, 'YYYY-MM-DD').locale('fa').format('YYYY-MM-DD')
     return date
 }
 

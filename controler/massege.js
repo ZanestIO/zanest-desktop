@@ -8,7 +8,8 @@ module.exports = {
     successLogin(username) {
         return  `کاربر با شناسه ${username} وارد حساب کاربری خود شد.`
     },
-
+    incorrectDate: "تاریخ وارد شده نامعتبر می باشد",
+    
     setNameInstitution(status) {
         if(status) {
             return 'نام اموزشگاه با موفقیت تنظیم گردید'
@@ -122,4 +123,5 @@ module.exports = {
     constraintError(str) {
         return ` برای این ${str} کلاس درس تعریف شده است`
     }
+
 }

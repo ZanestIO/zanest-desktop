@@ -1,7 +1,7 @@
 const db = require('../Db.js');
 const {log} = require('./../../logger')
 const message = require('./../../controler/massege')
-
+const moment = require('jalali-moment');
 // ================================================================================
 // RETURN INFO OF SOME SEMESTER
 // ================================================================================
@@ -20,12 +20,16 @@ module.exports = async (id) => {
         if (info !== null) {
             log.record('info', message.request('read', true, id,'semester'))
             info = info[0]
+
+            sDate = moment.from(info.startDate, 'fa', 'YYYY-MM-DD').format('YYYY-MM-DD')
+            fDate = moment.from(info.finishDate, 'fa', 'YYYY-MM-DD').format('YYYY-MM-DD')
+
             let result =
                 {
                     id: info.id,
                     year: info.year,
-                    startDate: info.startDate,
-                    finishDate: info.finishDate,
+                    startDate: sDate,
+                    finishDate: fDate,
                 }
             return [true, result]
 

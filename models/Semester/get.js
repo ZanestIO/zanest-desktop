@@ -1,5 +1,7 @@
 const {log} = require('./../../logger')
 const db = require('./../Db');
+const moment = require('jalali-moment');
+
 // ================================================================================
 // RETURN INFO Semester
 // ================================================================================
@@ -19,14 +21,18 @@ module.exports = async (id=null) => {
             // converts a info to a JSON format
             const strInfo = JSON.stringify(info)
             const holder = JSON.parse(strInfo)
-            
+
             holder.forEach(node => {
+                sDate = moment.from(node.startDate, 'fa', 'YYYY-MM-DD').format('YYYY-MM-DD')
+                fDate = moment.from(node.startDate, 'fa', 'YYYY-MM-DD').format('YYYY-MM-DD')
+                
                 let semester = {
                     id: node.id,
                     year: node.year,
-                    startDate: node.startDate,
-                    finishDate: node.finishDate
+                    startDate: sDate,
+                    finishDate: fDate
                 }
+                
                 semesters.push(semester)
             })
 
@@ -44,12 +50,15 @@ module.exports = async (id=null) => {
             const str = JSON.stringify(currentSem)
             const hold = JSON.parse(str)
             let result = []
-            
+
+            sDate = moment.from(hold.startDate, 'fa', 'YYYY-MM-DD').format('YYYY-MM-DD')
+            fDate = moment.from(hold.finishDate, 'fa', 'YYYY-MM-DD').format('YYYY-MM-DD')
+
             let semester = {
                 id: hold.id,
                 year: hold.year,
-                startDate: hold.startDate,
-                finishDate: hold.finishDate
+                startDate: sDate,
+                finishDate: fDate
             }
 
             result.push(semester)
@@ -59,6 +68,7 @@ module.exports = async (id=null) => {
         }
         
     } catch(err) {
+        
         log.record('error', err +":in:"+ __filename)
     }
 }
