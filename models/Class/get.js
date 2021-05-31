@@ -63,7 +63,6 @@ module.exports = async () => {
             })
         }
 
-        // console.log(classes)
         return classes
 
     } catch(err) {
