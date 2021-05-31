@@ -1,6 +1,6 @@
 const {log} = require('./../../logger')
 const db = require('./../Db');
-
+const sequelize = require('sequelize')
 // ================================================================================
 // RETURN INFO OF SOME TIMESLICE
 // ================================================================================
@@ -10,8 +10,8 @@ module.exports = async () => {
     try {
         // get info 
         info = await db().sequelize.models.TimeSlice.findAll({
-            order: [
-                ['createdAt', 'ASC']
+            order:[
+                ['startTime', 'DESC']
             ],
             nest: false
         })

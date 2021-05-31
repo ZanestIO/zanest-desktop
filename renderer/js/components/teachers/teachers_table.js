@@ -72,7 +72,7 @@ module.exports = {
         <tr v-for="teacher in teachers" v-on:dblclick="$emit('open-search-result', teacher.socialID)">
           <td>{{teacher.fullName}}</td>
           <td>{{teacher.phoneNumber}}</td>
-          <td>{{teacher.sex}}</td>
+          <td>{{ teacher.sex === 'female' ? 'زن' : 'مرد'}}</td>
           <td>{{teacher.socialID}}</td>
           <td>{{teacher.birthDate}}</td>
           <td>{{degrees[teacher.degree]}}</td>

@@ -13,11 +13,16 @@ module.uins = {
 
             if (check[0]) {
                 // process successfully done
-                return webContentsSend('successNot', {
+                webContentsSend('successNot', {
                     title: '',
                     message: check[1],
                     contactAdmin: false
                 })
+
+                const showing = await db().sequelize.models.Institution.show()
+                if (showing[0]) {
+                    return webContentsSend('responseGetInstitutionInfo', showing[1])
+                }
             } else {
                 // process failed
                 return webContentsSend('errorNot', {
