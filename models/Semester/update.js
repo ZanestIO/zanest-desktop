@@ -17,7 +17,7 @@ const {Op} = require('sequelize')
 module.exports = async (id, year, startDate, finishDate) => {
     try {
         // count number of element that changed 
-        let check = null
+        let noConflict = true
 
         // find semester with social ID 
         const semester = await db().sequelize.models.Semester.findOne({
@@ -26,20 +26,15 @@ module.exports = async (id, year, startDate, finishDate) => {
             }
         })
 
+        startDate = await checkFormat(startDate)
+        finishDate = await checkFormat(finishDate)
+
         if (semester.startDate != startDate || semester.finishDate != finishDate){
-            check = await db().sequelize.models.Semester.findAll({
-                where: {
-                    [Op.or]: [{
-                        startDate: {
-                            [Op.between]: [startDate, finishDate]
-                        }
-                    }, {
-                        finishDate: {
-                            [Op.between]: [startDate, finishDate]
-                        }
-                    }]
-                }
-            })
+            let query = 'SELECT * FROM `Semesters`'
+            let alreadySemesters = await db().sequelize.query(query)
+            alreadySemesters = alreadySemesters[0]
+
+            noConflict = checkConflict(startDate, finishDate, alreadySemesters)
         }
 
         // if start date greater then finish date return error message
@@ -50,7 +45,7 @@ module.exports = async (id, year, startDate, finishDate) => {
         }
 
         // if update does't have any conflict then updated else return conflict message
-        if(check == null){
+        if(noConflict == true){
             semester.update({year: year, startDate: startDate, finishDate: finishDate})
 
             const msg = message.request('update',true ,id, 'semester')
@@ -69,3 +64,32 @@ module.exports = async (id, year, startDate, finishDate) => {
     }
 }
 
+async function checkFormat(date) {
+    let [year, month, day] = date.split('-')
+    if(Number(month)< 9) {
+        month = 0 + month
+    }
+    date = year +'-'+month+'-'+day
+
+    return date
+}
+
+function checkConflict(startDate, finishDate, alreadySemesters){
+    let flag = null
+    let from = parseInt(startDate.split('-').join(""))
+    let to = parseInt(finishDate.split('-').join(""))
+
+    alreadySemesters.forEach( date => {
+        const startDate = parseInt(date.startDate.split('-').join(""))
+        const finishDate = parseInt(date.finishDate.split('-').join(""))
+
+        if (startDate <= from && finishDate >= from || startDate <= to && finishDate >= to)
+            flag = date.id
+    })
+
+    if (flag != null) {
+        return false
+    } else {
+        return true
+    }
+}

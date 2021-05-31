@@ -13,33 +13,27 @@ const {Op} = require('sequelize')
  * @returns {Promise<(boolean|string)[]|(boolean|*)[]>}
  */
 module.exports = async (year, startDate, finishDate) => {
-    let newSem
+    let noConflict
     try {
-        // check if netSem exist
-        newSem = await db().sequelize.models.Semester.findAll({
-            where: {
-                [Op.or]: [{
-                    startDate: {
-                        [Op.between]: [startDate, finishDate]
-                    }
-                }, {
-                    finishDate: {
-                        [Op.between]: [startDate, finishDate]
-                    }
-                }]
-            }
-        })
+        let query = 'SELECT * FROM `Semesters`'
+        let alreadySemesters = await db().sequelize.query(query)
+        alreadySemesters = alreadySemesters[0]
+
         startDate = await checkFormat(startDate)
         finishDate = await checkFormat(finishDate)
+
+        console.log(startDate + '>>>' + finishDate)
+
+        noConflict = checkConflict(startDate, finishDate, alreadySemesters)
         // if start date greater then finish date return error message
         if (startDate >= finishDate) {
             const msg = message.request('create', false, startDate + "(:)" + finishDate, 'semester')
             log.record('info', msg)
             return [false, message.finishDateError]
         }
-        
+
         // if new semester have no conflict create it else return conflict message
-        if (newSem == false) {
+        if (noConflict == true) {
             let semester = await db().sequelize.models.Semester.create({year: year, startDate: startDate, finishDate: finishDate})
 
             const msg = message.request('create', true, semester.id, 'semester')
@@ -66,4 +60,24 @@ async function checkFormat(date) {
     date = year+'-'+month+'-'+day
 
     return date
+}
+
+function checkConflict(startDate, finishDate, alreadySemesters){
+    let flag = null
+    let from = parseInt(startDate.split('-').join(""))
+    let to = parseInt(finishDate.split('-').join(""))
+
+    alreadySemesters.forEach( date => {
+        const startDate = parseInt(date.startDate.split('-').join(""))
+        const finishDate = parseInt(date.finishDate.split('-').join(""))
+
+        if (startDate <= from && finishDate >= from || startDate <= to && finishDate >= to)
+            flag = date.id
+    })
+
+    if (flag != null) {
+        return false
+    } else {
+        return true
+    }
 }
