@@ -129,7 +129,86 @@ module.rclss = {
             }
 
         } catch (err) {
+            await log.record('error', err +":in:"+ __filename)
+        }
+    })
+}
+
+// ==================================================================================
+// Add Students To Class
+// ==================================================================================
+module.addStdToClass = {
+    addStdToClass: global.share.ipcMain.on('addStudentToClass', async (e, args) => {
+        try {
+            const check = await db().sequelize.models.Class.addToClass(args)
+            if (check[0]) {
+                return webContentsSend('successNot', {
+                    title: '',
+                    message: 'زبان آموز به کلاس اضافه شد',
+                    contactAdmin: false,
+                })
+            } else {
+                return webContentsSend('errorNot', {
+                    title: 'خطا در افزودن زبان آموز',
+                    message:'sqlite error in adding std',
+                    contactAdmin: true,
+                })
+            }
+
+        } catch (err) {
             log.record('error', err +":in:"+ __filename)
         }
     })
 }
+
+// ==================================================================================
+// Delete Students From Class
+// ==================================================================================
+module.deleteStdFromClass = {
+    deleteStdFromClass: global.share.ipcMain.on('deleteStudentFromClass', async (e, args) => {
+        try {
+            const check = await db().sequelize.models.Class.removeFromClass(args)
+            if (check[0]) {
+                return webContentsSend('successNot', {
+                    title: '',
+                    message: check[1],
+                    contactAdmin: false,
+                })
+            } else {
+                return webContentsSend('errorNot', {
+                    title: 'خطا در حذف زبان آموز',
+                    message: 'sqlite error in adding std',
+                    contactAdmin: true,
+                })
+            }
+
+        } catch (err) {
+            log.record('error', err +":in:"+ __filename)
+        }
+    })
+}
+
+// ==================================================================================
+// Delete Students From Class
+// ==================================================================================
+module.getStudentsInClass = {
+    getStudentsInClass: global.share.ipcMain.on('getStudentsInClass', async (e, args) => {
+        try {
+            const check = await db().sequelize.models.Class.getAllStds(args)
+            if (check[0]) {
+                return webContentsSend('responseGetStudentsInClass', check[1])
+            } else {
+                return webContentsSend('errorNot', {
+                    title: "خطا در بارگذاری زبان آموزان",
+                    message: 'sqlite error in loading all students',
+                    contactAdmin: true,
+                })
+            }
+
+        } catch (err) {
+            log.record('error', err +":in:"+ __filename)
+        }
+    })
+}
+
+

@@ -40,7 +40,6 @@ module.exports = async (classRoomId, currentClass) => {
             freeTimes = freeTimes[0]
             availableTimeSlices[key] = freeTimes
         }
-        console.log(availableTimeSlices)
         return availableTimeSlices
 
     } catch (err) {

@@ -59,6 +59,21 @@ exports.Class = class Class extends Model {
         return await gets()
     }
 
+    static async addToClass(args) {
+        const adds = require('./addToClass')
+        return await adds(args.studentId, args.classId)
+    }
+
+    static async removeFromClass(args) {
+        const removes = require('./removeFromClass')
+        return await removes(args.studentId, args.classId)
+    }
+
+    static async getAllStds(args) {
+        const getAll = require('./getStdInClass')
+        return await getAll(args.classId)
+    }
+
     
 }
 
@@ -67,7 +82,6 @@ exports.Class = class Class extends Model {
 // ==================================================================================
 /**
  * define Class's attributes
- * @type
  */
 exports.classData = {
     attributes: {
