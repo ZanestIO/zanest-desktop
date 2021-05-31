@@ -29,7 +29,8 @@ module.exports = async (year, startDate, finishDate) => {
                 }]
             }
         })
-
+        startDate = await checkFormat(startDate)
+        finishDate = await checkFormat(finishDate)
         // if start date greater then finish date return error message
         if (startDate >= finishDate) {
             const msg = message.request('create', false, startDate + "(:)" + finishDate, 'semester')
@@ -55,4 +56,14 @@ module.exports = async (year, startDate, finishDate) => {
         log.record('error', err +":in:"+ __filename)
         return [false, err]
     }
+}
+
+async function checkFormat(date) {
+    let [year, month, day] = date.split('-')
+    if(Number(month)< 9) {
+        month = 0 + month
+    }
+    date = year+'-'+month+'-'+day
+
+    return date
 }
