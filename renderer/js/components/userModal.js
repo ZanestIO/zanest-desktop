@@ -368,7 +368,7 @@ module.exports = {
               <div class="mb-4 flex-fullrow">
                 <span class="text-sm text-gray-500 mb-2">نام کاربری*</span>
                 <input v-bind:class="{fail: username.err, success: username.success}" type="text" class="p-4 common"
-                       placeholder="نام کاربری" @change="processUsername" v-model="username.value" max="50">
+                       placeholder="نام کاربری" @change="processUsername" v-model="username.value" maxlength="50">
                 <p class="input-error" v-if="username.err">{{ username.errMsg }}</p>
                 <p class="input-guide">نام کاربری می تواند شامل حروف انگلیسی، اعداد و _ باشد.</p>
               </div>
@@ -378,7 +378,7 @@ module.exports = {
                 <span class="text-sm text-gray-500 mb-2">نام شما*</span>
                 <input type="text" class="p-4 common" :class="{fail: fullname.err, success: fullname.success}"
                        placeholder="نام شما"
-                       v-model="fullname.value" max="50" @change="processFullname">
+                       v-model="fullname.value" maxlength="50" @change="processFullname">
                 <p class="input-error" v-if="fullname.err">{{ fullname.errMsg }}</p>
               </div>
 
@@ -435,7 +435,7 @@ module.exports = {
                 <input :class="{fail: passwordRepeat.err}" type="password" class="p-4 common"
                        placeholder="تکرار رمز عبور جدید" v-model="passwordRepeat.value" v-on:change="processPassRep">
                 <p class="input-error" v-if="passwordRepeatErr.seen" id="pass-err">{{ passwordRepeatErr.text }}</p>
-                <p class="input-guide">رمز عبور شما باید حداقل 8 کاراکتر باشد</p>
+                <p class="input-guide">رمز عبور حداقل 8 کاراکتر است</p>
               </div>
             </div>
 

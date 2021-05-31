@@ -473,7 +473,7 @@ module.exports = {
                      placeholder="تکرار رمز عبور جدید" v-model="passwordRepeat.value" v-on:change="processPassRep"
                      minlength="8">
               <p class="input-error" v-if="passwordRepeatErr.seen" id="pass-err">{{ passwordRepeatErr.text }}</p>
-              <p class="input-guide">رمز عبور شما باید حداقل 8 کاراکتر باشد</p>
+              <p class="input-guide">رمز عبور حداقل 8 کاراکتر است</p>
             </div>
 
             <div class="p-2 pt-2 flex">
