@@ -155,13 +155,15 @@ module.exports = {
       let input = this.birthDate.day;
       resetError(input);
 
-      if (smallerThan(input, 1)) {
-        this.valid = false;
-      } else if (biggerThan(input, 31)) {
-        this.valid = false;
-      } else {
-        input.success = true;
-        this.changed = true;
+      if(!(input.value === '')){
+        if (smallerThan(input, 1)) {
+          this.valid = false;
+        } else if (biggerThan(input, 31)) {
+          this.valid = false;
+        } else {
+          input.success = true;
+          this.changed = true;
+        }
       }
     },
 
@@ -169,13 +171,15 @@ module.exports = {
       let input = this.birthDate.month;
       resetError(input);
 
-      if (smallerThan(input, 1)) {
-        this.valid = false;
-      } else if (biggerThan(input, 12)) {
-        this.valid = false;
-      } else {
-        input.success = true;
-        this.changed = true;
+      if(!(input.value === '')){
+        if (smallerThan(input, 1)) {
+          this.valid = false;
+        } else if (biggerThan(input, 12)) {
+          this.valid = false;
+        } else {
+          input.success = true;
+          this.changed = true;
+        }
       }
     },
 
@@ -183,13 +187,15 @@ module.exports = {
       let input = this.birthDate.year;
       resetError(input);
 
-      if (smallerThan(input, 1300)) {
-        this.valid = false;
-      } else if (biggerThan(input, 1450)) {
-        this.valid = false;
-      } else {
-        input.success = true;
-        this.changed = true;
+      if(!(input.value === '')){
+        if (smallerThan(input, 1300)) {
+          this.valid = false;
+        } else if (biggerThan(input, 1450)) {
+          this.valid = false;
+        } else {
+          input.success = true;
+          this.changed = true;
+        }
       }
     },
 
@@ -200,12 +206,14 @@ module.exports = {
       let input = this.phone;
       resetError(input);
 
-      if (isNumber(input)) {
-        this.valid = false;
-      } else if (exact(input, 11)) {
-        this.valid = false;
-      } else input.success = true;
-      this.changed = true;
+      if(!(input.value === '')){
+        if (isNumber(input)) {
+          this.valid = false;
+        } else if (exact(input, 11)) {
+          this.valid = false;
+        } else input.success = true;
+        this.changed = true;
+      }
     },
 
     // ==================================================================================

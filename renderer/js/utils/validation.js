@@ -66,7 +66,7 @@ module.exports = {
         let numbers = new RegExp(/^\d+$/)
         if (!numbers.test(input.value)) {
             input.err = true
-            input.errMsg = errors.onlyLetter
+            input.errMsg = errors.onlyNum
             return true
         }
         return false
