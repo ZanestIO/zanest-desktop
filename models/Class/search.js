@@ -8,6 +8,7 @@ const { TimeClass } = require('../Teacher/Teacher.js')
 const {Op} = require('sequelize')
 const { Person } = require('../Person/Person.js')
 const sequelize = require('sequelize')
+const {pWeekdays} = require('./../../renderer/js/utils/converts')
 // ================================================================================
 // RETURN INFO OF SOME CLASS
 // ================================================================================
@@ -76,6 +77,7 @@ module.exports = async (searchBy, value) => {
             })
         }
 
+        info = JSON.parse(JSON.stringify(info))
         let results = []
         
         if (info) {
@@ -87,6 +89,7 @@ module.exports = async (searchBy, value) => {
                     topic: node.Topic.name,
                     teacher: node.Teacher.Person.fullName,
                     time: node.TimeSlice[0].startTime + '-' + node.TimeSlice[0].finishTime,
+                    weekday: pWeekdays[node.TimeSlice[0].TimeClass.weekday]
                 }
                 results.push(holder)
             })

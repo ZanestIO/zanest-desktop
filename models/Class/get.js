@@ -42,7 +42,6 @@ module.exports = async () => {
                 classRoomName = 'مجازی'
             }
 
-            console.log(classRoomName)
 
             let session
 

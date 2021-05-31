@@ -44,7 +44,7 @@ exports.Class = class Class extends Model {
      */
     static async show(args) {
         const reads = require('./show')
-        return await reads(args.id)
+        return await reads(args)
     }
 
     // search student info

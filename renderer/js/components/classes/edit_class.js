@@ -45,7 +45,7 @@ module.exports = {
             },
             classType: {
                 err: false,
-                value: 'actual',
+                value: '',
                 errMsg: '',
                 success: false
             },
@@ -54,7 +54,7 @@ module.exports = {
                 value: '',
                 errMsg: '',
                 success: false,
-                active: true
+                active: false
             },
             tuition: {
                 err: false,
@@ -160,7 +160,7 @@ module.exports = {
     // ==================================================================================
     // -------------- INITIALIZATION
     // ==================================================================================
-    created() {
+    beforeCreate() {
         // =============================================
         // changing the color of button
         ipcRenderer.send('requestUserColor')
@@ -195,16 +195,46 @@ module.exports = {
         ipcRenderer.on('getClassInfo', (e, args) => {
 
             this.id = args.id
-            this.topic.value = args.topic
-            this.teacher.value = args.teacher
+            this.topic.value = args.topicId
+            this.teacher.value = args.teacherId
             this.classType.value = args.type
-            this.classRoom.value = args.classRoom
-            this.tuition.value = args.tuition
-            for ([key, value] of Object.entries(args.timeSlices)) {
-                this.timeSlices[key].value = value
+
+            if (args.type === 'actual') {
+                this.classRoom.value = args.classRoomId
+                this.classRoom.active = true
             }
 
+            this.tuition.value = args.tuition
+
+            for ([key, value] of Object.entries(args.timeSlices)) {
+                if (value) {
+                    this.weekdays[key] = true
+                    this.timeSlices[key].value = value
+                }
+            }
         })
+    },
+
+    created() {
+        // ==================================================================================
+        // GETTING TIMESLICES AT FIRST
+        setTimeout(() => {
+            if (this.classType.value === 'virtual') {
+                alert('virtual')
+                ipcRenderer.send('getBulk', {type: 'timeSlice'})
+                ipcRenderer.once('responseTimeSliceGetBulk', (e, args) => {
+                    for ([key, value] of Object.entries(this.availableTimeSlices)) {
+                        this.availableTimeSlices[key] = args.timeSlices
+                    }
+                })
+                // Get All Time Slices For All Days
+            } else {
+                alert(this.classRoom.value)
+                this.getTimeSliceForDay()
+
+            }
+        }, 100)
+
     },
 
     // ==================================================================================
@@ -245,15 +275,12 @@ module.exports = {
 
             this.classRoom.active = input.value === 'actual';
             if (input.value === 'virtual') {
-
                 ipcRenderer.send('getBulk', {type: 'timeSlice'})
                 ipcRenderer.on('responseTimeSliceGetBulk', (e, args) => {
                     for ([key, value] of Object.entries(this.availableTimeSlices)) {
                         this.availableTimeSlices[key] = args.timeSlices
                     }
                 })
-                // Get All Time Slices For All Days
-
             } // ./if virtual
 
             input.success = true
@@ -329,16 +356,19 @@ module.exports = {
         // ==================================================================================
         // FINAL SUBMIT and sending the values
         submit() {
+            if (!this.changed)
+                return
 
             // processing all of form
             this.valid = true
             this.processAll()
 
-            if (this.valid && this.changed) {
+            if (this.valid) {
 
                 // _____________________________________________________
                 // arguments to be send to server
                 let args = {
+                    id: this.id,
                     topicId: this.topic.value,
                     teacherId: this.teacher.value,
                     type: this.classType.value,
@@ -368,7 +398,10 @@ module.exports = {
                 // }
 
                 // refreshing table
-                ipcRenderer.send('getBulk', {type: 'class'})
+                setTimeout(() => {
+                    ipcRenderer.send('getBulk', {type: 'class'})
+                    this.processClassRoom()
+                }, 200)
             }
         }, // ./submit
 
@@ -414,15 +447,16 @@ module.exports = {
                 return
 
             let args = {
-                classRoomId: this.classRoom.value
+                classRoomId: this.classRoom.value,
+                currentClass: this.id
             }
 
             // alert('before send')
             ipcRenderer.send('getAllFreeTimeSlice', args)
-            ipcRenderer.on('responseGetAllFreeTimeSlice', (e, args) => {
+            ipcRenderer.once('responseGetAllFreeTimeSlice', (e, args) => {
                 this.availableTimeSlices = args
+                console.log(args)
             })
-
         }
 
     },

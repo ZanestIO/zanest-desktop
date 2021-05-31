@@ -72,12 +72,10 @@ module.exports = async (topicId, teacherId, classRoomId, tuition, type, timeSlic
                 semesterId: currentSemesterId, type: type, tuition: tuition
             });
         }
-        console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
-        console.log(timeSlices)
+
         // ==================================================================================
         // saving times and weekdays in db
         for ([key, value] of Object.entries(timeSlices)) {
-            console.log(key, value)
             await db().sequelize.models.TimeClass.create({TimeSlouseId: value, weekday: key, ClassId: holder.id})
         }
 

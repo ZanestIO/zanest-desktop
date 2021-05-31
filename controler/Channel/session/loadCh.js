@@ -22,7 +22,7 @@ module.exports = {
 
         global.share.session.defaultSession.cookies.set(lastPage)
 
-        if (args.page == args.currentPage) {
+        if (args.page === args.currentPage) {
             return
         }
 
@@ -31,7 +31,7 @@ module.exports = {
         // ==================================================================================
         // if user cookie is staff just allow to access the some limited page.
         global.share.session.defaultSession.cookies.get({url: 'http://zanest.io'})
-            .then( async(cookies) => {
+            .then(async (cookies) => {
                 // if cookies exist
                 if (cookies) {
                     // get userType 
@@ -69,21 +69,21 @@ module.exports = {
                 accessAuth(path, args.id, args.type)
 
             }).catch((err) => {
-                log.record('error', err +":in:"+ __filename)
+            log.record('error', err + ":in:" + __filename)
         })
 
     })
 }
 
 async function accessAuth(path, id, type) {
-    if (path !== "./renderer/404.html" ) {
+    if (path !== "./renderer/404.html") {
         // id most be available
         if (id) {
             // request for who
             if (type === 'student') {
                 try {
                     const student = await db().sequelize.models.Student.show(id)
-                
+
                     if (student[0]) {
                         webContentsSend('getInfo', student[1])
                     } else {
@@ -95,12 +95,15 @@ async function accessAuth(path, id, type) {
                         })
                     }
                 } catch (err) {
-                    log.record('error', err +":in:"+ __filename)
+                    log.record('error', err + ":in:" + __filename)
                 }
-            } else if (type === 'teacher'){
+
+                // ==================================================================================
+                // TEACHER
+            } else if (type === 'teacher') {
                 try {
                     const teacher = await db().sequelize.models.Teacher.show(id)
-                
+
                     if (teacher[0]) {
                         webContentsSend('getInfo', teacher[1])
                     } else {
@@ -112,7 +115,26 @@ async function accessAuth(path, id, type) {
                         })
                     }
                 } catch (err) {
-                    log.record('error', err +":in:"+ __filename)
+                    log.record('error', err + ":in:" + __filename)
+                }
+
+                // ==================================================================================
+                // CLASS
+            } else if (type === 'class') {
+                try {
+                    const myClass = await db().sequelize.models.Class.show(id)
+                    if (myClass[0]) {
+                        webContentsSend('getClassInfo', myClass[1])
+                    } else {
+                        await log.record('info', message.check(false, id))
+                        webContentsSend('errorNot', {
+                            title: message.title('read', 'کلاس'),
+                            message: myClass[1],
+                            contactAdmin: true,
+                        })
+                    }
+                } catch (err) {
+                    await log.record('error', err + ":in:" + __filename)
                 }
             }
         }

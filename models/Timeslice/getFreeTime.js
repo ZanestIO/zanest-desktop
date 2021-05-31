@@ -5,10 +5,10 @@ const {Op} = require('sequelize')
 // ================================================================================
 // RETURN INFO OF SOME TIMESLICE
 // ================================================================================
-module.exports = async (classRoomId) => {
+module.exports = async (classRoomId, currentClass) => {
     try {
 
-        availableTimeSlices = {
+        let availableTimeSlices = {
             saturday: [],
             sunday: [],
             monday: [],
@@ -17,6 +17,7 @@ module.exports = async (classRoomId) => {
             thursday: [],
         }
 
+        let freeTimes
         for ([key, value] of Object.entries(availableTimeSlices)) {
 
             query = "SELECT `id`, `startTime`, `finishTime` FROM `TimeSlice` AS A LEFT JOIN "
@@ -26,10 +27,20 @@ module.exports = async (classRoomId) => {
                 " WHERE classRoomId = '" + classRoomId + "') AS B"
             query += ' ON A.id = B.timeSlouseId WHERE B.timeSlouseId IS NULL'
 
-            let freeTimes = await db().sequelize.query(query)
+            if (currentClass) {
+                query = "SELECT `id`, `startTime`, `finishTime` FROM `TimeSlice` AS A LEFT JOIN "
+                query +=
+                    "(SELECT `ClassId`, `timeSlouseId`, `classRoomId` FROM `Classes` INNER JOIN (SELECT * FROM `TimeClasses` WHERE weekday = '" +
+                    key + "') ON id = ClassId" +
+                    " WHERE classRoomId = '" + classRoomId + "' AND ClassId != '" + currentClass + "') AS B"
+                query += ' ON A.id = B.timeSlouseId WHERE B.timeSlouseId IS NULL'
+            }
+
+            freeTimes = await db().sequelize.query(query)
             freeTimes = freeTimes[0]
             availableTimeSlices[key] = freeTimes
         }
+        console.log(availableTimeSlices)
         return availableTimeSlices
 
     } catch (err) {

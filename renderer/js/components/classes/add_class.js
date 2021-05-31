@@ -358,7 +358,8 @@ module.exports = {
                 return
 
             let args = {
-                classRoomId: this.classRoom.value
+                classRoomId: this.classRoom.value,
+                currentClass: ''
             }
 
             // alert('before send')

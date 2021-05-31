@@ -93,6 +93,8 @@ module.exports = {
                 {{ result.teacher }}
               </span>
               <span>
+                {{ result.weekday }}
+                 -- 
                 {{ result.time }}
               </span>
             </li>
