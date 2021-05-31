@@ -78,8 +78,11 @@ module.exports = {
     // TEMPLATE
     // ==================================================================================
     template: `
-      <div class="table-holder">
-        <table class="timetable">
+      <div class="table-holder"> 
+      <p v-if="!timeSlices[0]">
+        هنوز هیچ کلاسی موجود نیست، با زدن دکمه "ایجاد کلاس" یک کلاس ایجاد کنید
+      </p>
+        <table class="timetable" v-else>
           <tr :class="userColor.solid[userColor.name]">
             <th>روز/ساعت</th>
             <th v-for="time in timeSlices">{{ convert24To12(time.startTime) }} - {{ convert24To12(time.finishTime) }}</th>

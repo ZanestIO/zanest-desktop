@@ -128,7 +128,7 @@ module.exports = {
           <div class="main-section">
           <div class="section-title-2">
             <h2 class="mb-2">
-              ایجاد بازه زمانی جدید
+              ویرایش بازه زمانی 
             </h2>
             <hr class="mb-4">
           </div>
@@ -193,7 +193,7 @@ module.exports = {
             <div class="p-2 pt-2 flex">
               <a href="#"
                  class="w-1/2 px-4 py-3 text-center text-pink-100 bg-purple-600 rounded-lg hover:bg-pink-700 hover:text-white font-bold text-sm"
-                 v-on:click="editTimeSliceInfo">ایجاد بازه</a>
+                 v-on:click="editTimeSliceInfo">ویرایش بازه</a>
               <a href="#"
                  class="w-1/2 px-4 py-3 ml-2 mr-2 text-center bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-black font-bold rounded-lg text-sm"
                  v-on:click="$emit('cancel-edit-timeSlice')">انصراف</a>

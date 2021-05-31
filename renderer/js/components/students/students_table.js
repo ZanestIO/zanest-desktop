@@ -68,7 +68,7 @@ module.exports = {
         <tr v-for="student in students" v-on:dblclick="$emit('open-search-result', student.socialID)">
           <td>{{student.fullName}}</td>
           <td>{{student.phoneNumber}}</td>
-          <td>{{student.sex}}</td>
+          <td>{{ student.sex === 'female' ? 'زن' : 'مرد'}}</td>
           <td>{{student.socialID}}</td>
           <td>{{student.birthDate}}</td>
           <td>{{student.parentsName}}</td>

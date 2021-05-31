@@ -266,7 +266,7 @@ module.exports = {
 
             if (isEmpty(input)) {
                 this.valid = false
-            } else if (shorterThan(255)) {
+            } else if (shorterThan(input, 255)) {
                 this.valid = false
             } else
                 input.success = true
@@ -277,6 +277,7 @@ module.exports = {
             this.processName()
             this.processPhone()
             this.processSid()
+            this.processSex()
             this.processBirthDay()
             this.processBirthDay()
             this.processBirthMonth()
@@ -365,7 +366,7 @@ module.exports = {
           <span>
             جنسیت
           </span>
-          <select :class="{fail: sex.err, success: sex.success}" v-model="sex.value" @change="processSex">
+          <select :class="{fail: sex.err, success: sex.success}" v-model="sex.value" @change="processSex" @focusout="processSex">
             <option value="male">مرد</option>
             <option value="female">زن</option>
             <option value="bisex">نامشخص</option>

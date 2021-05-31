@@ -1,5 +1,5 @@
 const db = require('../../../models/Db')
-const {webContentsSend} = require('../../../main')
+const {webContentsSend, setLoadFile} = require('../../../main')
 const {log} = require('./../../../logger')
 const message = require('./../../massege')
 
@@ -47,7 +47,7 @@ module.dclss = {
         try {
             let check = await db().sequelize.models.Class.delete(args)
             if (check[0]) {
-
+                await setLoadFile('./renderer/classes.html');
                 return webContentsSend('successNot', {
                     title: '',
                     message: check[1],

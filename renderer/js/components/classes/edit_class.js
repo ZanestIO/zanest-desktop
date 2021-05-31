@@ -410,7 +410,6 @@ module.exports = {
         },
         confirm_delete() {
             this.deleteBox.seen = false
-            alert('sending delete to backend')
             ipcRenderer.send('classDeletion', {id: this.id})
         },
         cancelDelete() {
