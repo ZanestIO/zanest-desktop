@@ -1,7 +1,6 @@
 const db = require('../Db.js');
 const {log} = require('./../../logger')
 const message = require('./../../controler/massege');
-// const { Op } = require('sequelize/types');
 const {Semester} = require('../Semester/Semester.js');
 const {pWeekdays} = require('../../renderer/js/utils/converts')
 

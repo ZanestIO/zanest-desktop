@@ -92,6 +92,9 @@ module.exports = {
               <span>
                 {{ result.teacher }}
               </span>
+              <span>
+                {{ result.time }}
+              </span>
             </li>
             <li v-if="noResult">
               <span>
