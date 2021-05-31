@@ -13,33 +13,27 @@ const {Op} = require("sequelize");
  * @returns {Promise<(boolean|string)[]|(boolean|*)[]>}
  */
 module.exports = async (startTime, finishTime) => {
-    let newTime
+    let noConflict
     try {
 
         // search in database for this start time and finish time that selected.
-        newTime = await db().sequelize.models.TimeSlice.findOne({
-            where: {
-                [Op.or]: [{
-                    startTime: {
-                        [Op.between]: [startTime, finishTime]
-                    }
-                }, {
-                    finishTime: {
-                        [Op.between]: [startTime, finishTime]
-                    }
-                }]
-            }
+        let query = 'SELECT * FROM `TimeSlice`'
+        let alreadyTimes = await db().sequelize.query(query)
+        alreadyTimes = alreadyTimes[0]
+        alreadyTimes.forEach(node => {
+            console.log(node.startTime + " <> " + node.finishTime)
         })
-
         // if start date greater then finish date return error message
         if (campareTime(startTime, finishTime)) {
             const msg = message.request('create', false, startTime + '(:)' + finishTime, 'timeSlice')
             log.record('info', msg)
             return [false, message.finishTimeError]
         }
+        
+        noConflict = checkConflict(startTime, finishTime, alreadyTimes)
 
         // if new TimeSlice does not exist create it. 
-        if (!newTime) {
+        if (noConflict == true) {
             const holder = await db().sequelize.models.TimeSlice.create({startTime: startTime, finishTime: finishTime});
 
             const msg = message.request('create', true, holder.id, 'timeSlice')
@@ -66,5 +60,25 @@ function campareTime(from, to){
         return true
     } else {
         return false
+    }
+}
+
+function checkConflict(startTime, finishTime, alreadyTimes){
+    let flag = null
+    let from = parseInt(startTime.split(':').join(""))
+    let to = parseInt(finishTime.split(':').join(""))
+
+    alreadyTimes.forEach( time => {
+        const startTime = parseInt(time.startTime.split(':').join(""))
+        const finishTime = parseInt(time.finishTime.split(':').join(""))
+
+        if (startTime <= from && finishTime > from || startTime < to && finishTime >= to)
+            flag = time.id
+    })
+
+    if (flag != null) {
+        return false
+    } else {
+        return true
     }
 }
