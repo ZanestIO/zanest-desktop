@@ -13,17 +13,16 @@ const db = require('./../Db');
 // ================================================================================
 module.exports = async () => {
     let info
-    let classes = []
+    let classes = {saturday: [], sunday: [], monday: [], tuesday: [], wednesday: [], thursday: []}
     try {
         // get info 
         info = await db().sequelize.models.Class.findAll({
             include: [
-                { model: Teacher, include: { model: Person}},
-                { model: TimeSlice },
-                { model: Semester},
-                { model: Topic},
-                { model: ClassRoom}
+                { model: Teacher, attributes: ['socialID'], include: { model: Person, attributes:['fullName']},},
+                { model: Topic,  attributes: ['name']},
+                { model: ClassRoom,  attributes: ['name']},
             ],
+            attributes: ['id', 'type'],
             order: [
                 ['createdAt', 'ASC']
             ],
@@ -36,25 +35,36 @@ module.exports = async () => {
 
         let classRoomName
         let i = 0
-        holder.forEach(node => {
-            if(node.classRoom == null) {
-                classRoomName = 'مجازی'
-            } else {
+        for (const node of holder) {
+            try {
                 classRoomName = node.ClassRoom.name
+            } catch {
+                classRoomName = 'مجازی'
             }
 
-            let course = {
-                weekday: node.TimeSlice[0].TimeClass.weekday,
-                time: node.TimeSlice[0].startTime +':'+node.TimeSlice[0].finishTime,
-                topic: node.Topic.name,
-                id: node.id,
-                teacher: node.Teacher.Person.fullName,
-                classRoom: classRoomName
-            }
+            console.log(classRoomName)
 
-            classes.push(course)
-        })
+            let session
 
+            // getting all the timeSlices
+            let query = "SELECT id, startTime, finishTime, weekday FROM TimeSlice INNER JOIN (SELECT * FROM TimeClasses WHERE ClassId ='" +
+                node.id + "') ON id = timeSlouseId"
+            let times = await db().sequelize.query(query)
+            times = times[0]
+
+            times.forEach(time => {
+                session = {
+                    time: time.id,
+                    topic: node.Topic.name,
+                    id: node.id,
+                    teacher: node.Teacher.Person.fullName,
+                    classRoom: classRoomName
+                }
+                classes[time.weekday].push(session)
+            })
+        }
+
+        // console.log(classes)
         return classes
 
     } catch(err) {

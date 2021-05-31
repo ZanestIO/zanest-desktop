@@ -1,7 +1,6 @@
 const db = require('../Db.js');
 const {log} = require('./../../logger')
 const message = require('./../../controler/massege');
-// const { Op } = require('sequelize/types');
 const {Semester} = require('../Semester/Semester.js');
 const {pWeekdays} = require('../../renderer/js/utils/converts')
 
@@ -22,12 +21,11 @@ module.exports = async (topicId, teacherId, classRoomId, tuition, type, timeSlic
     try {
         // ==================================================================================
         // FIND CURRENT SEMESTER
-        let currentSemester = await Semester.current()
-
-        if(currentSemester == 0) {
-            const msg = message.request('create', true, currentSemester.id, 'class')
-            log.record('info', msg)
-            return [false, message.currentSemesterError]
+        let currentSemesterId = await Semester.current()
+        if(currentSemesterId === 0) {
+                    const msg = message.request('create', true, currentSemesterId, 'class')
+                    log.record('info', msg)
+                    return [false, message.currentSemesterError]
         }
 
         // ==================================================================================
@@ -66,18 +64,20 @@ module.exports = async (topicId, teacherId, classRoomId, tuition, type, timeSlic
         if (classRoomId) {
             holder = await db().sequelize.models.Class.create({
                 topicId: topicId, teacherId: teacherId, classRoomId: classRoomId,
-                semesterId: currentSemester, type: type, tuition: tuition
+                semesterId: currentSemesterId, type: type, tuition: tuition
             });
         } else {
             holder = await db().sequelize.models.Class.create({
                 topicId: topicId, teacherId: teacherId,
-                semesterId: currentSemester, type: type, tuition: tuition
+                semesterId: currentSemesterId, type: type, tuition: tuition
             });
         }
-
+        console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
+        console.log(timeSlices)
         // ==================================================================================
         // saving times and weekdays in db
         for ([key, value] of Object.entries(timeSlices)) {
+            console.log(key, value)
             await db().sequelize.models.TimeClass.create({TimeSlouseId: value, weekday: key, ClassId: holder.id})
         }
 
